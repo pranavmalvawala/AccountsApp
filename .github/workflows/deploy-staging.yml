@@ -38,12 +38,5 @@ jobs:
 
       - name: Deploy App
         run: |
-          cd AccessManagementApp
-          npm install
-          npm run deploy-staging
-
-      - name: Deploy API
-        run: |
-          cd AccessManagementApi
           npm install
           npm run deploy-staging
