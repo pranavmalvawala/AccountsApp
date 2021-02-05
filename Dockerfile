@@ -5,7 +5,7 @@ RUN apk update && \
 
 WORKDIR /app
 
-RUN git clone https://github.com/LiveChurchSolutions/AccountsApp .
+COPY . .
 
 RUN git submodule init && git submodule update
 
