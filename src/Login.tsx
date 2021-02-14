@@ -25,7 +25,7 @@ export const Login: React.FC = (props: any) => {
 
     return (<LoginPage auth={auth} context={context} jwt={jwt} />);
   } else {
-    let path = from.pathname === "/" ? "/access" : from.pathname;
+    let path = from.pathname === "/" ? "/churches" : from.pathname;
     return <Authenticated location={path}></Authenticated>;
   }
 };

@@ -15,9 +15,9 @@ export const AppAccess = ({ match }: RouteComponentProps<TParams>) => {
     const [redirectUrl, setRedirectUrl] = React.useState<string>("");
     const context = React.useContext(UserContext);
 
-    const loadData = async () => {
+    const loadData = () => {
         const churchId = parseInt(match.params.id, 0);
-        if (churchId !== UserHelper.currentChurch.id) await UserHelper.selectChurch(context, churchId).then(() => { setRedirectUrl("/settings/"); });
+        if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId).then(() => { setRedirectUrl("/settings/"); });
         ApiHelper.get('/roles/app/' + match.params.app, "AccessApi").then(data => setRoles(data));
     }
     const getEditContent = () => {
@@ -45,7 +45,7 @@ export const AppAccess = ({ match }: RouteComponentProps<TParams>) => {
         else return (<RoleEdit roleId={selectedRoleId} updatedFunction={handleUpdate} appName={match.params.app} ></RoleEdit>)
     }
 
-    React.useEffect(() => { loadData() });
+    React.useEffect(loadData, []);
 
     if (!UserHelper.checkAccess(Permissions.accessApi.roles.view)) return (<></>);
     if (redirectUrl !== '') return <Redirect to={redirectUrl}></Redirect>;
