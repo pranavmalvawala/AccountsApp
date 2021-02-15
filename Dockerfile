@@ -5,13 +5,14 @@ RUN apk update && \
 
 WORKDIR /app
 
-COPY . .
+COPY ./package.json . 
 
 RUN git submodule init && git submodule update
 
 RUN npm install
 
+COPY . .
+
 CMD npm start
 
-
-EXPOSE 3400
+EXPOSE 3401
