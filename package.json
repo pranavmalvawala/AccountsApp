@@ -35,12 +35,12 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy-staging": "export REACT_APP_STAGE=staging&& npm run build",
-    "exec-deploy-staging": "aws s3 sync build/ s3://staging-access-management-app",
-    "postdeploy-staging": "aws cloudfront create-invalidation --distribution-id E2G92YL6MEH2KZ --paths /*",
+    "exec-deploy-staging": "aws s3 sync build/ s3://staging-accounts-app",
+    "postdeploy-staging": "aws cloudfront create-invalidation --distribution-id E1MQL48H8S17JD --paths /*",
     "deploy-staging": "npm run predeploy-staging && npm run exec-deploy-staging && npm run postdeploy-staging",
     "predeploy-prod": "export REACT_APP_STAGE=prod&& npm run build",
-    "exec-deploy-prod": "aws s3 sync build/ s3://access-management-app",
-    "postdeploy-prod": "aws cloudfront create-invalidation --distribution-id E5IH8CHDJPPIV --paths /*",
+    "exec-deploy-prod": "aws s3 sync build/ s3://accounts-app",
+    "postdeploy-prod": "aws cloudfront create-invalidation --distribution-id E3NOF1LZOPAI6F --paths /*",
     "deploy-prod": "npm run predeploy-prod && npm run exec-deploy-prod && npm run postdeploy-prod"
   },
   "eslintConfig": {
