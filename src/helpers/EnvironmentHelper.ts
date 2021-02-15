@@ -5,6 +5,7 @@ export class EnvironmentHelper {
     static ChumsUrl = "";
     static B1Url = "";
     static ContentRoot = "";
+    static supportEmail = process.env.REACT_APP_SUPPORT_EMAIL;
 
     private static AccessApi = "";
     private static StreamingLiveApi = "";
