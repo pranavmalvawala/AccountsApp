@@ -66,7 +66,7 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
 
     const getApps = () => {
         if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit)) return null;
-        else return (<ChurchApps church={church} redirectFunction={setRedirectUrl} />);
+        else return (<ChurchApps church={church} redirectFunction={setRedirectUrl} updatedFunction={handleChurchUpdated} />);
     }
 
 

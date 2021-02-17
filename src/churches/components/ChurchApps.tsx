@@ -1,8 +1,7 @@
 import React from 'react';
-//import { RoleInterface, RolePermissionInterface } from '../../helpers';
 import { ApiHelper, ChurchInterface, DisplayBox, ChurchAppInterface, ApplicationInterface, UserHelper, LoginResponseInterface, ErrorMessages, Permissions } from './';
 
-interface Props { church: ChurchInterface, redirectFunction: (url: string) => void }
+interface Props { church: ChurchInterface, redirectFunction: (url: string) => void, updatedFunction: () => void }
 
 export const ChurchApps: React.FC<Props> = (props) => {
 
@@ -22,44 +21,8 @@ export const ChurchApps: React.FC<Props> = (props) => {
     const activate = async (churchId: number, appName: string) => {
         var resp: LoginResponseInterface = await ApiHelper.post("/churchApps/register", { appName: appName }, "AccessApi");
         if (resp.errors !== undefined) { setErrors(resp.errors); }
-        else {
-            resp = await ApiHelper.post("/users/switchApp", { churchId: churchId, appName: appName }, "AccessApi");
-            initApp(appName, resp);
-        }
+        props.updatedFunction();
     }
-    /*
-        const initSLHostPermissions = async (church: ChurchInterface) => {
-            //Need to find a way to not hard code this.
-            var role: RoleInterface = { appName: "StreamingLive", churchId: church.id, name: "Hosts" };
-            role.id = (await ApiHelper.post('/roles', [role]))[0].id;
-    
-            const permissions: RolePermissionInterface[] = [];
-            permissions.push({ churchId: church.id, contentType: "Chat", action: "Host", roleId: role.id });
-            await ApiHelper.post('/rolepermissions', permissions);
-        }*/
-
-    const initApp = async (appName: string, loginResp: LoginResponseInterface) => {
-        /*
-        const appJwt = loginResp.token;
-
-        var apiUrl = "";
-        var redirectUrl = "";
-        var additionalCode = async (church: ChurchInterface) => { }
-        switch (appName) {
-            case "CHUMS": apiUrl = EnvironmentHelper.ChumsApi; redirectUrl = EnvironmentHelper.ChumsUrl; break;
-            case "StreamingLive": apiUrl = EnvironmentHelper.StreamingLiveApi; redirectUrl = EnvironmentHelper.StreamingLiveUrl; additionalCode = initSLHostPermissions; break;
-            case "B1": apiUrl = EnvironmentHelper.B1Api; redirectUrl = EnvironmentHelper.B1Url; break;
-        }
-
-        if (apiUrl !== "") {
-            await additionalCode(props.church);
-            const data = { user: loginResp.user, church: props.church }
-            var resp: LoginResponseInterface = await ApiHelper.appApiPost(appJwt, apiUrl + "/churches/init", data);
-            if (resp.errors !== undefined) { setErrors(resp.errors); }
-            else window.location.href = redirectUrl;
-        }*/
-    }
-
 
     const handleEditAccess = (e: React.MouseEvent) => {
         e.preventDefault();
