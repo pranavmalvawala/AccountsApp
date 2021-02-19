@@ -36,7 +36,7 @@ export const AdminPage = () => {
     const handleEditAccess = async (e: React.MouseEvent) => {
         e.preventDefault();
         var anchor = e.currentTarget as HTMLAnchorElement;
-        var churchId = parseInt(anchor.getAttribute('data-churchid'), 0);
+        var churchId = anchor.getAttribute('data-churchid');
         var appName = anchor.getAttribute('data-appname');
 
         var churchLoaded = false;
