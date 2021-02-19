@@ -15,7 +15,7 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
     const context = React.useContext(UserContext);
 
     const loadData = () => {
-        const churchId = parseInt(match.params.id, 0);
+        const churchId = match.params.id;
         if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId).then(() => { setRedirectUrl("/settings/"); });
         else {
             ApiHelper.get('/churches/' + match.params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));

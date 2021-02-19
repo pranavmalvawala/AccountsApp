@@ -1,9 +1,9 @@
 import React from 'react';
-import { ApiHelper, InputBox, RoleInterface } from './';
+import { ApiHelper, InputBox, RoleInterface, UniqueIdHelper } from './';
 
 interface Props {
     appName: string,
-    roleId: number,
+    roleId: string,
     updatedFunction: () => void
 }
 
@@ -12,7 +12,7 @@ export const RoleEdit: React.FC<Props> = (props) => {
     const [role, setRole] = React.useState<RoleInterface>({} as RoleInterface);
 
     const loadData = () => {
-        if (props.roleId > 0) ApiHelper.get('/roles/' + props.roleId, "AccessApi").then((data: RoleInterface) => setRole(data));
+        if (!UniqueIdHelper.isMissing(props.roleId)) ApiHelper.get('/roles/' + props.roleId, "AccessApi").then((data: RoleInterface) => setRole(data));
         else setRole({} as RoleInterface);
     }
 
@@ -40,7 +40,7 @@ export const RoleEdit: React.FC<Props> = (props) => {
 
 
     return (
-        <InputBox id="roleBox" headerIcon="fas fa-lock" headerText="Edit Role" saveFunction={handleSave} cancelFunction={handleCancel} deleteFunction={(props.roleId > 0) ? handleDelete : undefined} >
+        <InputBox id="roleBox" headerIcon="fas fa-lock" headerText="Edit Role" saveFunction={handleSave} cancelFunction={handleCancel} deleteFunction={(!UniqueIdHelper.isMissing(props.roleId)) ? handleDelete : undefined} >
             <div className="form-group">
                 <label>Role Name</label>
                 <input type="text" className="form-control" value={role.name} onChange={handleChange} onKeyDown={handleKeyDown} />

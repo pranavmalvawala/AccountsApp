@@ -11,18 +11,18 @@ type TParams = { id?: string, app?: string };
 
 export const AppAccess = ({ match }: RouteComponentProps<TParams>) => {
     const [roles, setRoles] = React.useState<RoleInterface[]>([]);
-    const [selectedRoleId, setSelectedRoleId] = React.useState(-1);
+    const [selectedRoleId, setSelectedRoleId] = React.useState("notset");
     const [redirectUrl, setRedirectUrl] = React.useState<string>("");
     const context = React.useContext(UserContext);
 
     const loadData = () => {
-        const churchId = parseInt(match.params.id, 0);
+        const churchId = match.params.id;
         if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId).then(() => { setRedirectUrl("/settings/"); });
         ApiHelper.get('/roles/app/' + match.params.app, "AccessApi").then(data => setRoles(data));
     }
     const getEditContent = () => {
         if (!UserHelper.checkAccess(Permissions.accessApi.roles.edit)) return null;
-        else return (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); setSelectedRoleId(0); }} ><i className="fas fa-plus"></i></a>);
+        else return (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); setSelectedRoleId(""); }} ><i className="fas fa-plus"></i></a>);
     }
 
     const getRows = () => {
@@ -38,10 +38,10 @@ export const AppAccess = ({ match }: RouteComponentProps<TParams>) => {
         return result;
     }
 
-    const handleUpdate = () => { loadData(); setSelectedRoleId(-1); }
+    const handleUpdate = () => { loadData(); setSelectedRoleId("notset"); }
 
     const getSidebar = () => {
-        if (selectedRoleId === -1) return <></>
+        if (selectedRoleId === "notset") return <></>
         else return (<RoleEdit roleId={selectedRoleId} updatedFunction={handleUpdate} appName={match.params.app} ></RoleEdit>)
     }
 
