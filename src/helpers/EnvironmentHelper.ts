@@ -11,6 +11,7 @@ export class EnvironmentHelper {
     private static StreamingLiveApi = "";
     private static ChumsApi = "";
     private static B1Api = "";
+    static GoogleAnalyticsTag = "";
 
     static init = () => {
         switch (process.env.REACT_APP_STAGE) {
@@ -36,6 +37,7 @@ export class EnvironmentHelper {
         EnvironmentHelper.ChumsUrl = process.env.REACT_APP_CHUMS_URL || "";
         EnvironmentHelper.B1Api = process.env.REACT_APP_B1_API || "";
         EnvironmentHelper.B1Url = process.env.REACT_APP_B1_URL || "";
+        EnvironmentHelper.GoogleAnalyticsTag = process.env.REACT_APP_GOOGLE_ANALYTICS || "";
     }
 
     //NOTE: None of these values are secret.
@@ -48,6 +50,7 @@ export class EnvironmentHelper {
         EnvironmentHelper.ChumsUrl = "https://app.staging.chums.org";
         EnvironmentHelper.B1Api = "https://api.staging.b1.church";
         EnvironmentHelper.B1Url = "https://app.staging.b1.church";
+        EnvironmentHelper.GoogleAnalyticsTag = "";
     }
 
     //NOTE: None of these values are secret.
@@ -60,6 +63,7 @@ export class EnvironmentHelper {
         EnvironmentHelper.ChumsUrl = "https://app.chums.org";
         EnvironmentHelper.B1Api = "https://api.b1.church";
         EnvironmentHelper.B1Url = "https://app.b1.church";
+        EnvironmentHelper.GoogleAnalyticsTag = "UA-164774603-7";
     }
 
 }

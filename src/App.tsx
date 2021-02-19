@@ -1,16 +1,14 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { ControlPanel } from './ControlPanel';
+import { BrowserRouter as Router } from "react-router-dom";
 import { UserProvider } from './UserContext'
+import { Routing } from "./Routing";
 
 const App: React.FC = () => {
   return (
     <UserProvider>
       <Router>
-        <Switch>
-          <Route path="/"><ControlPanel /></Route>
-        </Switch>
+        <Routing />
       </Router>
     </UserProvider>
   );
