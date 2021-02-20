@@ -16,11 +16,10 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
 
     const loadData = () => {
         const churchId = match.params.id;
-        if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId).then(() => { setRedirectUrl("/settings/"); });
-        else {
-            ApiHelper.get('/churches/' + match.params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
-            ApiHelper.get('/churchApps/', "AccessApi").then(data => { console.log(data); setChurchApps(data) });
-        }
+        if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId);
+
+        ApiHelper.get('/churches/' + match.params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
+        ApiHelper.get('/churchApps/', "AccessApi").then(data => { setChurchApps(data) });
 
     }
 
