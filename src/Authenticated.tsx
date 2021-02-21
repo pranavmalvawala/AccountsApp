@@ -5,6 +5,7 @@ import { ProfilePage } from './profile/ProfilePage';
 import { RolePage } from './churches/RolePage';
 import { AppAccess } from './churches/AppAccess';
 import { ChurchesPage } from './churches/ChurchesPage';
+import { ManageChurch } from './churches/ManageChurch';
 import { ChurchPage } from './churches/ChurchPage';
 import { AdminPage } from './admin/AdminPage';
 import UserContext from "./UserContext";
@@ -29,6 +30,7 @@ export const Authenticated: React.FC<Props> = (props) => {
         <Switch>
           <Route path="/login"><Redirect to={props.location} /></Route>
           <Route path="/admin"><AdminPage /></Route>
+          <Route path="/churches/:id/manage" component={ManageChurch} />
           <Route path="/churches/:id/:app/:roleId" component={RolePage} />
           <Route path="/churches/:id/:app" component={AppAccess} />
           <Route path="/churches/:id" component={ChurchPage} />
