@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap'
 import UserContext from '../UserContext';
-import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, EnvironmentHelper, ChurchSettings, ChurchApps, ChurchAppInterface, Permissions } from './components'
+import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, EnvironmentHelper, ChurchAppInterface, Permissions } from './components'
 import { RouteComponentProps } from "react-router-dom";
 
 type TParams = { id?: string };

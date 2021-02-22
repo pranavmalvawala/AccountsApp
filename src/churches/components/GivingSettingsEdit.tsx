@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApiHelper, ChurchInterface, InputBox, ErrorMessages } from '.';
+import { ApiHelper } from '.';
 import { Row, Col, FormGroup } from 'react-bootstrap';
 import { PaymentGatewaysInterface, UniqueIdHelper } from '../../helpers';
 
@@ -52,6 +52,10 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
         }
     }
 
+    const checkSave = () => {
+        if (props.saveTrigger !== null) save()
+    };
+
     const loadData = async () => {
         const gateways = await ApiHelper.get("/gateways", "GivingApi");
         if (gateways.length === 0) {
@@ -70,7 +74,7 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
 
 
     React.useEffect(() => { if (!UniqueIdHelper.isMissing(props.churchId)) loadData() }, [props.churchId]);
-    React.useEffect(() => { if (props.saveTrigger !== null) save() }, [props.saveTrigger]);
+    React.useEffect(checkSave, [props.saveTrigger]);
 
     return (
         <>
