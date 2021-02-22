@@ -534,4 +534,7 @@ label .description {
   overflow-x: hidden;
 }
 
+
+.inputBox .subHead { margin: 10px -10px 10px -10px; padding: 10px; border-top:4px solid #03a9f4; border-bottom: 1px solid #ddd; font-weight: bold; }
+
 .disabled {color:#999;}

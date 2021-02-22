@@ -9,7 +9,7 @@ export class EnvironmentHelper {
 
     private static AccessApi = "";
     private static StreamingLiveApi = "";
-    private static ChumsApi = "";
+    private static GivingApi = "";
     private static B1Api = "";
     static GoogleAnalyticsTag = "";
 
@@ -22,7 +22,7 @@ export class EnvironmentHelper {
         ApiHelper.apiConfigs = [
             { keyName: "AccessApi", url: EnvironmentHelper.AccessApi, jwt: "", permisssions: [] },
             { keyName: "StreamingLiveApi", url: EnvironmentHelper.StreamingLiveApi, jwt: "", permisssions: [] },
-            { keyName: "ChumsApi", url: EnvironmentHelper.ChumsApi, jwt: "", permisssions: [] },
+            { keyName: "GivingApi", url: EnvironmentHelper.GivingApi, jwt: "", permisssions: [] },
             { keyName: "AcceB1ApissApi", url: EnvironmentHelper.B1Api, jwt: "", permisssions: [] }
         ];
         ApiHelper.defaultApi = "AccessApi";
@@ -33,7 +33,7 @@ export class EnvironmentHelper {
         EnvironmentHelper.ContentRoot = process.env.REACT_APP_CONTENT_ROOT || "";
         EnvironmentHelper.StreamingLiveApi = process.env.REACT_APP_STREAMINGLIVE_API || "";
         EnvironmentHelper.StreamingLiveUrl = process.env.REACT_APP_STREAMINGLIVE_URL || "";
-        EnvironmentHelper.ChumsApi = process.env.REACT_APP_CHUMS_API || "";
+        EnvironmentHelper.GivingApi = process.env.REACT_APP_GIVING_API || "";
         EnvironmentHelper.ChumsUrl = process.env.REACT_APP_CHUMS_URL || "";
         EnvironmentHelper.B1Api = process.env.REACT_APP_B1_API || "";
         EnvironmentHelper.B1Url = process.env.REACT_APP_B1_URL || "";
@@ -46,7 +46,7 @@ export class EnvironmentHelper {
         EnvironmentHelper.ContentRoot = "";
         EnvironmentHelper.StreamingLiveApi = "https://api.staging.streaminglive.church";
         EnvironmentHelper.StreamingLiveUrl = "https://admin.staging.streaminglive.church";
-        EnvironmentHelper.ChumsApi = "https://api.staging.chums.org";
+        EnvironmentHelper.GivingApi = "https://givingapi.staging.churchapps.org";
         EnvironmentHelper.ChumsUrl = "https://app.staging.chums.org";
         EnvironmentHelper.B1Api = "https://api.staging.b1.church";
         EnvironmentHelper.B1Url = "https://app.staging.b1.church";
@@ -59,7 +59,7 @@ export class EnvironmentHelper {
         EnvironmentHelper.ContentRoot = "";
         EnvironmentHelper.StreamingLiveApi = "https://api.streaminglive.church";
         EnvironmentHelper.StreamingLiveUrl = "https://admin.streaminglive.church";
-        EnvironmentHelper.ChumsApi = "https://api.chums.org";
+        EnvironmentHelper.GivingApi = "https://givingapi.churchapps.org";
         EnvironmentHelper.ChumsUrl = "https://app.chums.org";
         EnvironmentHelper.B1Api = "https://api.b1.church";
         EnvironmentHelper.B1Url = "https://app.b1.church";

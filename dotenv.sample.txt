@@ -2,6 +2,7 @@
 PORT=3300
 
 REACT_APP_ACCESS_API=https://accessapi.staging.churchapps.org
+REACT_APP_GIVING_API=http://givingapi.staging.churchapps.org
 
 REACT_APP_STREAMINGLIVE_API=https://api.staging.streaminglive.church
 REACT_APP_STREAMINGLIVE_URL=https://admin.staging.streaminglive.church
