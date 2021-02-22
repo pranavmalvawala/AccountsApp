@@ -8,9 +8,11 @@ interface Props { church: ChurchInterface, updatedFunction: () => void }
 export const ChurchSettingsEdit: React.FC<Props> = (props) => {
     const [church, setChurch] = React.useState({} as ChurchInterface);
     const [errors, setErrors] = React.useState([]);
+    const [saveTrigger, setSaveTrigger] = React.useState<Date | null>(null);
 
     const handleSave = async () => {
         if (validate()) {
+            setSaveTrigger(new Date());
             const resp = await ApiHelper.post('/churches', [church], "AccessApi");
             if (resp.errors !== undefined) setErrors(resp.errors);
             else props.updatedFunction();
@@ -104,7 +106,7 @@ export const ChurchSettingsEdit: React.FC<Props> = (props) => {
                 <label>Country</label>
                 <input id="country" type="text" className="form-control" value={church?.country || ''} onChange={handleChange} onKeyDown={handleKeyDown} />
             </FormGroup>
-            <GivingSettingsEdit churchId={church?.id || ""} saveHack={null} />
+            <GivingSettingsEdit churchId={church?.id || ""} saveTrigger={saveTrigger} />
 
         </InputBox>
     );

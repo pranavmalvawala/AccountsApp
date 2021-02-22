@@ -3,7 +3,7 @@ import { ApiHelper, ChurchInterface, InputBox, ErrorMessages } from '.';
 import { Row, Col, FormGroup } from 'react-bootstrap';
 import { PaymentGatewaysInterface, UniqueIdHelper } from '../../helpers';
 
-interface Props { churchId: string, saveHack: Date | null }
+interface Props { churchId: string, saveTrigger: Date | null }
 
 export const GivingSettingsEdit: React.FC<Props> = (props) => {
     const [gateway, setGateway] = React.useState<PaymentGatewaysInterface>(null);
@@ -68,7 +68,7 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
 
 
     React.useEffect(() => { if (!UniqueIdHelper.isMissing(props.churchId)) loadData() }, [props.churchId]);
-    React.useEffect(() => { if (props.saveHack !== null) save() }, [props.saveHack]);
+    React.useEffect(() => { if (props.saveTrigger !== null) save() }, [props.saveTrigger]);
 
     return (
         <>
