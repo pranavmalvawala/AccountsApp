@@ -2,6 +2,7 @@ import React from 'react';
 import { ApiHelper, ChurchInterface, InputBox, ErrorMessages } from './';
 import { Row, Col, FormGroup } from 'react-bootstrap';
 import { GivingSettingsEdit } from './GivingSettingsEdit';
+import { UserHelper, Permissions } from '../../helpers';
 
 interface Props { church: ChurchInterface, updatedFunction: () => void }
 
@@ -43,6 +44,11 @@ export const ChurchSettingsEdit: React.FC<Props> = (props) => {
         }
 
         setChurch(c);
+    }
+
+    const giveSection = () => {
+        if (!UserHelper.checkAccess(Permissions.givingApi.settings.edit)) return null;
+        else return (<GivingSettingsEdit churchId={church?.id || ""} saveTrigger={saveTrigger} />)
     }
 
 
@@ -106,7 +112,7 @@ export const ChurchSettingsEdit: React.FC<Props> = (props) => {
                 <label>Country</label>
                 <input id="country" type="text" className="form-control" value={church?.country || ''} onChange={handleChange} onKeyDown={handleKeyDown} />
             </FormGroup>
-            <GivingSettingsEdit churchId={church?.id || ""} saveTrigger={saveTrigger} />
+            {giveSection()}
 
         </InputBox>
     );
