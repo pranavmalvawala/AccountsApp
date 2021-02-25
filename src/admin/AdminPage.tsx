@@ -17,8 +17,8 @@ export const AdminPage = () => {
     const getChurchRows = () => {
         if (churches === null) return;
         const result: JSX.Element[] = [];
-        churches.forEach(c => {
-            result.push(<tr>
+        churches.forEach((c, index) => {
+            result.push(<tr key={index}>
                 <td>{c.name}</td>
                 <td>{getManageAccessLink(c, "CHUMS")}{getManageAccessLink(c, "StreamingLive")}</td>
             </tr>);

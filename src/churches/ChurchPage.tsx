@@ -25,8 +25,8 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
     const getAppRows = () => {
         const result: JSX.Element[] = [];
         if (church !== null) {
-            churchApps?.forEach(app => {
-                result.push(<tr>
+            churchApps?.forEach((app, index) => {
+                result.push(<tr key={index}>
                     <td>{app.appName}</td>
                     <td>{getLoginLink(church, app.appName)}</td>
                 </tr>);

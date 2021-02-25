@@ -13,8 +13,8 @@ export const ChurchesPage = () => {
     const getChurchRows = () => {
         if (churches === null) return;
         const result: JSX.Element[] = [];
-        churches.forEach(c => {
-            result.push(<tr className="group">
+        churches.forEach((c, index) => {
+            result.push(<tr className="group" key={index}>
                 <td colSpan={2}>
                     <Link to={"/churches/" + c.id.toString()}>{c.name}</Link>
                 </td>
