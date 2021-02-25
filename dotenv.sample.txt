@@ -1,5 +1,5 @@
 #Update values and rename to .env
-PORT=3300
+PORT=3401
 
 REACT_APP_ACCESS_API=https://accessapi.staging.churchapps.org
 REACT_APP_GIVING_API=http://givingapi.staging.churchapps.org
