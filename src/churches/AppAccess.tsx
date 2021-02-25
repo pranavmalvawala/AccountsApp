@@ -3,7 +3,6 @@ import { ApiHelper, DisplayBox, RoleInterface, RoleEdit, UserHelper } from './co
 import { Link } from 'react-router-dom'
 import { Row, Col, Table } from 'react-bootstrap';
 import { RouteComponentProps } from "react-router-dom";
-import { Redirect } from 'react-router-dom';
 import UserContext from '../UserContext';
 import { Permissions } from '../helpers'
 
@@ -12,12 +11,11 @@ type TParams = { id?: string, app?: string };
 export const AppAccess = ({ match }: RouteComponentProps<TParams>) => {
     const [roles, setRoles] = React.useState<RoleInterface[]>([]);
     const [selectedRoleId, setSelectedRoleId] = React.useState("notset");
-    const [redirectUrl, setRedirectUrl] = React.useState<string>("");
     const context = React.useContext(UserContext);
 
     const loadData = () => {
         const churchId = match.params.id;
-        if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId).then(() => { setRedirectUrl("/settings/"); });
+        if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId);
         ApiHelper.get('/roles/app/' + match.params.app, "AccessApi").then(data => setRoles(data));
     }
     const getEditContent = () => {
@@ -48,7 +46,6 @@ export const AppAccess = ({ match }: RouteComponentProps<TParams>) => {
     React.useEffect(loadData, []);
 
     if (!UserHelper.checkAccess(Permissions.accessApi.roles.view)) return (<></>);
-    if (redirectUrl !== '') return <Redirect to={redirectUrl}></Redirect>;
     else return (
         <>
             <h1><i className="fas fa-lock"></i> Roles</h1>

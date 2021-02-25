@@ -27,7 +27,7 @@ export const ChurchApps: React.FC<Props> = (props) => {
     const handleEditAccess = (e: React.MouseEvent) => {
         e.preventDefault();
         var anchor = e.currentTarget as HTMLAnchorElement;
-        var churchId = parseInt(anchor.getAttribute('data-churchid'), 0);
+        var churchId = anchor.getAttribute('data-churchid');
         var appName = anchor.getAttribute('data-appname');
         props.redirectFunction("/churches/" + churchId.toString() + "/" + appName)
     }
