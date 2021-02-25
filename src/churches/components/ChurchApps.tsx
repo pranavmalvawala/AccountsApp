@@ -48,13 +48,13 @@ export const ChurchApps: React.FC<Props> = (props) => {
     const getApps = () => {
         if (apps === null) return null;
         const result: JSX.Element[] = [];
-        apps.forEach(a => {
+        apps.forEach((a, index) => {
             var churchApp = null;
             churchApps?.forEach(ca => { if (ca.appName === a.keyName) churchApp = ca; });
             if (churchApp === null) {
-                result.push(<tr><td className="disabled">{a.name}</td><td><a href="about:blank" data-churchid={props.church.id} data-appname={a.keyName} onClick={handleActivate}>Activate</a></td></tr>)
+                result.push(<tr key={index}><td className="disabled">{a.name}</td><td><a href="about:blank" data-churchid={props.church.id} data-appname={a.keyName} onClick={handleActivate}>Activate</a></td></tr>)
             } else {
-                result.push(<tr><td>{a.name}</td><td>{getManageAccessLink(a.keyName)}</td></tr>)
+                result.push(<tr key={index}><td>{a.name}</td><td>{getManageAccessLink(a.keyName)}</td></tr>)
             }
 
         });
@@ -68,8 +68,10 @@ export const ChurchApps: React.FC<Props> = (props) => {
             <ErrorMessages errors={errors} />
             <DisplayBox id="churchSettingsBox" headerIcon="fas fa-church" headerText={"Apps for " + props.church?.name || ""} >
                 <table className="table table-sm">
-                    <tr><th>Application</th><th>Action</th></tr>
-                    {getApps()}
+                    <thead><tr><th>Application</th><th>Action</th></tr></thead>
+                    <tbody>
+                        {getApps()}
+                    </tbody>
                 </table>
             </DisplayBox>
         </>

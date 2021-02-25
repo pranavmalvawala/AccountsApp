@@ -23,10 +23,10 @@ export const ChurchSettings: React.FC<Props> = (props) => {
         var result: JSX.Element[] = [];
         if (props.church !== null) {
 
-            if (!isEmpty(props.church.address1)) result.push(<>{props.church.address1}<br /></>);
-            if (!isEmpty(props.church.address2)) result.push(<>{props.church.address2}<br /></>);
-            if (!isEmpty(props.church.city)) result.push(<>{props.church.city}, {props.church.state} {props.church.zip}<br /></>);
-            if (!isEmpty(props.church.country)) result.push(<>{props.church.country}</>);
+            if (!isEmpty(props.church.address1)) result.push(<span key="address1">{props.church.address1}<br /></span>);
+            if (!isEmpty(props.church.address2)) result.push(<span key="address2">{props.church.address2}<br /></span>);
+            if (!isEmpty(props.church.city)) result.push(<span key="state">{props.church.city}, {props.church.state} {props.church.zip}<br /></span>);
+            if (!isEmpty(props.church.country)) result.push(<span key="country">{props.church.country}</span>);
         }
         return (<>{result}</>);
     }

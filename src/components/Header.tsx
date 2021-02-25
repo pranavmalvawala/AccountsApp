@@ -19,9 +19,9 @@ export const Header: React.FC = () => {
     if (UserHelper.churches.length < 2) return null;
     else {
       var result: JSX.Element[] = [];
-      UserHelper.churches.forEach(c => {
+      UserHelper.churches.forEach((c, index) => {
         const churchName = (c.id === UserHelper.currentChurch.id) ? (<b>{c.name}</b>) : (c.name);
-        result.push(<li className="nav-tem"><a href="about:blank" data-id={c.id} onClick={switchChurch} className="nav-link"><i className="fas fa-external-link-alt"></i> {churchName}</a></li>);
+        result.push(<li className="nav-tem" key={index}><a href="about:blank" data-id={c.id} onClick={switchChurch} className="nav-link"><i className="fas fa-external-link-alt"></i> {churchName}</a></li>);
       });
       return result;
     }
