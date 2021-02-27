@@ -1,15 +1,17 @@
 import React from 'react';
 import { ChurchInterface, ApiHelper, DisplayBox, UserHelper } from "./components";
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col, InputGroup, FormControl, Button } from 'react-bootstrap'
 import UserContext from '../UserContext';
 import { Redirect } from 'react-router-dom';
 
 export const AdminPage = () => {
-    const [churches, setChurches] = React.useState<ChurchInterface[]>(null);
+    const [searchText, setSearchText] = React.useState<string>('')
+    const [churches, setChurches] = React.useState<ChurchInterface[]>([]);
     const [redirectUrl, setRedirectUrl] = React.useState<string>("");
 
     const loadData = () => {
-        ApiHelper.get("/churches/all", "AccessApi").then(data => setChurches(data));
+        const term = escape(searchText.trim());
+        ApiHelper.get("/churches/all?term=" + term, "AccessApi").then(data => setChurches(data));
     }
 
     const context = React.useContext(UserContext);
@@ -52,6 +54,10 @@ export const AdminPage = () => {
 
     }
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.currentTarget.value);
+
+    const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === "Enter") { e.preventDefault(); loadData(); } }
+
     React.useEffect(loadData, []);
 
     if (redirectUrl !== '') return <Redirect to={redirectUrl}></Redirect>;
@@ -63,15 +69,24 @@ export const AdminPage = () => {
             <Row>
                 <Col md={8}>
                     <DisplayBox headerIcon="fas fa-key" headerText="Your access">
-                        <table className="table table-sm" id="adminChurchesTable">
-                            <thead>
-                                <tr>
-                                    <th>Church</th>
-                                    <th>Apps</th>
-                                </tr>
-                                {getChurchRows()}
-                            </thead>
-                        </table>
+                        <InputGroup>
+                            <FormControl id="searchText" data-cy="search-input" name="searchText" type="text" placeholder="Church Name" value={searchText} onChange={handleChange} onKeyDown={handleKeyDown} />
+                            <InputGroup.Append><Button id="searchButton" data-cy="search-button" variant="primary" onClick={loadData}>Search</Button></InputGroup.Append>
+                        </InputGroup>
+                        <br />
+                        {
+                            churches.length === 0 ? <>No church found.  Please search for a different name.</> : (
+                                <table className="table table-sm" id="adminChurchesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Church</th>
+                                            <th>Apps</th>
+                                        </tr>
+                                        {getChurchRows()}
+                                    </thead>
+                                </table>
+                            )
+                        }                       
                     </DisplayBox>
                 </Col>
                 <Col md={4}>
