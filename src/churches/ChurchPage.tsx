@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap'
 import UserContext from '../UserContext';
 import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, EnvironmentHelper, ChurchAppInterface, Permissions } from './components'
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, useHistory } from "react-router-dom";
 
 type TParams = { id?: string };
 
@@ -11,6 +11,7 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
     const [church, setChurch] = React.useState<ChurchInterface>(null);
     const [churchApps, setChurchApps] = React.useState<ChurchAppInterface[]>([]);
     const context = React.useContext(UserContext);
+    const history = useHistory();
 
     const loadData = () => {
         const churchId = match.params.id;
@@ -52,7 +53,7 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
 
     const getSidebar = () => {
         if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit)) return null;
-        else return (<Button variant="primary" size="lg" block href={"/churches/" + church?.id + "/manage"} >Edit Church Settings</Button>);
+        else return (<Button variant="primary" size="lg" block onClick={() => history.push(`/churches/${church?.id}/manage`)}>Edit Church Settings</Button>);
     }
 
 

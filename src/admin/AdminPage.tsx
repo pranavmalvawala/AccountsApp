@@ -1,7 +1,6 @@
 import React from 'react';
 import { ChurchInterface, ApiHelper, DisplayBox, UserHelper } from "./components";
 import { Row, Col, InputGroup, FormControl, Button } from 'react-bootstrap'
-import UserContext from '../UserContext';
 import { Redirect } from 'react-router-dom';
 
 export const AdminPage = () => {
@@ -14,23 +13,20 @@ export const AdminPage = () => {
         ApiHelper.get("/churches/all?term=" + term, "AccessApi").then(data => setChurches(data));
     }
 
-    const context = React.useContext(UserContext);
-
     const getChurchRows = () => {
         if (churches === null) return;
         const result: JSX.Element[] = [];
         churches.forEach((c, index) => {
             result.push(<tr key={index}>
-                <td>{c.name}</td>
-                <td>{getManageAccessLink(c, "CHUMS")}{getManageAccessLink(c, "StreamingLive")}</td>
+                <td>{getManageAccessLink(c)}</td>
             </tr>);
         });
         return result;
     }
 
-    const getManageAccessLink = (church: ChurchInterface, appName: string) => {
+    const getManageAccessLink = (church: ChurchInterface) => {
         var result: JSX.Element = null;
-        result = (<a href="about:blank" data-churchid={church.id} data-appname={appName} onClick={handleEditAccess} style={{ marginRight: 40 }} ><i className="fas fa-key"></i> {appName}</a>);
+        result = (<a href="about:blank" data-churchid={church.id} onClick={handleEditAccess} style={{ marginRight: 40 }} >{church.name}</a>);
         return result;
     }
 
@@ -39,18 +35,14 @@ export const AdminPage = () => {
         e.preventDefault();
         var anchor = e.currentTarget as HTMLAnchorElement;
         var churchId = anchor.getAttribute('data-churchid');
-        var appName = anchor.getAttribute('data-appname');
 
         var churchLoaded = false;
         UserHelper.churches.forEach(c => { if (c.id === churchId) churchLoaded = true });
         if (!churchLoaded) {
-            const church = await ApiHelper.get('/churches/' + churchId + "?include=permissions", "AccessApi");
-            UserHelper.churches.push(church);
+            const result = await ApiHelper.get('/churches/' + churchId + "/impersonate", "AccessApi");
+            UserHelper.churches.push(...result.churches);
         }
-        const keyName = window.location.hostname.split(".")[0];
-        UserHelper.selectChurch(context, churchId, keyName).then(() => {
-            setRedirectUrl("/access/" + appName);
-        });
+        setRedirectUrl(`/churches/${churchId}/manage`);
 
     }
 
@@ -79,8 +71,7 @@ export const AdminPage = () => {
                                 <table className="table table-sm" id="adminChurchesTable">
                                     <thead>
                                         <tr>
-                                            <th>Church</th>
-                                            <th>Apps</th>
+                                            <th>List of all Churches</th>
                                         </tr>
                                         {getChurchRows()}
                                     </thead>
