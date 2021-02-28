@@ -39,10 +39,9 @@ export const AdminPage = () => {
         var churchLoaded = false;
         UserHelper.churches.forEach(c => { if (c.id === churchId) churchLoaded = true });
         if (!churchLoaded) {
-            const church = await ApiHelper.get('/churches/' + churchId + "?include=permissions", "AccessApi");
-            UserHelper.churches.push(church);
+            const result = await ApiHelper.get('/churches/' + churchId + "/impersonate", "AccessApi");
+            UserHelper.churches.push(...result.churches);
         }
-
         setRedirectUrl(`/churches/${churchId}/manage`);
 
     }
