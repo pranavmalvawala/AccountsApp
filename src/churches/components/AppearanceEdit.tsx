@@ -37,7 +37,7 @@ export const AppearanceEdit: React.FC<Props> = (props) => {
     }
 
     const getLogoUrl = (logoUrl: string) => {
-        if (logoUrl.indexOf("/data/") === 0) return EnvironmentHelper.ContentRoot + currentSettings.logoUrl.replace("/data/", "");
+        if (logoUrl?.indexOf("/data/") === 0) return EnvironmentHelper.ContentRoot + currentSettings.logoUrl.replace("/data/", "");
         else return logoUrl;
     }
     const getLogoLink = () => {
@@ -45,7 +45,7 @@ export const AppearanceEdit: React.FC<Props> = (props) => {
         return <a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); setEditLogo(true); }}>{logoImg}</a>
     }
 
-    const handleSave = () => { ApiHelper.post("/settings", [currentSettings], "StreamingLiveApi").then(props.updatedFunction); }
+    const handleSave = () => { ApiHelper.post("/settings", [currentSettings], "AccessApi").then(props.updatedFunction); }
 
     React.useEffect(() => { setCurrentSettings(props.settings); }, [props.settings]);
 

@@ -8,7 +8,7 @@ export const Appearance: React.FC<Props> = (props) => {
     const [currentSettings, setCurrentSettings] = React.useState<SettingInterface>();
     const [mode, setMode] = React.useState("display");
 
-    const loadData = () => { ApiHelper.get("/settings", "StreamingLiveApi").then(data => setCurrentSettings(data[0])); }
+    const loadData = () => { ApiHelper.get("/settings", "AccessApi").then(data => setCurrentSettings(data[0])) }
     const handleEdit = () => { setMode("edit"); }
     const handleUpdate = () => { setMode("display"); loadData(); props.updatedFunction(); }
 
