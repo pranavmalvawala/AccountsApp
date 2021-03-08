@@ -1,32 +1,42 @@
 import React from "react";
 import { Row, Col, FormGroup } from "react-bootstrap"
-import { InputBox, ApiHelper, SettingInterface, EnvironmentHelper, ImageEditor } from "."
+import { InputBox, ApiHelper, ImageEditor, GenericSettingInterface, ArrayHelper } from "."
 
 interface Props {
     updatedFunction?: () => void,
-    settings?: SettingInterface
+    settings?: GenericSettingInterface[],
 }
 
 export const AppearanceEdit: React.FC<Props> = (props) => {
-    const [currentSettings, setCurrentSettings] = React.useState<SettingInterface>();
+    const [currentSettings, setCurrentSettings] = React.useState<GenericSettingInterface[]>([]);
     const [editLogo, setEditLogo] = React.useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.currentTarget.value;
-        var s = { ...currentSettings };
-        switch (e.currentTarget.name) {
-            case "homePage": s.homePageUrl = val; break;
-            case "primary": s.primaryColor = val; break;
-            case "contrast": s.contrastColor = val; break;
+        const { name, value } = e.currentTarget;
+        const settings = [ ...currentSettings ]
+        const keySetting = settings.filter(c => c.keyName === name);
+
+        if (keySetting.length === 0) {
+            settings.push({ keyName: name, value, public: 1 });
+        } else {
+            keySetting[0].value = value;
         }
-        setCurrentSettings(s);
+
+        setCurrentSettings(settings);
     }
 
     const imageUpdated = (dataUrl: string) => {
         if (dataUrl !== null) {
-            var s = { ...currentSettings };
-            s.logoUrl = dataUrl;
-            setCurrentSettings(s);
+            const settings = [ ...currentSettings ];
+            const keySetting = settings.filter(s => s.keyName === "logoImage");
+
+            if (keySetting.length === 0) {
+                settings.push({ keyName: "logoImage", value: dataUrl, public: 1 });
+            } else {
+                keySetting[0].value = dataUrl;
+            }
+
+            setCurrentSettings(settings);
             setEditLogo(false);
         }
     }
@@ -36,16 +46,13 @@ export const AppearanceEdit: React.FC<Props> = (props) => {
         else return <ImageEditor settings={currentSettings} updatedFunction={imageUpdated}></ImageEditor>
     }
 
-    const getLogoUrl = (logoUrl: string) => {
-        if (logoUrl?.indexOf("/data/") === 0) return EnvironmentHelper.ContentRoot + currentSettings.logoUrl.replace("/data/", "");
-        else return logoUrl;
-    }
     const getLogoLink = () => {
-        var logoImg = (currentSettings && currentSettings?.logoUrl !== "") ? <img src={getLogoUrl(currentSettings.logoUrl)} alt="logo" className="img-fluid" /> : "none";
+        const logoImage = ArrayHelper.getOne(currentSettings, "keyName", "logoImage")
+        var logoImg = (currentSettings && logoImage !== null) ? <img src={logoImage.value} alt="logo" className="img-fluid" /> : "none";
         return <a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); setEditLogo(true); }}>{logoImg}</a>
     }
 
-    const handleSave = () => { ApiHelper.post("/settings", [currentSettings], "AccessApi").then(props.updatedFunction); }
+    const handleSave = () => {  ApiHelper.post("/settings", currentSettings, "AccessApi").then(props.updatedFunction); }
 
     React.useEffect(() => { setCurrentSettings(props.settings); }, [props.settings]);
 
@@ -60,20 +67,20 @@ export const AppearanceEdit: React.FC<Props> = (props) => {
 
                 <FormGroup>
                     <label>Home Page Url</label>
-                    <input type="text" className="form-control" name="homePage" value={currentSettings?.homePageUrl} onChange={handleChange} />
+                    <input type="text" className="form-control" name="homePageUrl" value={(ArrayHelper.getOne(currentSettings, "keyName", "homePageUrl"))?.value} onChange={handleChange} />
                 </FormGroup>
                 <div className="section">Colors</div>
                 <Row>
                     <Col>
                         <FormGroup>
                             <label>Primary</label>
-                            <input type="color" className="form-control" name="primary" value={currentSettings?.primaryColor} onChange={handleChange} />
+                            <input type="color" className="form-control" name="primaryColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryColor"))?.value} onChange={handleChange} />
                         </FormGroup>
                     </Col>
                     <Col>
                         <FormGroup>
                             <label>Contrast</label>
-                            <input type="color" className="form-control" name="contrast" value={currentSettings?.contrastColor} onChange={handleChange} />
+                            <input type="color" className="form-control" name="contrastColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "contrastColor"))?.value} onChange={handleChange} />
                         </FormGroup>
                     </Col>
                 </Row>

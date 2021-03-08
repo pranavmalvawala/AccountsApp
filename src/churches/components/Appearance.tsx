@@ -1,23 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Row, Col, FormGroup } from "react-bootstrap"
-import { ApiHelper, SettingInterface, AppearanceEdit, DisplayBox, EnvironmentHelper } from "."
+import { ApiHelper, AppearanceEdit, DisplayBox, GenericSettingInterface, ArrayHelper } from "."
 
 interface Props { updatedFunction?: () => void, enableEdit?: boolean }
 
 export const Appearance: React.FC<Props> = (props) => {
-    const [currentSettings, setCurrentSettings] = React.useState<SettingInterface>();
+    const [currentSettings, setCurrentSettings] = useState<GenericSettingInterface[]>([]);
     const [mode, setMode] = React.useState("display");
 
-    const loadData = () => { ApiHelper.get("/settings", "AccessApi").then(data => setCurrentSettings(data[0])) }
+    const loadData = () => { ApiHelper.get("/settings", "AccessApi").then(settings => setCurrentSettings(settings)) }
     const handleEdit = () => { setMode("edit"); }
     const handleUpdate = () => { setMode("display"); loadData(); props.updatedFunction(); }
 
     const getLogoLink = () => {
-        var logo = (currentSettings?.logoUrl || "");
-        if (logo.indexOf("http") === -1) logo = EnvironmentHelper.ContentRoot + logo;
+        var logo = (ArrayHelper.getOne(currentSettings, "keyName", "logoImage"))?.value;
 
-        var logoImg = (currentSettings && currentSettings?.logoUrl !== "") ? <img src={logo} alt="logo" className="img-fluid" /> : "No Logo";
-        return <a href={currentSettings?.homePageUrl} target="_blank" rel="noopener noreferrer" >{logoImg}</a>
+        var logoImg = (currentSettings && ArrayHelper.getOne(currentSettings, "keyName", "logoImage") !== null) ? <img src={logo} alt="logo" className="img-fluid" /> : "No Logo";
+        return <a href={(ArrayHelper.getOne(currentSettings, "keyName", "homePageUrl"))?.value} target="_blank" rel="noopener noreferrer" >{logoImg}</a>
     }
 
     React.useEffect(() => { loadData(); }, []);
@@ -38,13 +37,13 @@ export const Appearance: React.FC<Props> = (props) => {
                 <Col>
                     <FormGroup>
                         <label>Primary</label>
-                        <input type="color" className="form-control" name="primary" value={currentSettings?.primaryColor || ""} disabled={true} />
+                        <input type="color" className="form-control" name="primary" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryColor"))?.value} disabled={true} />
                     </FormGroup>
                 </Col>
                 <Col>
                     <FormGroup>
                         <label>Contrast</label>
-                        <input type="color" className="form-control" name="contrast" value={currentSettings?.contrastColor || ""} disabled={true} />
+                        <input type="color" className="form-control" name="contrast" value={(ArrayHelper.getOne(currentSettings, "keyName", "contrastColor"))?.value} disabled={true} />
                     </FormGroup>
                 </Col>
             </Row>

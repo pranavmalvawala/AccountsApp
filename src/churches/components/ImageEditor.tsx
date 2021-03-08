@@ -2,16 +2,15 @@ import React, { useCallback } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { Button } from "react-bootstrap";
-import { InputBox, SettingInterface } from ".";
+import { InputBox, GenericSettingInterface, ArrayHelper } from ".";
 
 
 interface Props {
-    settings: SettingInterface,
+    settings: GenericSettingInterface[],
     updatedFunction: (dataUrl: string) => void
 }
 
 export const ImageEditor: React.FC<Props> = (props) => {
-    //const [originalUrl, setOriginalUrl] = React.useState("about:blank");
     const [currentUrl, setCurrentUrl] = React.useState("about:blank");
     const [dataUrl, setDataUrl] = React.useState(null);
     var timeout: any = null;
@@ -63,14 +62,12 @@ export const ImageEditor: React.FC<Props> = (props) => {
     const handleSave = () => { props.updatedFunction(dataUrl); }
     const handleCancel = () => { props.updatedFunction(null); }
     const init = useCallback(() => {
-        var startingUrl = props.settings.logoUrl;
-        //setOriginalUrl(startingUrl);
+        var startingUrl = (ArrayHelper.getOne(props.settings, "keyName", "logoImage"))?.value;
         setCurrentUrl(startingUrl);
         // eslint-disable-next-line react-hooks/exhaustive-deps    
     }, []);
 
     React.useEffect(init, []);
-    //aspectRatio={4 / 3}
 
     return (
         <InputBox id="cropperBox" headerIcon="" headerText="Crop" saveFunction={handleSave} saveText={"Update"} cancelFunction={handleCancel} headerActionContent={getHeaderButton()}  >
