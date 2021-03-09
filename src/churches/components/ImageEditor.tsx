@@ -7,7 +7,9 @@ import { InputBox, GenericSettingInterface, ArrayHelper } from ".";
 
 interface Props {
     settings: GenericSettingInterface[],
-    updatedFunction: (dataUrl: string) => void
+    updatedFunction: (dataUrl: string) => void,
+    aspectRatio: number;
+    name: string;
 }
 
 export const ImageEditor: React.FC<Props> = (props) => {
@@ -62,7 +64,7 @@ export const ImageEditor: React.FC<Props> = (props) => {
     const handleSave = () => { props.updatedFunction(dataUrl); }
     const handleCancel = () => { props.updatedFunction(null); }
     const init = useCallback(() => {
-        var startingUrl = (ArrayHelper.getOne(props.settings, "keyName", "logoImage"))?.value;
+        var startingUrl = (ArrayHelper.getOne(props.settings, "keyName", props.name))?.value;
         setCurrentUrl(startingUrl);
         // eslint-disable-next-line react-hooks/exhaustive-deps    
     }, []);
@@ -75,6 +77,7 @@ export const ImageEditor: React.FC<Props> = (props) => {
                 onInitialized={onCropperInit}
                 src={currentUrl}
                 style={{ height: 150, width: "100%" }}
+                aspectRatio={props.aspectRatio}
                 guides={false}
                 crop={handleCrop} />
         </InputBox>
