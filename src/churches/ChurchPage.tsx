@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap'
 import UserContext from '../UserContext';
-import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, EnvironmentHelper, ChurchAppInterface, Permissions, Appearance } from './components'
+import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, EnvironmentHelper, ChurchAppInterface, Permissions } from './components'
 import { RouteComponentProps, useHistory } from "react-router-dom";
 
 type TParams = { id?: string };
@@ -81,11 +81,6 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
                 </Col>
                 <Col md={4}>
                     {getSidebar()}
-                </Col>
-            </Row>
-            <Row>
-                <Col md={4}>
-                    <Appearance enableEdit={false} />
                 </Col>
             </Row>
         </>
