@@ -1,14 +1,13 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap'
 import UserContext from '../UserContext';
-import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, ChurchApps, Permissions, Appearance, Preview } from './components'
+import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, ChurchApps, Permissions, Appearance } from './components'
 import { Redirect } from 'react-router-dom';
 import { RouteComponentProps } from "react-router-dom";
 
 type TParams = { id?: string };
 
 export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
-    const [ts, setTs] = React.useState(Date.now());
     const [church, setChurch] = React.useState<ChurchInterface>(null);
     const [redirectUrl, setRedirectUrl] = React.useState<string>("");
     const context = React.useContext(UserContext);
@@ -22,10 +21,6 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
 
     const handleChurchUpdated = () => {
         loadData();
-    }
-
-    const updatePreview = () => {
-        setTs(Date.now());
     }
 
     React.useEffect(loadData, [match.params.id]);
@@ -45,11 +40,9 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
                 </Col>
             </Row>
             <Row>
-                <Col md={8}>
-                    <Preview ts={ts} />
-                </Col>
+                <Col md={8} />            
                 <Col md={4}>
-                    <Appearance updatedFunction={updatePreview} enableEdit={true} />
+                    <Appearance />
                 </Col>
             </Row>
         </>

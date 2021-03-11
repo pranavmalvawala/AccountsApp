@@ -61,7 +61,7 @@ export const AppearanceEdit: React.FC<Props> = (props) => {
     return (
         <>
             {getLogoEditor(currentEditLogo)}
-            <InputBox headerIcon="fas fa-palette" headerText="Appearance" saveFunction={handleSave} >
+            <InputBox headerIcon="fas fa-palette" headerText="Church Appearance" saveFunction={handleSave} >
                 <FormGroup>
                     <label>Navbar Logo</label><br />
                     {getLogoLink("logoImage")}
@@ -69,10 +69,6 @@ export const AppearanceEdit: React.FC<Props> = (props) => {
                 <FormGroup>
                     <label>Login Screen Logo</label><br />
                     {getLogoLink("loginLogo")}
-                </FormGroup>
-                <FormGroup>
-                    <label>Home Page Url</label>
-                    <input type="text" className="form-control" name="homePageUrl" value={(ArrayHelper.getOne(currentSettings, "keyName", "homePageUrl"))?.value} onChange={handleChange} />
                 </FormGroup>
                 <div className="section">Primary Colors</div>
                 <Row>

@@ -1,74 +1,50 @@
 import React, { useState } from "react";
-import { Row, Col, FormGroup } from "react-bootstrap"
-import { ApiHelper, AppearanceEdit, DisplayBox, GenericSettingInterface, ArrayHelper } from "."
+import { Row } from "react-bootstrap"
+import { ApiHelper, AppearanceEdit, DisplayBox, GenericSettingInterface, IChurchAppearance } from "."
 
-interface Props { updatedFunction?: () => void, enableEdit?: boolean }
+interface Props { }
 
 export const Appearance: React.FC<Props> = (props) => {
     const [currentSettings, setCurrentSettings] = useState<GenericSettingInterface[]>([]);
-    const [mode, setMode] = React.useState("display");
+    const [mode, setMode] = useState("display");
+    const [styles, setStyles] = useState<IChurchAppearance>({});
 
-    const loadData = () => { ApiHelper.get("/settings", "AccessApi").then(settings => setCurrentSettings(settings)) }
+    const loadData = () => { ApiHelper.get("/settings", "AccessApi").then(settings => { setCurrentSettings(settings); configureStyles(settings)}) }
     const handleEdit = () => { setMode("edit"); }
-    const handleUpdate = () => { setMode("display"); loadData(); props.updatedFunction(); }
+    const handleUpdate = () => { setMode("display"); loadData(); }
 
-    const getLogoLink = (keyName: string) => {
-        var logo = (ArrayHelper.getOne(currentSettings, "keyName", keyName))?.value;
-
-        var logoImg = (currentSettings && ArrayHelper.getOne(currentSettings, "keyName", "logoImage") !== null) ? <img src={logo} alt="logo" className="img-fluid" /> : "No Logo";
-        return <a href={(ArrayHelper.getOne(currentSettings, "keyName", "homePageUrl"))?.value} target="_blank" rel="noopener noreferrer" >{logoImg}</a>
+    const getLogoLink = () => {
+        const logoSrc = styles?.logoImage;
+        var logoImg = (styles && logoSrc !== null && logoSrc !== undefined) ? <img src={logoSrc} alt="logo" className="img-fluid" /> : null;
+        return logoImg
     }
 
-    React.useEffect(() => { loadData(); }, []);
-    let opts = {}
-    if (props.enableEdit) {
-        opts = {
-            editFunction: handleEdit
-        }
+    const configureStyles = (settings: GenericSettingInterface[]) => {
+        let style: any = {};
+        settings.map(s => { style[s.keyName] = s.value; return null });
+        setStyles(style);
     }
 
+    React.useEffect(loadData, []);
+    const allConfigs = Object.keys(styles)
 
     if (mode === "edit") return (<AppearanceEdit settings={currentSettings} updatedFunction={handleUpdate} />)
     else return (
-        <DisplayBox headerIcon="fas fa-palette" headerText="Church Appearance" {...opts} >
-            <FormGroup>
-                <label>Navbar Logo</label><br />
-                {getLogoLink("logoImage")}
-            </FormGroup>
-            <FormGroup>
-                <label>Login Screen Logo</label><br />
-                {getLogoLink("loginLogo")}
-            </FormGroup>
-            <div className="section">Primary Colors</div>
-            <Row>
-                <Col>
-                    <FormGroup>
-                        <label>Color</label>
-                        <input type="color" className="form-control" name="primaryColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryColor"))?.value} disabled={true} />
-                    </FormGroup>
-                </Col>
-                <Col>
-                    <FormGroup>
-                        <label>Contrast</label>
-                        <input type="color" className="form-control" name="primaryContrast" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryContrast"))?.value} disabled={true} />
-                    </FormGroup>
-                </Col>
-            </Row>
-            <div className="section">Secondary Colors</div>
-            <Row>
-                <Col>
-                    <FormGroup>
-                        <label>Color</label>
-                        <input type="color" className="form-control" name="secondaryColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "secondaryColor"))?.value} disabled={true} />
-                    </FormGroup>
-                </Col>
-                <Col>
-                    <FormGroup>
-                        <label>Contrast</label>
-                        <input type="color" className="form-control" name="secondaryContrast" value={(ArrayHelper.getOne(currentSettings, "keyName", "secondaryContrast"))?.value} disabled={true} />
-                    </FormGroup>
-                </Col>
-            </Row>
+        <DisplayBox headerIcon="fas fa-palette" headerText="Church Appearance" editFunction={handleEdit} >
+            {
+                allConfigs.length === 0 ? "Please set new configurations." : (
+                    <>
+                        <Row className="ml-0 mr-0 pl-2" style={{ backgroundColor: styles.primaryColor, color: styles.primaryContrast }}>
+                            {getLogoLink()}
+                            Primary Colors
+                        </Row>
+                        <Row className="ml-0 mr-0 pl-2" style={{ backgroundColor: styles.secondaryColor, color: styles.secondaryContrast }}>
+                            Secondary Colors
+                        </Row>
+                    </>
+                )
+            }
+            
         </DisplayBox>
     );
 }
