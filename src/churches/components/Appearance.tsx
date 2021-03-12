@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Row } from "react-bootstrap"
 import { ApiHelper, AppearanceEdit, DisplayBox, GenericSettingInterface, IChurchAppearance } from "."
 
 interface Props { }
@@ -35,7 +34,6 @@ export const Appearance: React.FC<Props> = (props) => {
     }
 
     React.useEffect(loadData, []);
-    const allConfigs = Object.keys(styles)
 
     if (mode === "edit") return (<AppearanceEdit settings={currentSettings} updatedFunction={handleUpdate} />)
     else return (
