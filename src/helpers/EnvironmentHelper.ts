@@ -5,7 +5,7 @@ export class EnvironmentHelper {
     static ChumsUrl = "";
     static B1Url = "";
     static ContentRoot = "";
-    static supportEmail = process.env.REACT_APP_SUPPORT_EMAIL;
+    static SupportEmail = "";
 
     private static AccessApi = "";
     private static StreamingLiveApi = "";
@@ -38,6 +38,7 @@ export class EnvironmentHelper {
         EnvironmentHelper.B1Api = process.env.REACT_APP_B1_API || "";
         EnvironmentHelper.B1Url = process.env.REACT_APP_B1_URL || "";
         EnvironmentHelper.GoogleAnalyticsTag = process.env.REACT_APP_GOOGLE_ANALYTICS || "";
+        EnvironmentHelper.SupportEmail = process.env.REACT_APP_SUPPORT_EMAIL;
     }
 
     //NOTE: None of these values are secret.
@@ -51,6 +52,7 @@ export class EnvironmentHelper {
         EnvironmentHelper.B1Api = "https://api.staging.b1.church";
         EnvironmentHelper.B1Url = "https://app.staging.b1.church";
         EnvironmentHelper.GoogleAnalyticsTag = "";
+        EnvironmentHelper.SupportEmail = "support@churchapps.org";
     }
 
     //NOTE: None of these values are secret.
@@ -64,6 +66,7 @@ export class EnvironmentHelper {
         EnvironmentHelper.B1Api = "https://api.b1.church";
         EnvironmentHelper.B1Url = "https://app.b1.church";
         EnvironmentHelper.GoogleAnalyticsTag = "UA-164774603-7";
+        EnvironmentHelper.SupportEmail = "support@churchapps.org";
     }
 
 }
