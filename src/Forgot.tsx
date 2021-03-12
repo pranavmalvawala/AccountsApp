@@ -3,5 +3,5 @@ import { ForgotPage } from './appBase/pageComponents/ForgotPage';
 import { EnvironmentHelper } from './helpers'
 
 export const Forgot = () => {
-    return (<ForgotPage supportEmail={EnvironmentHelper.supportEmail} />)
+    return (<ForgotPage supportEmail={EnvironmentHelper.SupportEmail} />)
 }
