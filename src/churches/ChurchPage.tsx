@@ -51,7 +51,7 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
     }
 
     const getSidebar = () => {
-        if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit) || churchApps.length === 0) return null;
+        if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit) || church === null) return null;
         else return (<Button variant="primary" size="lg" block onClick={() => history.push(`/churches/${church?.id}/manage`)}>Edit Church Settings</Button>);
     }
 
