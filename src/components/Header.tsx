@@ -52,9 +52,9 @@ export const Header: React.FC = () => {
         <Container>
           <div className="d-flex justify-content-between">
             <div>
-              <a className="navbar-brand" href="/">
+              <div className="navbar-brand">
                 <img src="/images/logo.png" alt="logo" />
-              </a>
+              </div>
             </div>
 
             <Col className="d-none d-md-block" style={{ borderLeft: "2px solid #EEE", borderRight: "2px solid #EEE", maxWidth: "703px", margin: "0 15px" }} >
