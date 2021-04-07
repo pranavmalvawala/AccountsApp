@@ -1,6 +1,6 @@
 import React from 'react';
 import { InputBox, RoleInterface } from '.'
-import { FormGroup, Table, Form } from 'react-bootstrap';
+import { FormGroup, Table, Form, Alert } from 'react-bootstrap';
 import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonAdd, PersonInterface, HouseholdInterface, UniqueIdHelper, PersonHelper } from './';
 import { UserInterface } from '../../helpers';
 
@@ -15,6 +15,7 @@ export const UserAdd: React.FC<Props> = (props) => {
     const [name, setName] = React.useState("");
     const [fetchedUser, setFetchedUser] = React.useState<UserInterface>(null);
     const [showAssociatedWith, setShowAssociatedWith] = React.useState<boolean>(false);
+    const [showAlert, setShowAlert] = React.useState<boolean>(false);
     const [linkedPerson, setLinkedPerson] = React.useState<PersonInterface>(null)
     const [linkNewPerson, setLinkNewPerson] = React.useState<PersonInterface>(null);
 
@@ -80,6 +81,15 @@ export const UserAdd: React.FC<Props> = (props) => {
         }
     }
 
+    const handleAssociatePerson = (person: PersonInterface) => {
+        setShowAlert(false);
+        setShowAssociatedWith(true);
+        setLinkNewPerson(person);
+        if (person.userId) {
+            setShowAlert(true);
+        }
+    }
+
     React.useEffect(loadData, [props.selectedUser]);
 
     const associatedWith = showAssociatedWith ? (
@@ -98,7 +108,7 @@ export const UserAdd: React.FC<Props> = (props) => {
     ) : (
         <>
             <label>Link to person</label>
-            <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={(person) => { setShowAssociatedWith(true); setLinkNewPerson(person) }} />
+            <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={handleAssociatePerson} />
         </>
     )
 
@@ -106,6 +116,7 @@ export const UserAdd: React.FC<Props> = (props) => {
 
     return (
         <InputBox headerIcon="fas fa-lock" headerText={"Add to " + props.role.name} saveFunction={handleSave} cancelFunction={props.updatedFunction}  >
+            {showAlert && <Alert variant="warning"><b>{linkNewPerson?.name.display}</b> is already linked with other user. Press <b>save</b> only if you are sure about removing that link and associate it to <b>{email}</b>.</Alert>}
             <FormGroup>
                 <label>Name</label>
                 <input type="text" name="name" value={name} onChange={handleChange} placeholder="John Smith" className="form-control" />
