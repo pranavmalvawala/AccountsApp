@@ -18,6 +18,7 @@ export const UserAdd: React.FC<Props> = (props) => {
     const [showAlert, setShowAlert] = React.useState<boolean>(false);
     const [linkedPerson, setLinkedPerson] = React.useState<PersonInterface>(null)
     const [linkNewPerson, setLinkNewPerson] = React.useState<PersonInterface>(null);
+    const [suggestedPerson, setSuggestedPerson] = React.useState<PersonInterface>(null);
 
     const handleSave = async () => {
         var req: LoadCreateUserRequestInterface = { userName: name, userEmail: email };
@@ -65,6 +66,15 @@ export const UserAdd: React.FC<Props> = (props) => {
         }
     }
 
+    const checkForSuggestions = () => {
+        if (!linkedPerson) {
+            setSuggestedPerson(null)
+            ApiHelper.get(`/people/search?email=${email}`, "MembershipApi").then(person => {
+                setSuggestedPerson(person[0]);
+            })
+        }
+    }
+
     const loadData = () => {
         if (!UniqueIdHelper.isMissing(props.selectedUser)) {
             ApiHelper.get(`/users/${props.selectedUser}`, "AccessApi").then(user => {
@@ -91,28 +101,37 @@ export const UserAdd: React.FC<Props> = (props) => {
     }
 
     React.useEffect(loadData, [props.selectedUser]);
+    React.useEffect(checkForSuggestions, [email]);
 
     const associatedWith = showAssociatedWith ? (
-        <>
-            <label>Link with</label>
-            <Table size="sm">
-                <tbody>
-                    <tr>
-                        <td className="border-0"><img src="/images/sample-profile.png" width="60px" height="45px" style={{borderRadius: "5px"}} alt="avatar" /></td>
-                        <td className="border-0">{linkNewPerson?.name?.display || linkedPerson.name.display}</td>
-                        <td className="border-0"><a className="text-success" data-cy="change-person" href="about:blank" onClick={(e) => { e.preventDefault(); setShowAssociatedWith(false)}}><i className="fas fa-user"></i> Change</a></td>
-                    </tr>    
-                </tbody>    
-            </Table>
-        </>                    
+        <Table size="sm">
+            <tbody>
+                <tr>
+                    <td className="border-0"><img src="/images/sample-profile.png" width="60px" height="45px" style={{borderRadius: "5px"}} alt="avatar" /></td>
+                    <td className="border-0">{linkNewPerson?.name?.display || linkedPerson.name.display}</td>
+                    <td className="border-0"><a className="text-success" data-cy="change-person" href="about:blank" onClick={(e) => { e.preventDefault(); setShowAssociatedWith(false)}}><i className="fas fa-user"></i> Change</a></td>
+                </tr>    
+            </tbody>    
+        </Table>
     ) : (
-        <>
-            <label>Link to person</label>
-            <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={handleAssociatePerson} />
-        </>
+        <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={handleAssociatePerson} />
     )
 
-    const message = !linkedPerson && (<span><small>* If you do not link anyone, a new person with this details will be created.</small></span>);
+    const message = !linkedPerson && !linkNewPerson && (<span><small>* If you do not link anyone, a new person with these details will be created.</small></span>);
+    const personSuggestion = !linkedPerson && !linkNewPerson && email && suggestedPerson && (
+        <>
+            <p><small><em>suggestion</em></small></p>
+            <Table size="sm">
+            <tbody>
+                <tr>
+                    <td><img src="/images/sample-profile.png" width="60px" height="45px" style={{borderRadius: "5px"}} alt="avatar" /></td>
+                    <td>{suggestedPerson?.name.display}</td>
+                    <td><a className="text-success" data-cy="change-person" href="about:blank" onClick={(e) => { e.preventDefault(); handleAssociatePerson(suggestedPerson)}}><i className="fas fa-user"></i> Add</a></td>
+                </tr>    
+            </tbody>    
+        </Table>
+        </>
+    )
 
     return (
         <InputBox headerIcon="fas fa-lock" headerText={"Add to " + props.role.name} saveFunction={handleSave} cancelFunction={props.updatedFunction}  >
@@ -127,6 +146,8 @@ export const UserAdd: React.FC<Props> = (props) => {
                 <input type="email" name="email" value={email} onChange={handleChange} className="form-control" />
             </FormGroup>        
             <FormGroup>
+                <label>Associate Person</label>
+                {personSuggestion}
                 {associatedWith}
             </FormGroup>
             {message}            
