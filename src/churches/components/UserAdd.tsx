@@ -6,7 +6,7 @@ import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterf
 interface Props {
     role: RoleInterface,
     updatedFunction: () => void,
-    selectedRoleMemberId: string,
+    selectedUser: string,
 }
 
 export const UserAdd: React.FC<Props> = (props) => {
@@ -60,12 +60,21 @@ export const UserAdd: React.FC<Props> = (props) => {
     }
 
     const loadData = () => {
-        if (!UniqueIdHelper.isMissing(props.selectedRoleMemberId)) {
-
+        if (!UniqueIdHelper.isMissing(props.selectedUser)) {
+            ApiHelper.get(`/users/${props.selectedUser}`, "AccessApi").then(user => {
+                setName(user.displayName);
+                setEmail(user.email);
+            })
+            ApiHelper.get(`/people/userid/${props.selectedUser}`, "MembershipApi").then(person => {
+                if (person) {
+                    setLinkedPerson(person);
+                    setShowAssociatedWith(true);
+                }
+            })
         }
     }
 
-    React.useEffect(loadData, [])
+    React.useEffect(loadData, [props.selectedUser]);
 
     const associatedWith = showAssociatedWith ? (
         <>

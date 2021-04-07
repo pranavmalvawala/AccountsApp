@@ -18,7 +18,7 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
     const loadData = () => { ApiHelper.get('/roles/' + match.params.roleId, "AccessApi").then(data => setRole(data)); }
 
     const getAddUser = () => {
-        if (showAdd || selectedRoleMemberId) return <UserAdd role={role} selectedRoleMemberId={selectedRoleMemberId} updatedFunction={handleAdd} />;
+        if (showAdd || selectedRoleMemberId) return <UserAdd role={role} selectedUser={selectedRoleMemberId} updatedFunction={handleAdd} />;
         return null;
     }
 

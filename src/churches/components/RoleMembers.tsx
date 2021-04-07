@@ -36,7 +36,7 @@ export const RoleMembers: React.FC<Props> = (props) => {
         for (let i = 0; i < roleMembers.length; i++) {
             const rm = roleMembers[i];
             const removeLink = (canEdit) ? <a href="about:blank" onClick={handleRemove} data-index={i} className="text-danger" ><i className="fas fa-user-times"></i></a> : <></>
-            const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); props.setSelectedRoleMember(rm.id) }}><i className="fas fa-pencil-alt"></i></a>) : null;
+            const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); props.setSelectedRoleMember(rm.userId) }}><i className="fas fa-pencil-alt"></i></a>) : null;
 
             rows.push(
                 <tr key={i}>
