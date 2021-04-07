@@ -3,7 +3,7 @@ import { ApiHelper, DisplayBox, UserHelper, RoleMemberInterface, RoleInterface, 
 import { Table } from 'react-bootstrap';
 
 
-interface Props { role: RoleInterface, addFunction: (role: RoleInterface) => void }
+interface Props { role: RoleInterface, addFunction: (role: RoleInterface) => void, setSelectedRoleMember: (id: string) => void }
 
 export const RoleMembers: React.FC<Props> = (props) => {
 
@@ -34,13 +34,16 @@ export const RoleMembers: React.FC<Props> = (props) => {
         var canEdit = UserHelper.checkAccess(Permissions.accessApi.roleMembers.edit);
         var rows = [];
         for (let i = 0; i < roleMembers.length; i++) {
-            var rm = roleMembers[i];
-            var editLink = (canEdit) ? <a href="about:blank" onClick={handleRemove} data-index={i} className="text-danger" ><i className="fas fa-user-times"></i></a> : <></>
+            const rm = roleMembers[i];
+            const removeLink = (canEdit) ? <a href="about:blank" onClick={handleRemove} data-index={i} className="text-danger" ><i className="fas fa-user-times"></i></a> : <></>
+            const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); props.setSelectedRoleMember(rm.id) }}><i className="fas fa-pencil-alt"></i></a>) : null;
+
             rows.push(
                 <tr key={i}>
                     <td>{rm.user.displayName}</td>
-                    <td>{rm.user.email}</td>
+                    <td>{rm.user.email}</td>                    
                     <td>{editLink}</td>
+                    <td>{removeLink}</td>
                 </tr>
             );
         }
@@ -53,7 +56,7 @@ export const RoleMembers: React.FC<Props> = (props) => {
     return (
         <DisplayBox id="roleMembersBox" headerText="Members" headerIcon="fas fa-users" editContent={getEditContent()} >
             <Table id="roleMemberTable">
-                <thead><tr><th>Name</th><th>Email</th><th>Action</th></tr></thead>
+                <thead><tr><th>Name</th><th>Email</th><th>Edit</th><th>Remove</th></tr></thead>
                 <tbody>{getRows()}</tbody>
             </Table>
         </DisplayBox>

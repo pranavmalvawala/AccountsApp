@@ -10,15 +10,16 @@ type TParams = { app: string, roleId?: string };
 export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
     const [role, setRole] = React.useState<RoleInterface>({} as RoleInterface);
     const [showAdd, setShowAdd] = React.useState<boolean>(false);
+    const [selectedRoleMemberId, setSelectedRoleMemberId] = React.useState<string>("");
 
     const handleShowAdd = (role: RoleInterface) => { setShowAdd(true); }
-    const handleAdd = () => { setShowAdd(false); loadData(); }
+    const handleAdd = () => { setShowAdd(false); setSelectedRoleMemberId(""); loadData(); }
 
     const loadData = () => { ApiHelper.get('/roles/' + match.params.roleId, "AccessApi").then(data => setRole(data)); }
 
     const getAddUser = () => {
-        if (!showAdd) return null;
-        else return <UserAdd role={role} updatedFunction={handleAdd} />
+        if (showAdd || selectedRoleMemberId) return <UserAdd role={role} selectedRoleMemberId={selectedRoleMemberId} updatedFunction={handleAdd} />;
+        return null;
     }
 
     const getSidebar = () => {
@@ -37,7 +38,7 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
             <>
                 <h1><i className="fas fa-lock"></i> {role.name}</h1>
                 <Row>
-                    <Col lg={8}><RoleMembers role={role} addFunction={handleShowAdd} /></Col>
+                    <Col lg={8}><RoleMembers role={role} addFunction={handleShowAdd} setSelectedRoleMember={setSelectedRoleMemberId} /></Col>
                     <Col lg={4}>{getSidebar()}</Col>
                 </Row>
             </>
