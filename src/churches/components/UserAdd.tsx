@@ -2,6 +2,7 @@ import React from 'react';
 import { InputBox, RoleInterface } from '.'
 import { FormGroup, Table, Form } from 'react-bootstrap';
 import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonAdd, PersonInterface, HouseholdInterface, UniqueIdHelper, PersonHelper } from './';
+import { UserInterface } from '../../helpers';
 
 interface Props {
     role: RoleInterface,
@@ -12,29 +13,33 @@ interface Props {
 export const UserAdd: React.FC<Props> = (props) => {
     const [email, setEmail] = React.useState("");
     const [name, setName] = React.useState("");
+    const [fetchedUser, setFetchedUser] = React.useState<UserInterface>(null);
     const [showAssociatedWith, setShowAssociatedWith] = React.useState<boolean>(false);
     const [linkedPerson, setLinkedPerson] = React.useState<PersonInterface>(null)
+    const [linkNewPerson, setLinkNewPerson] = React.useState<PersonInterface>(null);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         var req: LoadCreateUserRequestInterface = { userName: name, userEmail: email };
 
-        ApiHelper.post('/users/loadOrCreate', req, "AccessApi").then(async (u) => {
-            const rm: RoleMemberInterface = { userId: u.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
-            ApiHelper.post('/rolemembers/', [rm], "AccessApi");
+        let user = {...fetchedUser};
+        if (!fetchedUser) {
+            user = await ApiHelper.post('/users/loadOrCreate', req, "AccessApi");
 
-            if (!linkedPerson) {
-                await createPerson(u.id);
-                props.updatedFunction();
-                return;
-            }
+            const rm: RoleMemberInterface = { userId: user.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
+            await ApiHelper.post('/rolemembers/', [rm], "AccessApi");
+        }
 
-            let person = { ...linkedPerson };
-            console.log("person", person)
-            person.userId = u.id
-            ApiHelper.post("/people", [person], "MembershipApi").then(() => {
-                props.updatedFunction();
-            })
-        });
+        if (!linkedPerson) {
+            await createPerson(user.id);
+            props.updatedFunction();
+            return;
+        }
+        linkedPerson.userId = "";
+        linkNewPerson.userId = user.id;
+
+        ApiHelper.post("/people", [linkedPerson, linkNewPerson], "MembershipApi").then(() => {
+            props.updatedFunction();
+        })
     }
 
     const createPerson = async (userId: string) => {
@@ -62,6 +67,7 @@ export const UserAdd: React.FC<Props> = (props) => {
     const loadData = () => {
         if (!UniqueIdHelper.isMissing(props.selectedUser)) {
             ApiHelper.get(`/users/${props.selectedUser}`, "AccessApi").then(user => {
+                setFetchedUser(user);
                 setName(user.displayName);
                 setEmail(user.email);
             })
@@ -83,7 +89,7 @@ export const UserAdd: React.FC<Props> = (props) => {
                 <tbody>
                     <tr>
                         <td className="border-0"><img src="/images/sample-profile.png" width="60px" height="45px" style={{borderRadius: "5px"}} alt="avatar" /></td>
-                        <td className="border-0">{linkedPerson.name.display}</td>
+                        <td className="border-0">{linkNewPerson?.name?.display || linkedPerson.name.display}</td>
                         <td className="border-0"><a className="text-success" data-cy="change-person" href="about:blank" onClick={(e) => { e.preventDefault(); setShowAssociatedWith(false)}}><i className="fas fa-user"></i> Change</a></td>
                     </tr>    
                 </tbody>    
@@ -92,7 +98,7 @@ export const UserAdd: React.FC<Props> = (props) => {
     ) : (
         <>
             <label>Link to person</label>
-            <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={(person) => {console.log("person: ", person); setShowAssociatedWith(true); setLinkedPerson(person)}} />
+            <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={(person) => { setShowAssociatedWith(true); setLinkNewPerson(person) }} />
         </>
     )
 
