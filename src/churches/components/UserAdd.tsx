@@ -36,13 +36,18 @@ export const UserAdd: React.FC<Props> = (props) => {
         }
         
         // create a new person when no person is linked
-        if (!linkedPerson) {
+        if (!linkedPerson && !linkNewPerson) {
             await createPerson(user.id);
         } else  if (linkNewPerson) {
             // unlink the old person and link the new one
-            linkedPerson.userId = "";
-            linkNewPerson.userId = user.id;    
-            await ApiHelper.post("/people", [linkedPerson, linkNewPerson], "MembershipApi")
+            let people: PersonInterface[] = [];
+            if (linkedPerson) {
+                linkedPerson.userId = "";
+                people.push(linkedPerson)
+            }
+            linkNewPerson.userId = user.id;
+            people.push(linkNewPerson);    
+            await ApiHelper.post("/people", people, "MembershipApi");
         }
         props.updatedFunction();
     }
