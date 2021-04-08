@@ -13,7 +13,7 @@ export const SuggestPerson: React.FC<Props> = ({ person, email, handleAssociateP
     const [suggestedPerson, setSuggestedPerson] = useState<PersonInterface>(null);
 
     useEffect(() => {
-        if (!person) {
+        if (!person && email) {
             setSuggestedPerson(null)
             ApiHelper.get(`/people/search?email=${email}`, "MembershipApi").then(foundPerson => {
                 setSuggestedPerson(foundPerson[0]);
