@@ -23,12 +23,15 @@ export const UserAdd: React.FC<Props> = (props) => {
     const handleSave = async () => {
         var req: LoadCreateUserRequestInterface = { userName: name, userEmail: email };
 
-        let user = {...fetchedUser};
+        let user = {...fetchedUser, email, displayName: name};
         if (!fetchedUser) {
             user = await ApiHelper.post('/users/loadOrCreate', req, "AccessApi");
 
             const rm: RoleMemberInterface = { userId: user.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
             await ApiHelper.post('/rolemembers/', [rm], "AccessApi");
+        } else {
+            // here when editing user details so update displayName and email.
+            await ApiHelper.post("/users/updateUser", user, "AccessApi");
         }
 
         if (!linkedPerson) {
@@ -36,12 +39,16 @@ export const UserAdd: React.FC<Props> = (props) => {
             props.updatedFunction();
             return;
         }
-        linkedPerson.userId = "";
-        linkNewPerson.userId = user.id;
 
-        ApiHelper.post("/people", [linkedPerson, linkNewPerson], "MembershipApi").then(() => {
-            props.updatedFunction();
-        })
+        if (linkNewPerson) {
+            linkedPerson.userId = "";
+            linkNewPerson.userId = user.id;
+    
+            ApiHelper.post("/people", [linkedPerson, linkNewPerson], "MembershipApi").then(() => {
+                props.updatedFunction();
+            })
+        }
+        props.updatedFunction();
     }
 
     const createPerson = async (userId: string) => {
@@ -49,7 +56,7 @@ export const UserAdd: React.FC<Props> = (props) => {
         const households = await ApiHelper.post("/households", [house], "MembershipApi")
         
         const names = name.split(' ');
-        const personRecord: PersonInterface = { householdId: households[0].id, name: { first: names[0], last: names[1] }, userId }
+        const personRecord: PersonInterface = { householdId: households[0].id, name: { first: names[0], last: names[1] }, userId, contactInfo: { email } }
         const person = await ApiHelper.post("/people", [personRecord], "MembershipApi")
 
         return person[0];
@@ -101,7 +108,6 @@ export const UserAdd: React.FC<Props> = (props) => {
     }
 
     React.useEffect(loadData, [props.selectedUser]);
-    React.useEffect(checkForSuggestions, [email]);
 
     const associatedWith = showAssociatedWith ? (
         <Table size="sm">
@@ -143,7 +149,7 @@ export const UserAdd: React.FC<Props> = (props) => {
             </FormGroup>
             <FormGroup>
                 <label>Email</label>
-                <input type="email" name="email" value={email} onChange={handleChange} className="form-control" />
+                <input type="email" name="email" value={email} onChange={handleChange} onBlur={checkForSuggestions} className="form-control" />
             </FormGroup>        
             <FormGroup>
                 <label>Associate Person</label>
