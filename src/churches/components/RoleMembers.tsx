@@ -22,12 +22,15 @@ export const RoleMembers: React.FC<Props> = (props) => {
 
     const handleRemove = (e: React.MouseEvent) => {
         e.preventDefault();
-        var anchor = e.currentTarget as HTMLAnchorElement;
-        var idx = parseInt(anchor.getAttribute('data-index'));
-        var members = [...roleMembers];
-        var member = members.splice(idx, 1)[0];
-        setRoleMembers(members);
-        ApiHelper.delete('/rolemembers/' + member.id, "AccessApi");
+        if (window.confirm(`Are you sure you wish to delete this user from ${props.role.name}?`)) {
+            var anchor = e.currentTarget as HTMLAnchorElement;
+            var idx = parseInt(anchor.getAttribute('data-index'));
+            var members = [...roleMembers];
+            var member = members.splice(idx, 1)[0];
+            setRoleMembers(members);
+            ApiHelper.delete('/rolemembers/' + member.id, "AccessApi");
+        }
+
     }
 
     const getRows = () => {
