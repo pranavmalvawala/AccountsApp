@@ -28,7 +28,7 @@ export const AppAccess = ({ match }: RouteComponentProps<TParams>) => {
         const canEdit = UserHelper.checkAccess(Permissions.accessApi.roles.edit);
         for (let i = 0; i < roles.length; i++) {
             const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); setSelectedRoleId(roles[i].id); }}><i className="fas fa-pencil-alt"></i></a>) : null;
-            result.push(<tr>
+            result.push(<tr key={i}>
                 <td><i className="fas fa-lock" /> <Link to={"/churches/" + match.params.id + "/" + match.params.app + "/" + roles[i].id}>{roles[i].name}</Link></td>
                 <td>{editLink}</td>
             </tr>);
