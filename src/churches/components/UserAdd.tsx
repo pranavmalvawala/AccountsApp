@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { InputBox, RoleInterface } from '.'
 import { FormGroup, Form } from 'react-bootstrap';
-import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, UniqueIdHelper, AssociatePerson, ErrorMessages, UserInterface, SuggestPerson, Validate } from './';
+import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, UniqueIdHelper, AssociatePerson, ErrorMessages, UserInterface, SuggestPerson, ValidateHelper } from './';
 
 interface Props {
     role: RoleInterface,
@@ -61,7 +61,7 @@ export const UserAdd: React.FC<Props> = (props) => {
         const { name: { display }, contactInfo: { email: personEmail } } = selectedPerson;
         // maybe this check will be removed in future as I can just move this to associateUser function and
         // show email field then and there when person is selected and not on clicking save.
-            if (emailNotFound && !Validate.email(email)) {
+            if (emailNotFound && !ValidateHelper.email(email)) {
                 setErrors(["Please enter a valid Email"]);
                 return;
             }
