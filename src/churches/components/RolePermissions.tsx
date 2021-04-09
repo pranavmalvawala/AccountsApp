@@ -14,10 +14,10 @@ export const RolePermissions: React.FC<Props> = (props) => {
     const getSections = () => {
         var lastSection = "";
         const result: JSX.Element[] = []
-        permissions.forEach(p => {
+        permissions.forEach((p, index) => {
             if (p.displaySection !== lastSection) {
                 result.push(
-                    <Col xl={6} style={{ marginBottom: 14 }}>
+                    <Col key={index} xl={6} style={{ marginBottom: 14 }}>
                         <div><b>{p.displaySection}:</b></div>
                         {getChecks(p.displaySection)}
                     </Col>
@@ -30,9 +30,9 @@ export const RolePermissions: React.FC<Props> = (props) => {
 
     const getChecks = (displaySection: string) => {
         const result: JSX.Element[] = []
-        permissions.forEach(p => {
+        permissions.forEach((p, index) => {
             if (p.displaySection === displaySection) {
-                result.push(<RoleCheck roleId={props.role.id} rolePermissions={rolePermissions} apiName={p.apiName} contentType={p.section} action={p.action} label={p.displayAction} />)
+                result.push(<RoleCheck key={index} roleId={props.role.id} rolePermissions={rolePermissions} apiName={p.apiName} contentType={p.section} action={p.action} label={p.displayAction} />)
             }
         });
         return result;

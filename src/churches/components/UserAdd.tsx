@@ -17,6 +17,7 @@ export const UserAdd: React.FC<Props> = (props) => {
     const [linkedPerson, setLinkedPerson] = React.useState<PersonInterface>(null)
     const [linkNewPerson, setLinkNewPerson] = React.useState<PersonInterface>(null);
     const [checkForSuggestions, setCheckForSuggestion] = React.useState<Date>(null);
+    const [selectedPerson, setSelectedPerson] = React.useState<PersonInterface>(null);
 
     const handleSave = async () => {
         if (!validate()) return;
@@ -50,6 +51,25 @@ export const UserAdd: React.FC<Props> = (props) => {
             await ApiHelper.post("/people", people, "MembershipApi");
         }
         props.updatedFunction();
+    }
+
+    const handleNewSave = async () => {
+        const { name: { display }, contactInfo: { email } } = selectedPerson;
+        // maybe this check will be removed in future as I can just move this to associateUser function and
+        // show email field then and there when person is selected and not on clicking save.
+        if (email) {
+            const userPayload: LoadCreateUserRequestInterface = { userName: display, userEmail: email };
+            console.log("user", userPayload);
+            const user: UserInterface = await ApiHelper.post('/users/loadOrCreate', userPayload, "AccessApi");
+            const roleMember: RoleMemberInterface = { userId: user.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
+            await ApiHelper.post('/rolemembers/', [roleMember], "AccessApi");
+            selectedPerson.userId = user.id;
+            console.log('person with user id', selectedPerson);
+            await ApiHelper.post("/people", [selectedPerson], "MembershipApi");
+            props.updatedFunction();
+        } else {
+            // TODO: case 2, person doesn't have email
+        }
     }
 
     const validate = (): boolean => {
@@ -103,11 +123,12 @@ export const UserAdd: React.FC<Props> = (props) => {
     }
 
     const handleAssociatePerson = (person: PersonInterface) => {
-        setErrors([]);
-        setLinkNewPerson(person);
-        if (person.userId) {
-            setErrors([<><b>{person?.name.display}</b> is already linked with other user. Press <b>save</b> only if you are sure about removing that link and associate it to <b>{email}</b>.</>])
-        }
+        setSelectedPerson(person);
+        // setErrors([]);
+        // setLinkNewPerson(person);
+        // if (person.userId) {
+        //     setErrors([<><b>{person?.name.display}</b> is already linked with other user. Press <b>save</b> only if you are sure about removing that link and associate it to <b>{email}</b>.</>])
+        // }
     }
 
     React.useEffect(loadData, [props.selectedUser]);
@@ -115,9 +136,9 @@ export const UserAdd: React.FC<Props> = (props) => {
     const message = !linkedPerson && !linkNewPerson && (<span><small>* If you do not link anyone, a new person with these details will be created.</small></span>);
 
     return (
-        <InputBox headerIcon="fas fa-lock" headerText={"Add to " + props.role.name} saveFunction={handleSave} cancelFunction={props.updatedFunction}  >
-            <ErrorMessages errors={errors} />
-            <FormGroup>
+        <InputBox headerIcon="fas fa-lock" headerText={"Add to " + props.role.name} saveFunction={handleNewSave} cancelFunction={props.updatedFunction}  >
+            {/* <ErrorMessages errors={errors} /> */}
+            {/* <FormGroup>
                 <label>Name</label>
                 <input type="text" name="name" value={name} onChange={handleChange} placeholder="John Smith" className="form-control" />
                 <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
@@ -125,13 +146,13 @@ export const UserAdd: React.FC<Props> = (props) => {
             <FormGroup>
                 <label>Email</label>
                 <input type="email" name="email" value={email} onChange={handleChange} onBlur={() => setCheckForSuggestion(new Date())} className="form-control" />
-            </FormGroup>        
+            </FormGroup>         */}
             <FormGroup>
                 <label>Associate Person</label>
-                <SuggestPerson person={linkedPerson || linkNewPerson} handleAssociatePerson={handleAssociatePerson} email={email} callNow={checkForSuggestions} />
-                <AssociatePerson person={linkNewPerson || linkedPerson} handleAssociatePerson={handleAssociatePerson} />
+                {/* <SuggestPerson person={linkedPerson || linkNewPerson} handleAssociatePerson={handleAssociatePerson} email={email} callNow={checkForSuggestions} /> */}
+                <AssociatePerson person={linkNewPerson || linkedPerson || selectedPerson} handleAssociatePerson={handleAssociatePerson} />
             </FormGroup>
-            {message}            
+            {/* {message}             */}
         </InputBox>
     );
 }
