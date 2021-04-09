@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { InputBox, RoleInterface } from '.'
 import { FormGroup, Form } from 'react-bootstrap';
-import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, UniqueIdHelper, AssociatePerson, ErrorMessages, UserInterface, SuggestPerson } from './';
+import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, UniqueIdHelper, AssociatePerson, ErrorMessages, UserInterface, SuggestPerson, Validate } from './';
 
 interface Props {
     role: RoleInterface,
@@ -10,14 +10,15 @@ interface Props {
 }
 
 export const UserAdd: React.FC<Props> = (props) => {
-    const [email, setEmail] = React.useState("");
-    const [name, setName] = React.useState("");
-    const [fetchedUser, setFetchedUser] = React.useState<UserInterface>(null);
-    const [errors, setErrors] = React.useState([]);
-    const [linkedPerson, setLinkedPerson] = React.useState<PersonInterface>(null)
-    const [linkNewPerson, setLinkNewPerson] = React.useState<PersonInterface>(null);
-    const [checkForSuggestions, setCheckForSuggestion] = React.useState<Date>(null);
-    const [selectedPerson, setSelectedPerson] = React.useState<PersonInterface>(null);
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [fetchedUser, setFetchedUser] = useState<UserInterface>(null);
+    const [errors, setErrors] = useState([]);
+    const [linkedPerson, setLinkedPerson] = useState<PersonInterface>(null)
+    const [linkNewPerson, setLinkNewPerson] = useState<PersonInterface>(null);
+    const [checkForSuggestions, setCheckForSuggestion] = useState<Date>(null);
+    const [selectedPerson, setSelectedPerson] = useState<PersonInterface>(null);
+    const [emailNotFound, setEmailNotFound] = useState<boolean>(false);
 
     const handleSave = async () => {
         if (!validate()) return;
@@ -53,12 +54,19 @@ export const UserAdd: React.FC<Props> = (props) => {
         props.updatedFunction();
     }
 
+    // okay, so for case 1, I'm thinking UI flow will remain same, all I have to check in that case is
+    // does selected person already has userId and add that user directly to this group by 
+    // calling loadorcreate api and then just attaching those data to rolemember.
     const handleNewSave = async () => {
-        const { name: { display }, contactInfo: { email } } = selectedPerson;
+        const { name: { display }, contactInfo: { email: personEmail } } = selectedPerson;
         // maybe this check will be removed in future as I can just move this to associateUser function and
         // show email field then and there when person is selected and not on clicking save.
-        if (email) {
-            const userPayload: LoadCreateUserRequestInterface = { userName: display, userEmail: email };
+            if (emailNotFound && !Validate.email(email)) {
+                setErrors(["Please enter a valid Email"]);
+                return;
+            }
+            const userEmail = emailNotFound ? email : personEmail;
+            const userPayload: LoadCreateUserRequestInterface = { userName: display, userEmail };
             console.log("user", userPayload);
             const user: UserInterface = await ApiHelper.post('/users/loadOrCreate', userPayload, "AccessApi");
             const roleMember: RoleMemberInterface = { userId: user.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
@@ -67,9 +75,7 @@ export const UserAdd: React.FC<Props> = (props) => {
             console.log('person with user id', selectedPerson);
             await ApiHelper.post("/people", [selectedPerson], "MembershipApi");
             props.updatedFunction();
-        } else {
-            // TODO: case 2, person doesn't have email
-        }
+        
     }
 
     const validate = (): boolean => {
@@ -124,6 +130,10 @@ export const UserAdd: React.FC<Props> = (props) => {
 
     const handleAssociatePerson = (person: PersonInterface) => {
         setSelectedPerson(person);
+        if (!person.contactInfo.email) {
+            console.log("email not found");
+            setEmailNotFound(true);
+        }
         // setErrors([]);
         // setLinkNewPerson(person);
         // if (person.userId) {
@@ -137,21 +147,26 @@ export const UserAdd: React.FC<Props> = (props) => {
 
     return (
         <InputBox headerIcon="fas fa-lock" headerText={"Add to " + props.role.name} saveFunction={handleNewSave} cancelFunction={props.updatedFunction}  >
-            {/* <ErrorMessages errors={errors} /> */}
-            {/* <FormGroup>
-                <label>Name</label>
-                <input type="text" name="name" value={name} onChange={handleChange} placeholder="John Smith" className="form-control" />
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </FormGroup>
-            <FormGroup>
-                <label>Email</label>
-                <input type="email" name="email" value={email} onChange={handleChange} onBlur={() => setCheckForSuggestion(new Date())} className="form-control" />
-            </FormGroup>         */}
+            <ErrorMessages errors={errors} />        
             <FormGroup>
                 <label>Associate Person</label>
                 {/* <SuggestPerson person={linkedPerson || linkNewPerson} handleAssociatePerson={handleAssociatePerson} email={email} callNow={checkForSuggestions} /> */}
                 <AssociatePerson person={linkNewPerson || linkedPerson || selectedPerson} handleAssociatePerson={handleAssociatePerson} />
             </FormGroup>
+            {/* <FormGroup>
+                <label>Name</label>
+                <input type="text" name="name" value={name} onChange={handleChange} placeholder="John Smith" className="form-control" />
+                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            </FormGroup> */}
+            {
+                emailNotFound && (
+                    <FormGroup>
+                        <label>Email</label>
+                        <input type="email" name="email" value={email} onChange={handleChange} className="form-control" />
+                    </FormGroup>
+                )
+            }        
+            
             {/* {message}             */}
         </InputBox>
     );
