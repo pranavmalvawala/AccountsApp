@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { InputBox, RoleInterface } from '.'
-import { FormGroup, Form } from 'react-bootstrap';
+import { FormGroup, Form, Button } from 'react-bootstrap';
 import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, UniqueIdHelper, AssociatePerson, ErrorMessages, UserInterface, SuggestPerson, ValidateHelper } from './';
 
 interface Props {
@@ -18,7 +18,9 @@ export const UserAdd: React.FC<Props> = (props) => {
     const [linkNewPerson, setLinkNewPerson] = useState<PersonInterface>(null);
     const [checkForSuggestions, setCheckForSuggestion] = useState<Date>(null);
     const [selectedPerson, setSelectedPerson] = useState<PersonInterface>(null);
-    const [emailNotFound, setEmailNotFound] = useState<boolean>(false);
+    const [showEmailField, setShowEmailField] = useState<boolean>(false);
+    const [showNameField, setShowNameField] = useState<boolean>(false);
+    const [editMode, setEditMode] = useState<boolean>(false);
 
     const handleSave = async () => {
         if (!validate()) return;
@@ -54,26 +56,46 @@ export const UserAdd: React.FC<Props> = (props) => {
         props.updatedFunction();
     }
 
-    // okay, so for case 1, I'm thinking UI flow will remain same, all I have to check in that case is
-    // does selected person already has userId and add that user directly to this group by 
-    // calling loadorcreate api and then just attaching those data to rolemember.
     const handleNewSave = async () => {
-        const { name: { display }, contactInfo: { email: personEmail } } = selectedPerson;
-        // maybe this check will be removed in future as I can just move this to associateUser function and
-        // show email field then and there when person is selected and not on clicking save.
-            if (emailNotFound && !ValidateHelper.email(email)) {
+        if (showNameField) {
+            console.log('creating a whole new user...');
+
+            const warnings: string[] = [];
+            if (!ValidateHelper.shouldBeTwoWords(name)) warnings.push("Name should be 2 words");
+            if (!ValidateHelper.email(email)) warnings.push("Enter a valid Email");
+            setErrors(warnings);
+            if (warnings.length > 0) return;
+            
+            console.log("create user now");
+            const userPayload: LoadCreateUserRequestInterface = { userName: name, userEmail: email };
+            const user: UserInterface = await ApiHelper.post('/users/loadOrCreate', userPayload, "AccessApi");
+            const roleMember: RoleMemberInterface = { userId: user.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
+            await ApiHelper.post('/rolemembers/', [roleMember], "AccessApi");
+            await createPerson(user.id);
+            props.updatedFunction();
+
+            return;
+
+            
+        }
+            if (showEmailField && !ValidateHelper.email(email)) {
                 setErrors(["Please enter a valid Email"]);
                 return;
             }
-            const userEmail = emailNotFound ? email : personEmail;
-            const userPayload: LoadCreateUserRequestInterface = { userName: display, userEmail };
+            const userEmail = showEmailField ? email : selectedPerson.contactInfo.email;
+            const userPayload: LoadCreateUserRequestInterface = { userName: selectedPerson.name.display, userEmail };
             console.log("user", userPayload);
             const user: UserInterface = await ApiHelper.post('/users/loadOrCreate', userPayload, "AccessApi");
             const roleMember: RoleMemberInterface = { userId: user.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
             await ApiHelper.post('/rolemembers/', [roleMember], "AccessApi");
-            selectedPerson.userId = user.id;
-            console.log('person with user id', selectedPerson);
-            await ApiHelper.post("/people", [selectedPerson], "MembershipApi");
+            // selectedPerson is already associated with a user
+            if (user.id !== selectedPerson.userId) {
+                selectedPerson.userId = user.id;
+                selectedPerson.contactInfo.email = userEmail;
+                console.log('person with user id', selectedPerson);
+                await ApiHelper.post("/people", [selectedPerson], "MembershipApi");
+            }
+
             props.updatedFunction();
         
     }
@@ -113,6 +135,9 @@ export const UserAdd: React.FC<Props> = (props) => {
 
     const loadData = () => {
         if (!UniqueIdHelper.isMissing(props.selectedUser)) {
+            setEditMode(true);
+            setShowNameField(true);
+            setShowEmailField(true);
             ApiHelper.get(`/users/${props.selectedUser}`, "AccessApi").then(user => {
                 setFetchedUser(user);
                 setName(user.displayName);
@@ -130,9 +155,12 @@ export const UserAdd: React.FC<Props> = (props) => {
 
     const handleAssociatePerson = (person: PersonInterface) => {
         setSelectedPerson(person);
+        if (person.userId) {
+            return;
+        }
         if (!person.contactInfo.email) {
             console.log("email not found");
-            setEmailNotFound(true);
+            setShowEmailField(true);
         }
         // setErrors([]);
         // setLinkNewPerson(person);
@@ -141,25 +169,37 @@ export const UserAdd: React.FC<Props> = (props) => {
         // }
     }
 
+    const CreateNewUser = () => {
+        setShowNameField(true);
+        setShowEmailField(true);
+    }
+
     React.useEffect(loadData, [props.selectedUser]);
 
     const message = !linkedPerson && !linkNewPerson && (<span><small>* If you do not link anyone, a new person with these details will be created.</small></span>);
+    const nameField = showNameField && (
+        <FormGroup>
+                <label>Name</label>
+                <input type="text" name="name" value={name} onChange={handleChange} placeholder="John Smith" className="form-control" />
+        </FormGroup>
+    )
 
     return (
         <InputBox headerIcon="fas fa-lock" headerText={"Add to " + props.role.name} saveFunction={handleNewSave} cancelFunction={props.updatedFunction}  >
             <ErrorMessages errors={errors} />        
-            <FormGroup>
-                <label>Associate Person</label>
-                {/* <SuggestPerson person={linkedPerson || linkNewPerson} handleAssociatePerson={handleAssociatePerson} email={email} callNow={checkForSuggestions} /> */}
-                <AssociatePerson person={linkNewPerson || linkedPerson || selectedPerson} handleAssociatePerson={handleAssociatePerson} />
-            </FormGroup>
-            {/* <FormGroup>
-                <label>Name</label>
-                <input type="text" name="name" value={name} onChange={handleChange} placeholder="John Smith" className="form-control" />
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </FormGroup> */}
             {
-                emailNotFound && (
+                (!showNameField || editMode) && (
+                    <FormGroup>
+                        <label>Associate Person</label>
+                        {/* <SuggestPerson person={linkedPerson || linkNewPerson} handleAssociatePerson={handleAssociatePerson} email={email} callNow={checkForSuggestions} /> */}
+                        <AssociatePerson person={linkNewPerson || linkedPerson || selectedPerson} handleAssociatePerson={handleAssociatePerson} />
+                    </FormGroup>
+                )
+            }
+            {!showNameField && (<Button variant="primary" onClick={CreateNewUser}>Create new user</Button>)}
+            {nameField}
+            {
+                showEmailField && (
                     <FormGroup>
                         <label>Email</label>
                         <input type="email" name="email" value={email} onChange={handleChange} className="form-control" />
