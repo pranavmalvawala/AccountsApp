@@ -53,7 +53,6 @@ export const UserAdd: React.FC<Props> = (props) => {
         // selectedPerson is already associated with a user
         if (user.id !== selectedPerson.userId) {
             selectedPerson.userId = user.id;
-            selectedPerson.contactInfo.email = userEmail;
             await ApiHelper.post("/people", [selectedPerson], "MembershipApi");
         }
         props.updatedFunction();
