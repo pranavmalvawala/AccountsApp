@@ -3,16 +3,16 @@ import { ApiHelper, DisplayBox, UserHelper, RoleMemberInterface, RoleInterface, 
 import { Table } from 'react-bootstrap';
 
 
-interface Props { role: RoleInterface, addFunction: (role: RoleInterface) => void, setSelectedRoleMember: (id: string) => void }
+interface Props { 
+    role: RoleInterface, 
+    addFunction: (role: RoleInterface) => void, 
+    setSelectedRoleMember: (id: string) => void,
+    roleMembers: RoleMemberInterface[],
+    updatedFunction: () => void, 
+}
 
 export const RoleMembers: React.FC<Props> = (props) => {
-
-    const [roleMembers, setRoleMembers] = React.useState<RoleMemberInterface[]>([]);
-
-    const loadData = React.useCallback(() => {
-        ApiHelper.get('/rolemembers/roles/' + props.role.id + '?include=users', "AccessApi").then((data: any) => { setRoleMembers(data); });
-    }, [props.role]);
-
+    const { roleMembers } = props;
     const getEditContent = () => { return <a href="about:blank" onClick={handleAdd}><i className="fas fa-plus"></i></a> }
 
     const handleAdd = (e: React.MouseEvent) => {
@@ -23,12 +23,11 @@ export const RoleMembers: React.FC<Props> = (props) => {
     const handleRemove = (e: React.MouseEvent) => {
         e.preventDefault();
         if (window.confirm(`Are you sure you wish to delete this user from ${props.role.name}?`)) {
-            var anchor = e.currentTarget as HTMLAnchorElement;
-            var idx = parseInt(anchor.getAttribute('data-index'));
-            var members = [...roleMembers];
-            var member = members.splice(idx, 1)[0];
-            setRoleMembers(members);
-            ApiHelper.delete('/rolemembers/' + member.id, "AccessApi");
+            const anchor = e.currentTarget as HTMLAnchorElement;
+            const idx = parseInt(anchor.getAttribute('data-index'));
+            const members = [...roleMembers];
+            const member = members.splice(idx, 1)[0];
+            ApiHelper.delete('/rolemembers/' + member.id, "AccessApi").then(() => props.updatedFunction());
         }
 
     }
@@ -52,9 +51,6 @@ export const RoleMembers: React.FC<Props> = (props) => {
         }
         return rows;
     }
-
-
-    React.useEffect(() => { if (props.role.id !== undefined) loadData(); }, [props.role, loadData]);
 
     return (
         <DisplayBox id="roleMembersBox" headerText="Members" headerIcon="fas fa-users" editContent={getEditContent()} >
