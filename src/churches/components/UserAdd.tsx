@@ -7,6 +7,7 @@ interface Props {
     role: RoleInterface,
     updatedFunction: () => void,
     selectedUser: string,
+    roleMembers: RoleMemberInterface[];
 }
 
 export const UserAdd: React.FC<Props> = (props) => {
@@ -116,6 +117,12 @@ export const UserAdd: React.FC<Props> = (props) => {
     }
 
     const handleAssociatePerson = (person: PersonInterface) => {
+        const filteredUser = props.roleMembers.filter(r => r.userId === person.userId);
+        if (filteredUser.length > 0) {
+            window.alert("There already exist a role member associating with this person.");
+            props.updatedFunction();
+            return;
+        }
         setSelectedPerson(person);
         if (person.userId) {
             return;
