@@ -30,6 +30,17 @@ export const UserAdd: React.FC<Props> = (props) => {
 
             const user: UserInterface = {...fetchedUser, email, displayName: name};
             await ApiHelper.post("/users/updateUser", user, "AccessApi");
+            let people: PersonInterface[] = []
+            if (linkedPerson) {
+                linkedPerson.userId = "";
+                people.push(linkedPerson)
+            }
+            if (selectedPerson) {
+                selectedPerson.userId = user.id;
+                people.push(selectedPerson);
+            }
+            await ApiHelper.post("/people", people, "MembershipApi");
+
             props.updatedFunction();
             return;
         }
@@ -111,18 +122,23 @@ export const UserAdd: React.FC<Props> = (props) => {
                 if (person) {
                     setLinkedPerson(person);
                 }
+            }).catch(() => {
+                setLinkedPerson(null);
             })
         }
     }
 
     const handleAssociatePerson = (person: PersonInterface) => {
         const filteredUser = props.roleMembers.filter(r => r.userId === person.userId);
-        if (filteredUser.length > 0) {
+        if (!editMode && filteredUser.length > 0) {
             window.alert("There already exist a role member associating with this person.");
             props.updatedFunction();
             return;
         }
         setSelectedPerson(person);
+        if (editMode && person.userId && person.userId !== fetchedUser.id) {
+            setErrors([<><b>{person?.name.display}</b> is already linked with other user. Press <b>save</b> only if you are sure about removing that link and associate it to <b>{email}</b>.</>])
+        }
         if (person.userId) {
             return;
         }
@@ -160,7 +176,7 @@ export const UserAdd: React.FC<Props> = (props) => {
                 (!showNameField || editMode) && (
                     <FormGroup>
                         <label>Associate Person</label>
-                        <AssociatePerson person={linkedPerson || selectedPerson} handleAssociatePerson={handleAssociatePerson} />
+                        <AssociatePerson person={selectedPerson || linkedPerson } handleAssociatePerson={handleAssociatePerson} />
                     </FormGroup>
                 )
             }
