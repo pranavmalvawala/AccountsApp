@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { InputBox, RoleInterface } from '.'
 import { FormGroup } from 'react-bootstrap';
 import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, UniqueIdHelper, AssociatePerson, ErrorMessages, UserInterface, ValidateHelper } from './';
@@ -20,6 +20,7 @@ export const UserAdd: React.FC<Props> = (props) => {
     const [showEmailField, setShowEmailField] = useState<boolean>(false);
     const [showNameField, setShowNameField] = useState<boolean>(false);
     const [editMode, setEditMode] = useState<boolean>(false);
+    const [hasSearched, setHasSearched] = useState<boolean>(false);
 
     const handleSave = async () => {
         // when edit mode
@@ -156,9 +157,13 @@ export const UserAdd: React.FC<Props> = (props) => {
         setShowEmailField(true);
     }
 
+    const handleSearchStatus = useCallback((value: boolean) => {
+        setHasSearched(value);
+    }, [])
+
     React.useEffect(loadData, [props.selectedUser]);
 
-    const message = (!showNameField && !editMode) && (<span>Don't have a user account? <a href="about:blank" onClick={CreateNewUser}>Create New User</a></span>);
+    const message = (!showNameField && !editMode && hasSearched) && (<span>Don't have a user account? <a href="about:blank" onClick={CreateNewUser}>Create New User</a></span>);
     const nameField = (showNameField || editMode) && (
         <FormGroup>
                 <label>Name</label>
@@ -179,7 +184,11 @@ export const UserAdd: React.FC<Props> = (props) => {
                 (!showNameField || editMode) && (
                     <FormGroup>
                         <label>Associate Person</label>
-                        <AssociatePerson person={selectedPerson || linkedPerson } handleAssociatePerson={handleAssociatePerson} />
+                        <AssociatePerson 
+                            person={selectedPerson || linkedPerson } 
+                            handleAssociatePerson={handleAssociatePerson} 
+                            searchStatus={handleSearchStatus} 
+                        />
                     </FormGroup>
                 )
             }

@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import { Table } from 'react-bootstrap'
-import { PersonAdd, PersonInterface, PersonHelper } from '.'
+import { PersonAdd, PersonInterface, PersonHelper, PersonAddEvents } from '.'
 
 interface Props {
     person: PersonInterface,
     handleAssociatePerson: (person: PersonInterface) => void,
+    searchStatus: (value: boolean) => void,
 }
 
-export const AssociatePerson: React.FC<Props> = ({ person, handleAssociatePerson }) => {
+export const AssociatePerson: React.FC<Props> = ({ person, handleAssociatePerson, searchStatus }) => {
     const [showSearchPerson, setShowSearchPerson] = useState<boolean>(false);
+    const [hasSearched, setHasSearched] = useState<boolean>(false);
 
     useEffect(() => {
         setShowSearchPerson(false);
+        setHasSearched(false);
     }, [person])
 
-    if (!person || showSearchPerson) return <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={handleAssociatePerson} />;
+    const personAddEvents = (eventName: PersonAddEvents) => {
+        switch(eventName) {
+            case "searchClicked":
+                setHasSearched(true);
+                break;
+        }
+    }
+
+    useEffect(() => {
+        searchStatus(hasSearched);
+    }, [hasSearched, searchStatus])
+
+    if (!person || showSearchPerson) return <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={handleAssociatePerson} passEvents={personAddEvents} />;
     return (
         <Table size="sm">
             <tbody>
