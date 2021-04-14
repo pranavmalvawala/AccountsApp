@@ -44,7 +44,7 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
                 result = (<a href={EnvironmentHelper.ChumsUrl + "/login/?jwt=" + jwt + "&churchId=" + church.id.toString()} rel="external noopener noreferrer " target="_blank" ><i className="fas fa-external-link-alt"></i></a>);
                 break;
             case "StreamingLive":
-                result = (<a href={EnvironmentHelper.StreamingLiveUrl + "/login/?jwt=" + jwt + "&churchId=" + church.id.toString()} rel="external noopener noreferrer" target="_blank"><i className="fas fa-external-link-alt"></i></a>);
+                result = (<a href={EnvironmentHelper.StreamingLiveUrl.replace("{key}", UserHelper.currentChurch.subDomain) + "/login/?jwt=" + jwt + "&churchId=" + church.id.toString()} rel="external noopener noreferrer" target="_blank"><i className="fas fa-external-link-alt"></i></a>);
                 break;
         }
         return result;
