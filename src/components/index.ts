@@ -3,6 +3,3 @@ export { ErrorMessages, ExportLink, DisplayBox, InputBox, PersonAdd } from '../a
 export { Header } from './Header'
 export { Footer } from './Footer'
 export { NavItems } from './NavItems'
-
-// events
-export * from '../appBase/components/componentEvents'
