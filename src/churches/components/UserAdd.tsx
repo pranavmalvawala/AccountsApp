@@ -85,7 +85,7 @@ export const UserAdd: React.FC<Props> = (props) => {
     const createUserAndToGroup = async (userName: string, userEmail: string) => {
         const appUrl: {[key: string]: string} = {
             'CHUMS': EnvironmentHelper.ChumsUrl,
-            'StreamingLive': EnvironmentHelper.StreamingLiveUrl,
+            'StreamingLive': EnvironmentHelper.StreamingLiveUrl.replace("{key}", UserHelper.currentChurch.subDomain),
             'B1': EnvironmentHelper.B1Url,
             'AccessManagement': window.location.href.replace(window.location.pathname, ""),
         }

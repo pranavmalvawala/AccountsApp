@@ -6,7 +6,7 @@ REACT_APP_GIVING_API=https://givingapi.staging.churchapps.org
 REACT_APP_MEMBERSHIP_API=https://membershipapi.staging.churchapps.org
 
 REACT_APP_STREAMINGLIVE_API=https://api.staging.streaminglive.church
-REACT_APP_STREAMINGLIVE_URL=https://staging.streaminglive.church
+REACT_APP_STREAMINGLIVE_URL=https://{key}.staging.streaminglive.church
 
 REACT_APP_CHUMS_URL=https://app.staging.chums.org
 
