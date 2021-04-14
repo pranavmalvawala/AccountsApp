@@ -83,7 +83,13 @@ export const UserAdd: React.FC<Props> = (props) => {
     }
 
     const createUserAndToGroup = async (userName: string, userEmail: string) => {
-        const loginLink = window.location.href.replace(window.location.pathname, "") + "/login?auth={auth}";
+        const appUrl: {[key: string]: string} = {
+            'CHUMS': EnvironmentHelper.ChumsUrl,
+            'StreamingLive': EnvironmentHelper.StreamingLiveUrl,
+            'B1': EnvironmentHelper.B1Url,
+            'AccessManagement': window.location.href.replace(window.location.pathname, ""),
+        }
+        const loginLink = appUrl[props.role.appName] + "/login?auth={auth}";
 
         const userPayload: LoadCreateUserRequestInterface = {
             fromEmail: EnvironmentHelper.SupportEmail,
