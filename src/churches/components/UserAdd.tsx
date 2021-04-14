@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { InputBox, RoleInterface } from '.'
 import { FormGroup } from 'react-bootstrap';
-import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, UniqueIdHelper, AssociatePerson, ErrorMessages, UserInterface, ValidateHelper } from './';
+import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, UniqueIdHelper, AssociatePerson, ErrorMessages, UserInterface, ValidateHelper, EnvironmentHelper } from './';
 
 interface Props {
     role: RoleInterface,
@@ -83,7 +83,15 @@ export const UserAdd: React.FC<Props> = (props) => {
     }
 
     const createUserAndToGroup = async (userName: string, userEmail: string) => {
-        const userPayload: LoadCreateUserRequestInterface = { userName, userEmail };
+        const loginLink = window.location.href.replace(window.location.pathname, "") + "/login?auth={auth}";
+
+        const userPayload: LoadCreateUserRequestInterface = {
+            fromEmail: EnvironmentHelper.SupportEmail,
+            subject: "Live Church Solutions One Time Login Link",
+            body: `Your one time login link: <a href="${loginLink}">${loginLink}</a>`,
+            userName, 
+            userEmail  
+        };
         const user: UserInterface = await ApiHelper.post('/users/loadOrCreate', userPayload, "AccessApi");
         const roleMember: RoleMemberInterface = { userId: user.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
         await ApiHelper.post('/rolemembers/', [roleMember], "AccessApi");
