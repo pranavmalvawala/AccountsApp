@@ -32,11 +32,14 @@ export const UserAdd: React.FC<Props> = (props) => {
             const user: UserInterface = {...fetchedUser, email, displayName: name};
             await ApiHelper.post("/users/updateUser", user, "AccessApi");
             let people: PersonInterface[] = []
-            if (linkedPerson) {
-                linkedPerson.userId = "";
-                people.push(linkedPerson)
-            }
+
+            // link new one
             if (selectedPerson) {
+                // unlink the old person
+                if (linkedPerson) {
+                    linkedPerson.userId = "";
+                    people.push(linkedPerson)
+                }
                 selectedPerson.userId = user.id;
                 people.push(selectedPerson);
             }
@@ -60,6 +63,7 @@ export const UserAdd: React.FC<Props> = (props) => {
             setErrors(["Please enter a valid Email"]);
             return;
         }
+        if (!selectedPerson) return;
         const userEmail = showEmailField ? email : selectedPerson.contactInfo.email;
         const user = await createUserAndToGroup(selectedPerson.name.display, userEmail);
         // selectedPerson is already associated with a user
