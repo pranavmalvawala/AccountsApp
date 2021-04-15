@@ -1,6 +1,5 @@
 import { PersonHelper as BasePersonHelper } from '../appBase/helpers'
-import { PersonInterface } from '.'
-import { EnvironmentHelper } from './EnvironmentHelper'
+import { PersonInterface, EnvironmentHelper } from '.'
 
 export class PersonHelper extends BasePersonHelper {
     static getPhotoUrl(person: PersonInterface) {
