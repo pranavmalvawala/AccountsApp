@@ -14,5 +14,3 @@ REACT_APP_B1_API=https://api.staging.b1.church
 REACT_APP_B1_URL=https://app.staging.b1.church
 
 REACT_APP_CONTENT_ROOT=https://app.staging.chums.org
-
-REACT_APP_SUPPORT_EMAIL=
