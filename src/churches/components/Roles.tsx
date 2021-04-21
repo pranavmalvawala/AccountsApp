@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Table } from 'react-bootstrap'
 import { useParams, Link } from 'react-router-dom'
-import { DisplayBox, UserHelper, ApiHelper, Permissions } from '.'
+import { DisplayBox, UserHelper, ApiHelper, Permissions, ChurchInterface } from '.'
 import { RoleInterface } from '../../helpers'
 import UserContext from '../../UserContext'
 
 interface Props {
     selectRoleId: (id: string) => void;
     selectedRoleId: string;
+    church: ChurchInterface;
 }
 
-export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId }) => {
+export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church }) => {
     const [roles, setRoles] = useState<RoleInterface[]>([]);
     const params: { id: string } = useParams();
     const context = useContext(UserContext);
@@ -42,7 +43,7 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId }) => {
         return result;
     }
 
-    useEffect(loadData, [selectedRoleId]);
+    useEffect(loadData, [selectedRoleId, church]);
 
     return (
         <DisplayBox id="rolesBox" headerText="Roles" headerIcon="fas fa-lock" editContent={getEditContent()}>

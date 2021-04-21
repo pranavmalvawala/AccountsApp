@@ -44,7 +44,7 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
             <Row>
                 <Col lg={8}>
                     <ChurchSettings church={church} updatedFunction={loadData} />
-                    <Roles selectRoleId={setSelectedRoleId} selectedRoleId={selectedRoleId} />
+                    <Roles selectRoleId={setSelectedRoleId} selectedRoleId={selectedRoleId} church={church} />
                 </Col>
                 <Col lg={4}>
                     {getSidebar()}
