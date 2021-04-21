@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApiHelper, ChurchInterface, DisplayBox, ChurchAppInterface, ApplicationInterface, UserHelper, LoginResponseInterface, ErrorMessages, Permissions } from './';
+import { ApiHelper, ChurchInterface, DisplayBox, ChurchAppInterface, ApplicationInterface, LoginResponseInterface, ErrorMessages } from './';
 
 interface Props { church: ChurchInterface, redirectFunction: (url: string) => void, updatedFunction: () => void }
 
@@ -24,20 +24,6 @@ export const ChurchApps: React.FC<Props> = (props) => {
         props.updatedFunction();
     }
 
-    const handleEditAccess = (e: React.MouseEvent) => {
-        e.preventDefault();
-        var anchor = e.currentTarget as HTMLAnchorElement;
-        var churchId = anchor.getAttribute('data-churchid');
-        var appName = anchor.getAttribute('data-appname');
-        props.redirectFunction("/churches/" + churchId.toString() + "/" + appName)
-    }
-
-    const getManageAccessLink = (appName: string) => {
-        var result: JSX.Element = null;
-        if (UserHelper.checkAccess(Permissions.accessApi.roles.edit)) result = (<a href="about:blank" data-churchid={props.church.id} data-appname={appName} onClick={handleEditAccess} ><i className="fas fa-key"></i></a>);
-        return result;
-    }
-
     const loadData = () => {
         if (props.church !== null) {
             ApiHelper.get('/applications/', "AccessApi").then(data => setApps(data));
@@ -54,7 +40,7 @@ export const ChurchApps: React.FC<Props> = (props) => {
             if (churchApp === null) {
                 result.push(<tr key={index}><td className="disabled">{a.name}</td><td><a href="about:blank" data-churchid={props.church.id} data-appname={a.keyName} onClick={handleActivate}>Activate</a></td></tr>)
             } else {
-                result.push(<tr key={index}><td>{a.name}</td><td>{getManageAccessLink(a.keyName)}</td></tr>)
+                result.push(<tr key={index}><td>{a.name}</td><td></td></tr>)
             }
 
         });
