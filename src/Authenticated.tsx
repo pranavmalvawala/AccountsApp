@@ -31,7 +31,7 @@ export const Authenticated: React.FC<Props> = (props) => {
           <Route path="/login"><Redirect to={props.location} /></Route>
           <Route path="/admin"><AdminPage /></Route>
           <Route path="/churches/:id/manage" component={ManageChurch} />
-          <Route path="/churches/:id/:app/:roleId" component={RolePage} />
+          <Route path="/churches/:id/role/:roleId" component={RolePage} />
           <Route path="/churches/:id/:app" component={AppAccess} />
           <Route path="/churches/:id" component={ChurchPage} />
           <Route path="/churches"><ChurchesPage /></Route>
