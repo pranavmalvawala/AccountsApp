@@ -40,7 +40,7 @@ export const AppAccess = ({ match }: RouteComponentProps<TParams>) => {
 
     const getSidebar = () => {
         if (selectedRoleId === "notset") return <></>
-        else return (<RoleEdit roleId={selectedRoleId} updatedFunction={handleUpdate} appName={match.params.app} ></RoleEdit>)
+        else return (<RoleEdit roleId={selectedRoleId} updatedFunction={handleUpdate}></RoleEdit>)
     }
 
     React.useEffect(loadData, []);

@@ -28,7 +28,7 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
         if (!UserHelper.checkAccess(Permissions.accessApi.roles.edit)) return (null);
         else return (<>
             {getAddUser()}
-            <RolePermissions role={role} appName={match.params.app} />
+            <RolePermissions role={role} />
         </>);
     }
 
