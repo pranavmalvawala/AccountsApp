@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { Row, Col } from 'react-bootstrap'
 import UserContext from '../UserContext';
-import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, ChurchApps, Permissions, Appearance } from './components'
+import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, ChurchApps, Permissions, Appearance, Roles, RoleEdit } from './components'
 import { Redirect } from 'react-router-dom';
 import { RouteComponentProps } from "react-router-dom";
 
 type TParams = { id?: string };
 
 export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
-    const [church, setChurch] = React.useState<ChurchInterface>(null);
-    const [redirectUrl, setRedirectUrl] = React.useState<string>("");
-    const context = React.useContext(UserContext);
+    const [church, setChurch] = useState<ChurchInterface>(null);
+    const [redirectUrl, setRedirectUrl] = useState<string>("");
+    const [selectedRoleId, setSelectedRoleId] = useState<string>("notset");
+    const context = useContext(UserContext);
 
     const loadData = () => {
         const churchId = match.params.id;
@@ -19,8 +20,17 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
         ApiHelper.get('/churches/' + match.params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
     }
 
-    const handleChurchUpdated = () => {
-        loadData();
+    const getSidebar = () => {
+        let modules: JSX.Element[] = [
+            <ChurchApps key="churchApps" church={church} redirectFunction={setRedirectUrl} updatedFunction={loadData} />,
+            <Appearance key="appearence" />,
+        ];
+
+        if (selectedRoleId !== "notset") {
+            modules.splice(1, 0, <RoleEdit key="roleEdit" roleId={selectedRoleId} updatedFunction={() => { setSelectedRoleId("notset") }} />);
+        }
+
+        return modules;
     }
 
     React.useEffect(loadData, [match.params.id]);
@@ -32,17 +42,12 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
                 <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-church"></i> Manage: {church?.name || ""}</h1></div>
             </Row>
             <Row>
-                <Col md={8}>
-                    <ChurchSettings church={church} updatedFunction={handleChurchUpdated} />
+                <Col lg={8}>
+                    <ChurchSettings church={church} updatedFunction={loadData} />
+                    <Roles selectRoleId={setSelectedRoleId} selectedRoleId={selectedRoleId} church={church} />
                 </Col>
-                <Col md={4}>
-                    <ChurchApps church={church} redirectFunction={setRedirectUrl} updatedFunction={handleChurchUpdated} />
-                </Col>
-            </Row>
-            <Row>
-                <Col md={8} />            
-                <Col md={4}>
-                    <Appearance />
+                <Col lg={4}>
+                    {getSidebar()}
                 </Col>
             </Row>
         </>
