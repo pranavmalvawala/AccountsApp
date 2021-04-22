@@ -14,17 +14,17 @@ export const RolePermissions: React.FC<Props> = (props) => {
     }, []);
 
     const getSections = () => {
-        var lastSection = "";
+        const lastSection: string[] = [];
         const result: JSX.Element[] = []
         permissions.forEach((p, index) => {
-            if (p.displaySection !== lastSection) {
+            if (!lastSection.includes(p.displaySection)) {
                 result.push(
                     <Col key={index} xl={6} style={{ marginBottom: 14 }}>
                         <div><b>{p.displaySection}:</b></div>
                         {getChecks(p.displaySection)}
                     </Col>
                 )
-                lastSection = p.displaySection;
+                lastSection.push(p.displaySection);
             }
         });
         return result;
