@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { ApiHelper, DisplayBox, RoleInterface, RolePermissionInterface, RoleCheck, PermissionInterface } from './';
-import { Row, Col } from 'react-bootstrap';
+import { Accordion, Card } from 'react-bootstrap';
 
 interface Props { role: RoleInterface }
 
@@ -16,14 +16,18 @@ export const RolePermissions: React.FC<Props> = (props) => {
     const getSections = () => {
         const lastSection: string[] = [];
         const result: JSX.Element[] = []
-        permissions.forEach((p, index) => {
+        permissions.forEach(p => {
             if (!lastSection.includes(p.displaySection)) {
                 result.push(
-                    <Col key={index} xl={6} style={{ marginBottom: 14 }}>
-                        <div><b>{p.displaySection}:</b></div>
-                        {getChecks(p.displaySection)}
-                    </Col>
-                )
+                    <Card key={p.displaySection}>
+                        <Accordion.Toggle as={Card.Header} eventKey={p.displaySection}>
+                            {p.displaySection}
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey={p.displaySection}>
+                            <Card.Body>{getChecks(p.displaySection)}</Card.Body>
+                        </Accordion.Collapse>
+                    </Card>
+                  );
                 lastSection.push(p.displaySection);
             }
         });
@@ -45,9 +49,9 @@ export const RolePermissions: React.FC<Props> = (props) => {
 
     return (
         <DisplayBox id="rolePermissionsBox" headerText="Edit Permissions" headerIcon="fas fa-lock" >
-            <Row>
+            <Accordion>
                 {getSections()}
-            </Row>
+            </Accordion>
         </DisplayBox>
     );
 }
