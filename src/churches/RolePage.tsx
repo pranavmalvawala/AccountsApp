@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { ApiHelper, RoleInterface, UserAdd, UserHelper, Permissions, RoleMemberInterface } from './components';
+import { ApiHelper, RoleInterface, UserAdd, UserHelper, Permissions, RoleMemberInterface, BreadCrumb } from './components';
 import { RouteComponentProps } from 'react-router-dom'
 import { RoleMembers } from './components/RoleMembers';
 import { RolePermissions } from './components/RolePermissions';
 import { Row, Col } from 'react-bootstrap';
+import { BreadCrumbProps } from './components/BreadCrumb'
 
-type TParams = { app: string, roleId?: string };
+type TParams = { roleId?: string };
 
 export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
     const [role, setRole] = React.useState<RoleInterface>({} as RoleInterface);
     const [showAdd, setShowAdd] = React.useState<boolean>(false);
     const [selectedRoleMemberId, setSelectedRoleMemberId] = React.useState<string>("");
     const [roleMembers, setRoleMembers] = useState<RoleMemberInterface[]>([]);
+    const church = UserHelper.currentChurch;
 
     const handleShowAdd = (role: RoleInterface) => { setShowAdd(true); }
     const handleAdd = () => { setShowAdd(false); setSelectedRoleMemberId(""); loadData(); loadRoleMembers(); }
@@ -35,10 +37,18 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
     React.useEffect(loadData, []);
     React.useEffect(loadRoleMembers, [])
 
+    const items: BreadCrumbProps[] = [
+        { name: 'churches', to: '/churches' },
+        { name: church?.name, to: `/churches/${church?.id}` },
+        { name: 'Manage', to: `/churches/${church?.id}/manage` },
+        { name: role?.name, to: `/churches/${church?.id}/role/${role?.id}`, active: true }
+    ]
+
     if (!UserHelper.checkAccess(Permissions.accessApi.roles.view)) return (<></>);
     else {
         return (
             <>
+                <BreadCrumb items={items} />
                 <h1><i className="fas fa-lock"></i> {role.name}</h1>
                 <Row>
                     <Col lg={8}>
