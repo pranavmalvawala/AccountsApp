@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { ApiHelper, RoleInterface, UserAdd, UserHelper, Permissions, RoleMemberInterface, BreadCrumb } from './components';
+import { ApiHelper, RoleInterface, UserAdd, UserHelper, Permissions, RoleMemberInterface, BreadCrumb, BreadCrumbProps } from './components';
 import { RouteComponentProps } from 'react-router-dom'
 import { RoleMembers } from './components/RoleMembers';
 import { RolePermissions } from './components/RolePermissions';
 import { Row, Col } from 'react-bootstrap';
-import { BreadCrumbProps } from './components/BreadCrumb'
 
 type TParams = { roleId?: string };
 

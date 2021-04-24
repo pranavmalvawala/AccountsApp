@@ -1,10 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { Row, Col } from 'react-bootstrap'
 import UserContext from '../UserContext';
-import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, ChurchApps, Permissions, Appearance, Roles, RoleEdit, BreadCrumb } from './components'
+import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, ChurchApps, Permissions, Appearance, Roles, RoleEdit, BreadCrumb, BreadCrumbProps } from './components'
 import { Redirect } from 'react-router-dom';
 import { RouteComponentProps } from "react-router-dom";
-import { BreadCrumbProps } from './components/BreadCrumb'
 
 type TParams = { id?: string };
 
