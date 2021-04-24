@@ -39,7 +39,7 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
     else {
         return (
             <>
-                <h1><i className="fas fa-lock"></i> {role.name}</h1>
+                <h1><i className="fas fa-lock"></i> {role?.name || 'Everyone'}</h1>
                 <Row>
                     <Col lg={8}>
                         <RoleMembers 
