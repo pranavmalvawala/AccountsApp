@@ -20,7 +20,7 @@ export const RolePermissions: React.FC<Props> = (props) => {
             if (!lastSection.includes(p.displaySection)) {
                 result.push(
                     <Card key={p.displaySection}>
-                        <Accordion.Toggle as={Card.Header} eventKey={p.displaySection}>
+                        <Accordion.Toggle as={Card.Header} style={{ cursor: 'pointer' }} eventKey={p.displaySection}>
                             {p.displaySection}
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey={p.displaySection}>
