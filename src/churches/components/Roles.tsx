@@ -29,17 +29,20 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
     }
 
     const getRows = () => {
-        const result = [];
+        const result: JSX.Element[] = [];
+        const sortedRoles = [...roles].sort((a, b) => a.name > b.name ? 1 : -1);
         const churchId = params.id;
         const canEdit = UserHelper.checkAccess(Permissions.accessApi.roles.edit);
-        for (let i = 0; i < roles.length; i++) {
-            const role = roles[i];
+
+        sortedRoles.forEach(role => {
             const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); selectRoleId(role.id) }}><i className="fas fa-pencil-alt"></i></a>) : null;
-            result.push(<tr key={i}>
+
+            result.push(<tr key={role.id}>
                 <td><i className="fas fa-lock" /> <Link to={`/churches/${churchId}/role/${role.id}`}>{role.name}</Link></td>
                 <td>{editLink}</td>
             </tr>);
-        }
+        })
+
         return result;
     }
 
