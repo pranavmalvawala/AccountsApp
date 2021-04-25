@@ -13,7 +13,10 @@ interface Props {
 
 export const RoleMembers: React.FC<Props> = (props) => {
     const { roleMembers } = props;
-    const getEditContent = () => { return <a href="about:blank" onClick={handleAdd}><i className="fas fa-plus"></i></a> }
+    const getEditContent = () => {
+        if (props.role.id === null) return null; 
+        return <a href="about:blank" onClick={handleAdd}><i className="fas fa-plus"></i></a> 
+    }
 
     const handleAdd = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -34,7 +37,12 @@ export const RoleMembers: React.FC<Props> = (props) => {
 
     const getRows = () => {
         var canEdit = UserHelper.checkAccess(Permissions.accessApi.roleMembers.edit);
-        var rows = [];
+        var rows: JSX.Element[] = [];
+        if (props.role.id === null) {
+            rows.push(<tr><td key="0">This role applies to all the members of the church.</td></tr>)
+            return rows;
+        }
+
         for (let i = 0; i < roleMembers.length; i++) {
             const rm = roleMembers[i];
             const removeLink = (canEdit) ? <a href="about:blank" onClick={handleRemove} data-index={i} className="text-danger" ><i className="fas fa-user-times"></i></a> : <></>
@@ -52,10 +60,16 @@ export const RoleMembers: React.FC<Props> = (props) => {
         return rows;
     }
 
+    const getTableHeader = () => {
+        if (props.role.id === null) return null;
+
+        return (<tr><th>Name</th><th>Email</th><th>Edit</th><th>Remove</th></tr>);
+    }
+
     return (
         <DisplayBox id="roleMembersBox" headerText="Members" headerIcon="fas fa-users" editContent={getEditContent()} >
             <Table id="roleMemberTable">
-                <thead><tr><th>Name</th><th>Email</th><th>Edit</th><th>Remove</th></tr></thead>
+                <thead>{getTableHeader()}</thead>
                 <tbody>{getRows()}</tbody>
             </Table>
         </DisplayBox>
