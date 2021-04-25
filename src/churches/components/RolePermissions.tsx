@@ -16,11 +16,13 @@ export const RolePermissions: React.FC<Props> = (props) => {
     const getSections = () => {
         const lastSection: string[] = [];
         const result: JSX.Element[] = []
-        permissions.forEach(p => {
+        const sortedPermissions = [...permissions].sort((a, b) => a.displaySection > b.displaySection ? 1 : -1);
+
+        sortedPermissions.forEach(p => {
             if (!lastSection.includes(p.displaySection)) {
                 result.push(
                     <Card key={p.displaySection}>
-                        <Accordion.Toggle as={Card.Header} eventKey={p.displaySection}>
+                        <Accordion.Toggle as={Card.Header} style={{ cursor: 'pointer' }} eventKey={p.displaySection}>
                             {p.displaySection}
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey={p.displaySection}>

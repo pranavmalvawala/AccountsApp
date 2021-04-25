@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Row, Col } from 'react-bootstrap'
 import UserContext from '../UserContext';
-import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, ChurchApps, Permissions, Appearance, Roles, RoleEdit } from './components'
+import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, ChurchApps, Permissions, Appearance, Roles, RoleEdit, BreadCrumb, BreadCrumbProps } from './components'
 import { Redirect } from 'react-router-dom';
 import { RouteComponentProps } from "react-router-dom";
 
@@ -35,9 +35,16 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
 
     React.useEffect(loadData, [match.params.id]);
 
+    const items: BreadCrumbProps[] = [
+        { name: 'churches', to: '/churches' },
+        { name: church?.name, to: `/churches/${church?.id}` },
+        { name: 'Manage', to: `/churches/${church?.id}/manage`, active: true }
+    ] 
+
     if (redirectUrl !== '') return <Redirect to={redirectUrl}></Redirect>;
     else return (
         <>
+            <BreadCrumb items={items} />
             <Row style={{ marginBottom: 25 }}>
                 <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-church"></i> Manage: {church?.name || ""}</h1></div>
             </Row>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap'
 import UserContext from '../UserContext';
-import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, EnvironmentHelper, ChurchAppInterface, Permissions } from './components'
+import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, EnvironmentHelper, ChurchAppInterface, Permissions, BreadCrumb, BreadCrumbProps } from './components'
 import { RouteComponentProps, useHistory } from "react-router-dom";
 
 type TParams = { id?: string };
@@ -58,8 +58,14 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
 
     React.useEffect(loadData, [match.params.id]);
 
+    const items: BreadCrumbProps[] = [
+        { name: 'churches', to: '/churches' },
+        { name: church?.name, to: `/churches/${church?.id}`, active: true }
+    ] 
+
     return (
         <>
+            <BreadCrumb items={items} />
             <Row style={{ marginBottom: 25 }}>
                 <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-church"></i> {church?.name || ""}</h1></div>
             </Row>
