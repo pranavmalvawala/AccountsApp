@@ -41,7 +41,16 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
                 <td><i className="fas fa-lock" /> <Link to={`/churches/${churchId}/role/${role.id}`}>{role.name}</Link></td>
                 <td>{editLink}</td>
             </tr>);
-        })
+        });
+        if (UserHelper.checkAccess(Permissions.accessApi.rolePermissions.edit)) {
+            result.push(
+                <tr key="everyone">
+                    <td><i className="fas fa-lock" /> <Link to={`/churches/${churchId}/role/everyone`}>Everyone</Link></td>
+                    <td></td>
+                </tr>
+            );
+        }
+
 
         return result;
     }

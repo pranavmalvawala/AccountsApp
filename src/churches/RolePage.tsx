@@ -17,7 +17,14 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
     const handleShowAdd = (role: RoleInterface) => { setShowAdd(true); }
     const handleAdd = () => { setShowAdd(false); setSelectedRoleMemberId(""); loadData(); loadRoleMembers(); }
 
-    const loadData = () => { ApiHelper.get('/roles/' + match.params.roleId, "AccessApi").then(data => setRole(data)); }
+    const loadData = () => {
+        if (match.params.roleId === 'everyone') {
+            setRole({ id: null, name: 'Everyone' });
+            return;
+        } 
+        ApiHelper.get('/roles/' + match.params.roleId, "AccessApi")
+            .then(data => setRole(data)); 
+    }
     const loadRoleMembers = () => { ApiHelper.get('/rolemembers/roles/' + match.params.roleId + '?include=users', "AccessApi").then((data: any) => { setRoleMembers(data); }); }
 
     const getAddUser = () => {
@@ -40,7 +47,7 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
         { name: 'churches', to: '/churches' },
         { name: church?.name, to: `/churches/${church?.id}` },
         { name: 'Manage', to: `/churches/${church?.id}/manage` },
-        { name: role?.name, to: `/churches/${church?.id}/role/${role?.id}`, active: true }
+        { name: role.name, to: `/churches/${church?.id}/role/${role?.id}`, active: true }
     ]
 
     if (!UserHelper.checkAccess(Permissions.accessApi.roles.view)) return (<></>);
