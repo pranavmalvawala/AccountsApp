@@ -13,8 +13,9 @@ interface Props {
 
 export const RoleMembers: React.FC<Props> = (props) => {
     const { roleMembers } = props;
+    const isRoleEveryone = props.role.id === null;
     const getEditContent = () => {
-        if (props.role.id === null) return null; 
+        if (isRoleEveryone) return null; 
         return <a href="about:blank" onClick={handleAdd}><i className="fas fa-plus"></i></a> 
     }
 
@@ -38,7 +39,7 @@ export const RoleMembers: React.FC<Props> = (props) => {
     const getRows = () => {
         var canEdit = UserHelper.checkAccess(Permissions.accessApi.roleMembers.edit);
         var rows: JSX.Element[] = [];
-        if (props.role.id === null) {
+        if (isRoleEveryone) {
             rows.push(<tr><td key="0">This role applies to all the members of the church.</td></tr>)
             return rows;
         }
@@ -61,7 +62,7 @@ export const RoleMembers: React.FC<Props> = (props) => {
     }
 
     const getTableHeader = () => {
-        if (props.role.id === null) return null;
+        if (isRoleEveryone) return null;
 
         return (<tr><th>Name</th><th>Email</th><th>Edit</th><th>Remove</th></tr>);
     }
