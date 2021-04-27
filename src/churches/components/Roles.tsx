@@ -42,10 +42,15 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
                 <td>{editLink}</td>
             </tr>);
         });
-        result.push(<tr key="everyone">
-            <td><i className="fas fa-lock" /> <Link to={`/churches/${churchId}/role/everyone`}>Everyone</Link></td>
-            <td></td>
-        </tr>);
+        if (UserHelper.checkAccess(Permissions.accessApi.rolePermissions.edit)) {
+            result.push(
+                <tr key="everyone">
+                    <td><i className="fas fa-lock" /> <Link to={`/churches/${churchId}/role/everyone`}>Everyone</Link></td>
+                    <td></td>
+                </tr>
+            );
+        }
+
 
         return result;
     }
