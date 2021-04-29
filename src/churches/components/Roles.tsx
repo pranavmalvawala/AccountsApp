@@ -37,7 +37,7 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
         if (UserHelper.checkAccess(Permissions.accessApi.rolePermissions.edit)) {
             result.push(
                 <tr key="everyone">
-                    <td><i className="fas fa-user-friends" /> <Link to={`/churches/${churchId}/role/everyone`} className="everyone">Everyone</Link></td>
+                    <td><i className="fas fa-user-friends" /> <Link to={`/churches/${churchId}/role/everyone`}>(Everyone)</Link></td>
                     <td></td>
                 </tr>
             );
