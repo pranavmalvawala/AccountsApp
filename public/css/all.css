@@ -539,3 +539,5 @@ label .description {
 
 .disabled {color:#999;}
 .breadcrumb { background: none; padding-left: 0; }
+a.everyone { color: darkgray }
+a.everyone:hover { color: darkslategray; }

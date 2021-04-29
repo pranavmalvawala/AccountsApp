@@ -34,6 +34,15 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
         const churchId = params.id;
         const canEdit = UserHelper.checkAccess(Permissions.accessApi.roles.edit);
 
+        if (UserHelper.checkAccess(Permissions.accessApi.rolePermissions.edit)) {
+            result.push(
+                <tr key="everyone">
+                    <td><i className="fas fa-user-friends" /> <Link to={`/churches/${churchId}/role/everyone`} className="everyone">Everyone</Link></td>
+                    <td></td>
+                </tr>
+            );
+        }
+
         sortedRoles.forEach(role => {
             const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); selectRoleId(role.id) }}><i className="fas fa-pencil-alt"></i></a>) : null;
 
@@ -42,14 +51,7 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
                 <td>{editLink}</td>
             </tr>);
         });
-        if (UserHelper.checkAccess(Permissions.accessApi.rolePermissions.edit)) {
-            result.push(
-                <tr key="everyone">
-                    <td><i className="fas fa-lock" /> <Link to={`/churches/${churchId}/role/everyone`}>Everyone</Link></td>
-                    <td></td>
-                </tr>
-            );
-        }
+
 
 
         return result;
