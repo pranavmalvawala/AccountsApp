@@ -3,7 +3,7 @@ import { ApiHelper } from "./components";
 import { Authenticated } from "./Authenticated";
 import UserContext from "./UserContext";
 import { useLocation } from "react-router-dom";
-import { useCookies } from 'react-cookie';
+import { useCookies } from "react-cookie";
 import { LoginPage } from "./appBase/pageComponents/LoginPage";
 
 export const Login: React.FC = (props: any) => {
