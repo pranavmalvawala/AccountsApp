@@ -27,7 +27,6 @@ export class EnvironmentHelper {
             { keyName: "AcceB1ApissApi", url: EnvironmentHelper.B1Api, jwt: "", permisssions: [] },
             { keyName: "MembershipApi", url: EnvironmentHelper.MembershipApi, jwt: "", permisssions: [] }
         ];
-        ApiHelper.defaultApi = "AccessApi";
     }
 
     static initDev = () => {
