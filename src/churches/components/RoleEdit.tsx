@@ -1,5 +1,5 @@
-import React from 'react';
-import { ApiHelper, InputBox, RoleInterface, UniqueIdHelper } from './';
+import React, { useState } from 'react';
+import { ApiHelper, InputBox, RoleInterface, UniqueIdHelper, ErrorMessages } from './';
 
 interface Props {
     roleId: string,
@@ -8,7 +8,8 @@ interface Props {
 
 
 export const RoleEdit: React.FC<Props> = (props) => {
-    const [role, setRole] = React.useState<RoleInterface>({} as RoleInterface);
+    const [role, setRole] = useState<RoleInterface>({} as RoleInterface);
+    const [errors, setErrors] = useState<string[]>([]);
 
     const loadData = () => {
         if (!UniqueIdHelper.isMissing(props.roleId)) ApiHelper.get('/roles/' + props.roleId, "AccessApi").then((data: RoleInterface) => setRole(data));
@@ -20,10 +21,19 @@ export const RoleEdit: React.FC<Props> = (props) => {
         r.name = e.currentTarget.value;
 
         setRole(r);
+        setErrors([]);
     }
 
     const handleSave = () => {
-        const r = { ...role };
+        if (!role.name?.trim()) {
+            setErrors(['Please enter a valid role name.'])
+            return;
+        }
+
+        const r = { 
+            ...role,
+            name: role.name.trim() 
+        };
         ApiHelper.post('/roles', [r], "AccessApi").then(() => props.updatedFunction());
     }
     const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === 'Enter') { e.preventDefault(); handleSave(); } }
@@ -39,6 +49,7 @@ export const RoleEdit: React.FC<Props> = (props) => {
 
     return (
         <InputBox id="roleBox" headerIcon="fas fa-lock" headerText="Edit Role" saveFunction={handleSave} cancelFunction={handleCancel} deleteFunction={(!UniqueIdHelper.isMissing(props.roleId)) ? handleDelete : undefined} >
+            <ErrorMessages errors={errors} />
             <div className="form-group">
                 <label>Role Name</label>
                 <input type="text" className="form-control" value={role.name || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
