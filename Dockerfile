@@ -1,4 +1,4 @@
-# pull offical base image
+# pull official base image
 FROM node:12-alpine
 
 # set working directory
