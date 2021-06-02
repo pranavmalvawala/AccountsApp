@@ -36,7 +36,7 @@ export const UserAdd: React.FC<Props> = (props) => {
             // link new one
             if (selectedPerson) {
                 // unlink the old person
-                if (linkedPerson) {
+                if (linkedPerson.id) {
                     linkedPerson.userId = "";
                     people.push(linkedPerson)
                 }

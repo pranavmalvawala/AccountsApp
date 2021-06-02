@@ -30,11 +30,11 @@ export const AssociatePerson: React.FC<Props> = ({ person, handleAssociatePerson
         <Table size="sm">
             <tbody>
                 <tr>
-                    <td className="border-0"><img src={PersonHelper.getPhotoUrl(person)} width="60px" height="45px" style={{borderRadius: "5px"}} alt="avatar" /></td>
-                    <td className="border-0">{person?.name.display}</td>
-                    <td className="border-0"><a className="text-success" data-cy="change-person" href="about:blank" onClick={(e) => { e.preventDefault(); setShowSearchPerson(true)}}><i className="fas fa-user"></i> Change</a></td>
-                </tr>    
-            </tbody>    
+                    <td className="border-0"><img src={PersonHelper.getPhotoUrl(person)} width="60px" height="45px" style={{ borderRadius: "5px" }} alt="avatar" /></td>
+                    <td className="border-0">{person?.name?.display}</td>
+                    <td className="border-0"><a className="text-success" data-cy="change-person" href="about:blank" onClick={(e) => { e.preventDefault(); setShowSearchPerson(true) }}><i className="fas fa-user"></i> Change</a></td>
+                </tr>
+            </tbody>
         </Table>
     )
 }
