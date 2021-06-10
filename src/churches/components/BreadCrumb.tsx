@@ -2,10 +2,10 @@ import React from "react";
 import { Breadcrumb } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-export interface BreadCrumbProps { 
-    to: string, 
-    name: string, 
-    active?: boolean 
+export interface BreadCrumbProps {
+    to: string,
+    name: string,
+    active?: boolean
 }
 
 interface Props {

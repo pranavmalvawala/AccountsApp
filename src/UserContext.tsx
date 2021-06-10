@@ -1,6 +1,5 @@
-import React from 'react'
+import React from "react"
 import { UserContextInterface } from "./appBase/interfaces"
-
 
 const UserContext = React.createContext<UserContextInterface | undefined>(undefined);
 interface Props { children: React.ReactNode; }

@@ -36,6 +36,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint:only": "eslint --ext ts,tsx",
+    "lint:fix": "npm run lint:only -- --fix",
     "predeploy-staging": "export REACT_APP_STAGE=staging&& npm run build",
     "exec-deploy-staging": "aws s3 sync build/ s3://staging-accounts-app",
     "postdeploy-staging": "aws cloudfront create-invalidation --distribution-id E1MQL48H8S17JD --paths \"/*\"",
@@ -43,10 +45,13 @@
     "predeploy-prod": "export REACT_APP_STAGE=prod&& npm run build",
     "exec-deploy-prod": "aws s3 sync build/ s3://accounts-app",
     "postdeploy-prod": "aws cloudfront create-invalidation --distribution-id E3NOF1LZOPAI6F --paths \"/*\"",
-    "deploy-prod": "npm run predeploy-prod && npm run exec-deploy-prod && npm run postdeploy-prod"
+    "deploy-prod": "npm run predeploy-prod && npm run exec-deploy-prod && npm run postdeploy-prod",
+    "prepare": "husky install"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "npm run lint:fix"
+    ]
   },
   "browserslist": {
     "production": [
@@ -63,6 +68,8 @@
   "devDependencies": {
     "@types/file-saver": "^2.0.1",
     "@types/react-ga": "^2.3.0",
-    "google-charts": "^2.0.0"
+    "google-charts": "^2.0.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0"
   }
 }

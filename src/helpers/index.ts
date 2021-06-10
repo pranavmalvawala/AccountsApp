@@ -4,4 +4,4 @@ export { Helper } from "./Helper"
 export { ArrayHelper } from "./ArrayHelper"
 export * from "./Interfaces";
 export { UniqueIdHelper } from "../appBase/helpers";
-export { PersonHelper } from './PersonHelper'
+export { PersonHelper } from "./PersonHelper"

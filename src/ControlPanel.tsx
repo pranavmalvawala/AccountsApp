@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const ControlPanel = () => {
-  var user = React.useContext(UserContext).userName; //to force rerender on login
+  let user = React.useContext(UserContext).userName; //to force rerender on login
   if (user === null) return null;
   return (
     <Switch>
@@ -26,14 +26,9 @@ export const ControlPanel = () => {
   );
 };
 
-const PrivateRoute: React.FC<Props> = ({ path }) => {
-  return (
-    <Route
-      path={path}
-      render={({ location }) => {
-        return ApiHelper.isAuthenticated ? (<Authenticated location={location.pathname}></Authenticated>) :
-          (<Redirect to={{ pathname: "/login", state: { from: location } }} ></Redirect>);
-      }}
-    ></Route>
-  );
-};
+const PrivateRoute: React.FC<Props> = ({ path }) => (
+  <Route
+    path={path}
+    render={({ location }) => ApiHelper.isAuthenticated ? (<Authenticated location={location.pathname} />) : (<Redirect to={{ pathname: "/login", state: { from: location } }} />)}
+  ></Route>
+);
