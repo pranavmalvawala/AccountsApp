@@ -1,14 +1,13 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { Header } from "./components";
-import { ProfilePage } from './profile/ProfilePage';
-import { RolePage } from './churches/RolePage';
-import { ChurchesPage } from './churches/ChurchesPage';
-import { ManageChurch } from './churches/ManageChurch';
-import { ChurchPage } from './churches/ChurchPage';
-import { AdminPage } from './admin/AdminPage';
+import { ProfilePage } from "./profile/ProfilePage";
+import { RolePage } from "./churches/RolePage";
+import { ChurchesPage } from "./churches/ChurchesPage";
+import { ManageChurch } from "./churches/ManageChurch";
+import { ChurchPage } from "./churches/ChurchPage";
+import { AdminPage } from "./admin/AdminPage";
 import UserContext from "./UserContext";
-
 
 interface Props {
   location: any;
@@ -16,8 +15,8 @@ interface Props {
 
 export const Authenticated: React.FC<Props> = (props) => {
   //to force rerender on login
-  var user = React.useContext(UserContext)?.userName;
-  var church = React.useContext(UserContext)?.churchName;
+  let user = React.useContext(UserContext)?.userName;
+  let church = React.useContext(UserContext)?.churchName;
   console.log(user);
   console.log(church);
 

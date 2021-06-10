@@ -7,14 +7,14 @@ import { useCookies } from "react-cookie";
 import { LoginPage } from "./appBase/pageComponents/LoginPage";
 
 export const Login: React.FC = (props: any) => {
-  const [cookies] = useCookies(['jwt']);
+  const [cookies] = useCookies(["jwt"]);
   let { from } = (useLocation().state as any) || { from: { pathname: "/" } };
 
   const context = React.useContext(UserContext);
 
   if (context.userName === "" || !ApiHelper.isAuthenticated) {
     let search = new URLSearchParams(props.location.search);
-    var jwt = search.get("jwt") || cookies.jwt;
+    let jwt = search.get("jwt") || cookies.jwt;
     let auth = search.get("auth");
     if (!jwt) jwt = "";
     if (!auth) auth = "";

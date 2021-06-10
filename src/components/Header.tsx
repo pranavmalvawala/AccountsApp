@@ -18,7 +18,7 @@ export const Header: React.FC = () => {
   const getChurchLinks = () => {
     if (UserHelper.churches.length < 2) return null;
     else {
-      var result: JSX.Element[] = [];
+      let result: JSX.Element[] = [];
       UserHelper.churches.forEach((c, index) => {
         const churchName = (c.id === UserHelper.currentChurch.id) ? (<b>{c.name}</b>) : (c.name);
         result.push(<li className="nav-tem" key={index}><a href="about:blank" data-id={c.id} onClick={switchChurch} className="nav-link"><i className="fas fa-external-link-alt"></i> {churchName}</a></li>);
@@ -57,14 +57,14 @@ export const Header: React.FC = () => {
               </div>
             </div>
 
-            <Col className="d-none d-md-block" style={{ borderLeft: "2px solid #EEE", borderRight: "2px solid #EEE", maxWidth: "703px", margin: "0 15px" }} >
-              <ul id="nav-main" className="nav nav-fill d-flex overflow-hidden" style={{ height: "55px" }} >
+            <Col className="d-none d-md-block" style={{ borderLeft: "2px solid #EEE", borderRight: "2px solid #EEE", maxWidth: "703px", margin: "0 15px" }}>
+              <ul id="nav-main" className="nav nav-fill d-flex overflow-hidden" style={{ height: "55px" }}>
                 <NavItems prefix="main" />
               </ul>
             </Col>
 
             <div className="d-flex align-items-center" id="navRight">
-              <a href="about:blank" id="userMenuLink" data-toggle="collapse" data-target="#userMenu" aria-controls="navbarToggleMenu" aria-expanded="false" aria-label="Toggle navigation" >
+              <a href="about:blank" id="userMenuLink" data-toggle="collapse" data-target="#userMenu" aria-controls="navbarToggleMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <img src="/images/sample-profile.png" alt="user" />
                 {userName} <i className="fas fa-caret-down"></i>
               </a>
