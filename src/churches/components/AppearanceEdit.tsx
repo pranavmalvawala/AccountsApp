@@ -3,8 +3,8 @@ import { Row, Col, FormGroup } from "react-bootstrap"
 import { InputBox, ApiHelper, ImageEditor, GenericSettingInterface, ArrayHelper } from "."
 
 interface Props {
-    updatedFunction?: () => void,
-    settings?: GenericSettingInterface[],
+  updatedFunction?: () => void,
+  settings?: GenericSettingInterface[],
 }
 
 export const AppearanceEdit: React.FC<Props> = (props) => {
@@ -43,9 +43,8 @@ export const AppearanceEdit: React.FC<Props> = (props) => {
   }
 
   const getLogoEditor = (logoName: string) => {
-    const ratio = logoName === "logoHeader" ? 4 : 1;
     if (!editLogo) return null;
-    else return <ImageEditor settings={currentSettings} name={logoName} updatedFunction={(dataUrl) => imageUpdated(dataUrl, logoName)} aspectRatio={ratio} />
+    else return <ImageEditor settings={currentSettings} name={logoName} updatedFunction={(dataUrl) => imageUpdated(dataUrl, logoName)} aspectRatio={4} />
   }
 
   const getLogoLink = (name: string, backgroundColor: string) => {
@@ -55,21 +54,31 @@ export const AppearanceEdit: React.FC<Props> = (props) => {
   }
 
   const handleSave = () => { ApiHelper.post("/settings", currentSettings, "AccessApi").then(props.updatedFunction); }
+  const handleCancel = () => { props.updatedFunction(); }
 
   React.useEffect(() => { setCurrentSettings(props.settings); }, [props.settings]);
 
   return (
     <>
       {getLogoEditor(currentEditLogo)}
-      <InputBox headerIcon="fas fa-palette" headerText="Church Appearance" saveFunction={handleSave}>
-        <FormGroup>
-          <label>Navbar Logo</label><br />
-          {getLogoLink("logoHeader", ArrayHelper.getOne(currentSettings, "keyName", "primaryColor")?.value || "#08A0CC")}
-        </FormGroup>
-        <FormGroup>
-          <label>Login Screen Logo</label><br />
-          {getLogoLink("logoSquare", "#FFFFFF")}
-        </FormGroup>
+      <InputBox headerIcon="fas fa-palette" headerText="Church Appearance" saveFunction={handleSave} cancelFunction={handleCancel}>
+        <div style={{ backgroundColor: "#EEE", margin: -10, padding: 10 }}>
+          <FormGroup>
+            <label>Logo - Light background</label><br />
+            <p style={{ color: "#999", fontSize: 12 }}>Upload horizontal logo with a transparent background suitable for use of light backrounds.</p>
+            {getLogoLink("logoLight", "#EEE")}
+
+          </FormGroup>
+        </div>
+        <hr />
+        <div style={{ backgroundColor: "#333", margin: -10, padding: 10, color: "#FFF" }}>
+          <FormGroup>
+            <label>Logo - Dark background</label><br />
+            <p style={{ color: "#999", fontSize: 12 }}>Upload horizontal logo with a transparent background suitable for use of dark backrounds.</p>
+            {getLogoLink("logoDark", "#333")}
+          </FormGroup>
+        </div>
+        <hr />
         <div className="section">Primary Colors</div>
         <Row>
           <Col>

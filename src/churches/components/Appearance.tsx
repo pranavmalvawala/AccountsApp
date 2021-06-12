@@ -1,19 +1,21 @@
 import React, { useState } from "react";
-import { ApiHelper, AppearanceEdit, DisplayBox, GenericSettingInterface, IChurchAppearance } from "."
+import { ApiHelper, AppearanceEdit, DisplayBox, GenericSettingInterface, AppearanceHelper, AppearanceInterface } from "."
 
 interface Props { }
 
 export const Appearance: React.FC<Props> = (props) => {
   const [currentSettings, setCurrentSettings] = useState<GenericSettingInterface[]>([]);
   const [mode, setMode] = useState("display");
-  const [styles, setStyles] = useState<IChurchAppearance>({});
+  const [styles, setStyles] = useState<AppearanceInterface>({});
 
   const loadData = () => { ApiHelper.get("/settings", "AccessApi").then(settings => { setCurrentSettings(settings); configureStyles(settings) }) }
   const handleEdit = () => { setMode("edit"); }
   const handleUpdate = () => { setMode("display"); loadData(); }
 
   const getLogo = (logoName: string) => {
-    const logoSrc = (logoName === "logoHeader") ? styles?.logoHeader || "/images/sample-logo-header.png" : styles?.logoSquare || "/images/sample-logo-square.png"
+    const logoSrc = (logoName === "logoLight")
+      ? AppearanceHelper.getLogoLight(styles, "/images/sample-logo-header.png")
+      : AppearanceHelper.getLogoDark(styles, "/images/sample-logo-header.png");
     let logoImg = (styles && logoSrc !== null && logoSrc !== undefined) ? <img src={logoSrc} alt="logo" className="img-fluid" /> : null;
     return logoImg
   }
@@ -36,16 +38,22 @@ export const Appearance: React.FC<Props> = (props) => {
   if (mode === "edit") return (<AppearanceEdit settings={currentSettings} updatedFunction={handleUpdate} />)
   else return (
     <DisplayBox headerIcon="fas fa-palette" headerText="Church Appearance" editFunction={handleEdit}>
+
+      <div style={{ padding: 10, fontWeight: "bold", textAlign: "center", backgroundColor: "#EEE" }}>
+        {getLogo("logoLight")}
+      </div>
+
+      <div style={{ padding: 10, fontWeight: "bold", textAlign: "center", backgroundColor: "#333", color: "#FFF" }}>
+        {getLogo("logoDark")}
+      </div>
+
       <div style={{ backgroundColor: styles.primaryColor, color: styles.primaryContrast, padding: 5, fontWeight: "bold" }}>
-        {getLogo("logoHeader")}
-                Primary Colors
+        Primary Colors
       </div>
       <div style={{ backgroundColor: styles.secondaryColor, color: styles.secondaryContrast, padding: 5, fontWeight: "bold" }}>
-                Secondary Colors
+        Secondary Colors
       </div>
-      <div style={{ padding: 5, fontWeight: "bold", textAlign: "center" }}>
-        {getLogo("logoSquare")}
-      </div>
+
     </DisplayBox>
   );
 }
