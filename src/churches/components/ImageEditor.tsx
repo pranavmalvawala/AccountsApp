@@ -5,10 +5,10 @@ import { Button } from "react-bootstrap";
 import { InputBox, GenericSettingInterface, ArrayHelper } from ".";
 
 interface Props {
-    settings: GenericSettingInterface[],
-    updatedFunction: (dataUrl: string) => void,
-    aspectRatio: number;
-    name: string;
+  settings: GenericSettingInterface[],
+  updatedFunction: (dataUrl: string) => void,
+  aspectRatio: number;
+  name: string;
 }
 
 export const ImageEditor: React.FC<Props> = (props) => {
@@ -43,9 +43,9 @@ export const ImageEditor: React.FC<Props> = (props) => {
   const cropCallback = () => {
     if (cropper.current !== null) {
       const data = cropper.current.getCropBoxData();
-      const ratio = parseInt((150.0 / data.height).toString());
+      const ratio = parseInt((300.0 / data.height).toString());
       const width = data.width * ratio;
-      let url = cropper.current.getCroppedCanvas({ width: width, height: 150 }).toDataURL();
+      let url = cropper.current.getCroppedCanvas({ width: width, height: 300 }).toDataURL();
       setDataUrl(url);
     }
   }
