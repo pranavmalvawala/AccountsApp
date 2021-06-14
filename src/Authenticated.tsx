@@ -22,7 +22,6 @@ export const Authenticated: React.FC<Props> = (props) => {
 
   return (
     <>
-      <link rel="stylesheet" href="/css/cp.css" />
       <Header></Header>
       <div className="container">
         <Switch>
@@ -35,8 +34,6 @@ export const Authenticated: React.FC<Props> = (props) => {
           <Route path="/profile"><ProfilePage /></Route>
         </Switch>
       </div>
-      <iframe title="print" style={{ display: "none" }} src="about:blank" id="printFrame"></iframe>
-      <script src="/js/cp.js"></script>
     </>
   );
 };
