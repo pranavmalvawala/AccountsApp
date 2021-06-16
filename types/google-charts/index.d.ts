@@ -1,1 +1,1 @@
-declare module 'google-charts';
+declare module "google-charts";
