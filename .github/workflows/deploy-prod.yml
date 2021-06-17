@@ -38,5 +38,5 @@ jobs:
 
       - name: Deploy App
         run: |
-          npm install
+          npm ci
           npm run deploy-prod
