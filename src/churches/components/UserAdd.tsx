@@ -109,12 +109,12 @@ export const UserAdd: React.FC<Props> = (props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setErrors([]);
     switch (e.currentTarget.name) {
-    case "email":
-      setEmail(e.currentTarget.value);
-      break;
-    case "name":
-      setName(e.currentTarget.value);
-      break;
+      case "email":
+        setEmail(e.currentTarget.value);
+        break;
+      case "name":
+        setName(e.currentTarget.value);
+        break;
     }
   }
 

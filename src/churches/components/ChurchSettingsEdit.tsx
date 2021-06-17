@@ -33,14 +33,14 @@ export const ChurchSettingsEdit: React.FC<Props> = (props) => {
     e.preventDefault();
     let c = { ...church };
     switch (e.currentTarget.id) {
-    case "churchName": c.name = e.currentTarget.value; break;
-    case "address1": c.address1 = e.currentTarget.value; break;
-    case "address2": c.address2 = e.currentTarget.value; break;
-    case "city": c.city = e.currentTarget.value; break;
-    case "state": c.state = e.currentTarget.value; break;
-    case "zip": c.zip = e.currentTarget.value; break;
-    case "country": c.country = e.currentTarget.value; break;
-    case "subDomain": c.subDomain = e.currentTarget.value; break;
+      case "churchName": c.name = e.currentTarget.value; break;
+      case "address1": c.address1 = e.currentTarget.value; break;
+      case "address2": c.address2 = e.currentTarget.value; break;
+      case "city": c.city = e.currentTarget.value; break;
+      case "state": c.state = e.currentTarget.value; break;
+      case "zip": c.zip = e.currentTarget.value; break;
+      case "country": c.country = e.currentTarget.value; break;
+      case "subDomain": c.subDomain = e.currentTarget.value; break;
     }
 
     setChurch(c);

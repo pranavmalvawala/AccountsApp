@@ -32,18 +32,18 @@ export const ProfilePage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.currentTarget.value;
     switch (e.currentTarget.name) {
-    case "name":
-      setName(val);
-      break;
-    case "email":
-      setEmail(val);
-      break;
-    case "password":
-      setPassword(val);
-      break;
-    case "passwordVerify":
-      setPasswordVerify(val);
-      break;
+      case "name":
+        setName(val);
+        break;
+      case "email":
+        setEmail(val);
+        break;
+      case "password":
+        setPassword(val);
+        break;
+      case "passwordVerify":
+        setPasswordVerify(val);
+        break;
     }
   }
 

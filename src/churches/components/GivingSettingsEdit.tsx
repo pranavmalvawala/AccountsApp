@@ -14,9 +14,9 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     e.preventDefault();
     switch (e.currentTarget.id) {
-    case "provider": setProvider(e.currentTarget.value); break;
-    case "publicKey": setPublicKey(e.currentTarget.value); break;
-    case "privateKey": setPrivateKey(e.currentTarget.value); break;
+      case "provider": setProvider(e.currentTarget.value); break;
+      case "publicKey": setPublicKey(e.currentTarget.value); break;
+      case "privateKey": setPrivateKey(e.currentTarget.value); break;
     }
   }
 
