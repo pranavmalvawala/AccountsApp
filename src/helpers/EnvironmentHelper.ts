@@ -25,7 +25,7 @@ export class EnvironmentHelper {
         { keyName: "StreamingLiveApi", url: EnvironmentHelper.StreamingLiveApi, jwt: "", permisssions: [] },
         { keyName: "GivingApi", url: EnvironmentHelper.GivingApi, jwt: "", permisssions: [] },
         { keyName: "AcceB1ApissApi", url: EnvironmentHelper.B1Api, jwt: "", permisssions: [] },
-        { keyName: "MembershipApi", url: EnvironmentHelper.MembershipApi, jwt: "", permisssions: [] },
+        { keyName: "MembershipApi", url: EnvironmentHelper.MembershipApi, jwt: "", permisssions: [] }
       ];
     }
 

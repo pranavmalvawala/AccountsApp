@@ -47,7 +47,7 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
     { name: "churches", to: "/churches" },
     { name: church?.name, to: `/churches/${church?.id}` },
     { name: "Manage", to: `/churches/${church?.id}/manage` },
-    { name: role.name, to: `/churches/${church?.id}/role/${role?.id}`, active: true },
+    { name: role.name, to: `/churches/${church?.id}/role/${role?.id}`, active: true }
   ]
 
   if (!UserHelper.checkAccess(Permissions.accessApi.roles.view)) return (<></>);

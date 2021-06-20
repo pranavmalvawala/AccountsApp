@@ -23,7 +23,7 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
   const getSidebar = () => {
     let modules: JSX.Element[] = [
       <ChurchApps key="churchApps" church={church} redirectFunction={setRedirectUrl} updatedFunction={loadData} />,
-      <Appearance key="appearence" />,
+      <Appearance key="appearence" />
     ];
 
     if (selectedRoleId !== "notset") {
@@ -38,7 +38,7 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
   const items: BreadCrumbProps[] = [
     { name: "churches", to: "/churches" },
     { name: church?.name, to: `/churches/${church?.id}` },
-    { name: "Manage", to: `/churches/${church?.id}/manage`, active: true },
+    { name: "Manage", to: `/churches/${church?.id}/manage`, active: true }
   ]
 
   if (redirectUrl !== "") return <Redirect to={redirectUrl}></Redirect>;

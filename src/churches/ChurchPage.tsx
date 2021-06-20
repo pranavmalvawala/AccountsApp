@@ -57,7 +57,7 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
 
   const items: BreadCrumbProps[] = [
     { name: "churches", to: "/churches" },
-    { name: church?.name, to: `/churches/${church?.id}`, active: true },
+    { name: church?.name, to: `/churches/${church?.id}`, active: true }
   ]
 
   return (

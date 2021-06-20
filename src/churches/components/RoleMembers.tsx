@@ -54,7 +54,7 @@ export const RoleMembers: React.FC<Props> = (props) => {
           <td>{rm.user.email}</td>
           <td>{editLink}</td>
           <td>{removeLink}</td>
-        </tr>,
+        </tr>
       );
     }
     return rows;

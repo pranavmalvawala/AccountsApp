@@ -24,7 +24,7 @@ export const Appearance: React.FC<Props> = (props) => {
     primaryColor: "#08A0CC",
     primaryContrast: "#FFFFFF",
     secondaryColor: "#FFBA1A",
-    secondaryContrast: "#000000",
+    secondaryContrast: "#000000"
   })
 
   const configureStyles = (settings: GenericSettingInterface[]) => {

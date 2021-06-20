@@ -28,7 +28,7 @@ export const RolePermissions: React.FC<Props> = (props) => {
             <Accordion.Collapse eventKey={p.displaySection}>
               <Card.Body>{getChecks(p.displaySection)}</Card.Body>
             </Accordion.Collapse>
-          </Card>,
+          </Card>
         );
         lastSection.push(p.displaySection);
       }

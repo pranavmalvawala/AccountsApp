@@ -39,7 +39,7 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
         <tr key="everyone">
           <td><i className="fas fa-user-friends" /> <Link to={`/churches/${churchId}/role/everyone`}>(Everyone)</Link></td>
           <td></td>
-        </tr>,
+        </tr>
       );
     }
 

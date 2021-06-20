@@ -31,7 +31,7 @@ export const RoleEdit: React.FC<Props> = (props) => {
 
     const r = {
       ...role,
-      name: role.name.trim(),
+      name: role.name.trim()
     };
     ApiHelper.post("/roles", [r], "AccessApi").then(() => props.updatedFunction());
   }
