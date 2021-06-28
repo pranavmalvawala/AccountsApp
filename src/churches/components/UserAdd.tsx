@@ -102,6 +102,7 @@ export const UserAdd: React.FC<Props> = (props) => {
     const names = name.split(" ");
     const personRecord: PersonInterface = { householdId: households[0].id, name: { first: names[0], last: names[1] }, userId, contactInfo: { email } }
     const person = await ApiHelper.post("/people", [personRecord], "MembershipApi")
+    await ApiHelper.post(`/userchurch?userId=${userId}`, { personId: person[0].id }, "AccessApi");
 
     return person[0];
   }
@@ -135,6 +136,7 @@ export const UserAdd: React.FC<Props> = (props) => {
       })
     }
   }
+  // TODO: gotta verify the same for linking record instead of creating new one.
 
   const handleAssociatePerson = (person: PersonInterface) => {
     const filteredUser = props.roleMembers.filter(r => r.userId === person.userId);
