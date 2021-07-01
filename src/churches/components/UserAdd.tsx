@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { InputBox, RoleInterface } from "."
 import { FormGroup } from "react-bootstrap";
-import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, AssociatePerson, ErrorMessages, UserInterface, ValidateHelper } from "./";
+import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, AssociatePerson, ErrorMessages, UserInterface, ValidateHelper, UserChurchInterface } from "./";
 
 interface Props {
     role: RoleInterface,
@@ -146,7 +146,8 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
         setEmail(user.email);
 
         try {
-          const person = await ApiHelper.get(`/people/${user.personId}`, "MembershipApi");
+          const userChurch: UserChurchInterface = await ApiHelper.get(`/userchurch/userid/${user.id}`, "AccessApi");
+          const person = await ApiHelper.get(`/people/${userChurch.personId}`, "MembershipApi");
           setLinkedPerson(person)
         } catch {
           setLinkedPerson(null);
