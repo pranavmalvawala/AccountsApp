@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { InputBox, RoleInterface } from "."
 import { FormGroup } from "react-bootstrap";
-import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, UniqueIdHelper, AssociatePerson, ErrorMessages, UserInterface, ValidateHelper } from "./";
+import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, AssociatePerson, ErrorMessages, UserInterface, ValidateHelper } from "./";
 
 interface Props {
     role: RoleInterface,
@@ -10,7 +10,7 @@ interface Props {
     roleMembers: RoleMemberInterface[];
 }
 
-export const UserAdd: React.FC<Props> = (props) => {
+export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Props) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [fetchedUser, setFetchedUser] = useState<UserInterface>(null);
@@ -29,23 +29,18 @@ export const UserAdd: React.FC<Props> = (props) => {
         return
       }
 
-      const user: UserInterface = {...fetchedUser, email, displayName: name};
-      await ApiHelper.post("/users/updateUser", user, "AccessApi");
-      let people: PersonInterface[] = []
+      await ApiHelper.post(`/users/setDisplayName`, { displayName: name, userId: fetchedUser.id }, "AccessApi");
+      await ApiHelper.post(`/users/updateEmail`, { email, userId: fetchedUser.id }, "AccessApi");
 
-      // link new one
-      if (selectedPerson) {
-        // unlink the old person
-        if (linkedPerson.id) {
-          linkedPerson.userId = "";
-          people.push(linkedPerson)
-        }
-        selectedPerson.userId = user.id;
-        people.push(selectedPerson);
-      }
-      await ApiHelper.post("/people", people, "MembershipApi");
+      const person = {...linkedPerson};
+      person.contactInfo.email = email;
+      const [first, last] = name.split(" ");
+      person.name.first = first;
+      person.name.last = last;
 
-      props.updatedFunction();
+      await ApiHelper.post("/people", [person], "MembershipApi");
+
+      updatedFunction();
       return;
     }
     // creating a complete new user
@@ -54,8 +49,10 @@ export const UserAdd: React.FC<Props> = (props) => {
         return;
       }
       const user = await createUserAndToGroup(name, email);
-      await createPerson(user.id);
-      props.updatedFunction();
+      const person = await createPerson(user.id);
+      await linkUserAndPerson(user.id, person.id)
+
+      updatedFunction();
       return;
     }
     // creating users from already existing people
@@ -66,16 +63,15 @@ export const UserAdd: React.FC<Props> = (props) => {
     if (!selectedPerson) return;
     const userEmail = showEmailField ? email : selectedPerson.contactInfo.email;
     const user = await createUserAndToGroup(selectedPerson.name.display, userEmail);
-    // selectedPerson is already associated with a user
-    if (user.id !== selectedPerson.userId) {
-      selectedPerson.userId = user.id;
-      if (showEmailField && !editMode) {
-        selectedPerson.contactInfo.email = email;
-      }
-      await ApiHelper.post("/people", [selectedPerson], "MembershipApi");
-    }
-    props.updatedFunction();
+    await linkUserAndPerson(user.id, selectedPerson.id);
 
+    if (showEmailField) {
+      const person = {...selectedPerson};
+      person.contactInfo.email = email;
+      await ApiHelper.post("/people", [person], "MembershipApi");
+    }
+
+    updatedFunction();
   }
 
   const validateInputs = () => {
@@ -86,10 +82,14 @@ export const UserAdd: React.FC<Props> = (props) => {
     return warnings.length > 0;
   }
 
+  const linkUserAndPerson = async (userId: string, personId: string) => {
+    await ApiHelper.post(`/userchurch?userId=${userId}`, { personId }, "AccessApi");
+  }
+
   const createUserAndToGroup = async (userName: string, userEmail: string) => {
     const userPayload: LoadCreateUserRequestInterface = { userName, userEmail };
     const user: UserInterface = await ApiHelper.post("/users/loadOrCreate", userPayload, "AccessApi");
-    const roleMember: RoleMemberInterface = { userId: user.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
+    const roleMember: RoleMemberInterface = { userId: user.id, roleId: role.id, churchId: UserHelper.currentChurch.id };
     await ApiHelper.post("/rolemembers/", [roleMember], "AccessApi");
 
     return user;
@@ -101,8 +101,7 @@ export const UserAdd: React.FC<Props> = (props) => {
 
     const names = name.split(" ");
     const personRecord: PersonInterface = { householdId: households[0].id, name: { first: names[0], last: names[1] }, userId, contactInfo: { email } }
-    const person = await ApiHelper.post("/people", [personRecord], "MembershipApi")
-    await ApiHelper.post(`/userchurch?userId=${userId}`, { personId: person[0].id }, "AccessApi");
+    const person: PersonInterface[] = await ApiHelper.post("/people", [personRecord], "MembershipApi")
 
     return person[0];
   }
@@ -119,39 +118,9 @@ export const UserAdd: React.FC<Props> = (props) => {
     }
   }
 
-  const loadData = () => {
-    if (!UniqueIdHelper.isMissing(props.selectedUser)) {
-      setEditMode(true);
-      ApiHelper.get(`/users/${props.selectedUser}`, "AccessApi").then(user => {
-        setFetchedUser(user);
-        setName(user.displayName);
-        setEmail(user.email);
-      })
-      ApiHelper.get(`/people/userid/${props.selectedUser}`, "MembershipApi").then(person => {
-        if (person) {
-          setLinkedPerson(person);
-        }
-      }).catch(() => {
-        setLinkedPerson(null);
-      })
-    }
-  }
-  // TODO: gotta verify the same for linking record instead of creating new one.
-
   const handleAssociatePerson = (person: PersonInterface) => {
-    const filteredUser = props.roleMembers.filter(r => r.userId === person.userId);
-    if (!editMode && filteredUser.length > 0) {
-      window.alert("There already exist a role member associating with this person.");
-      props.updatedFunction();
-      return;
-    }
     setSelectedPerson(person);
-    if (editMode && person.userId && person.userId !== fetchedUser.id) {
-      setErrors([<><b>{person?.name.display}</b> is already linked with other user. Press <b>save</b> only if you are sure about removing that link and associate it to <b>{email}</b>.</>])
-    }
-    if (person.userId) {
-      return;
-    }
+
     if (!person.contactInfo.email) {
       setShowEmailField(true);
     }
@@ -167,7 +136,24 @@ export const UserAdd: React.FC<Props> = (props) => {
     setHasSearched(value);
   }, [])
 
-  React.useEffect(loadData, [props.selectedUser]);
+  useEffect(() => {
+    (async () => {
+      if (selectedUser) {
+        setEditMode(true);
+        const user: UserInterface = await ApiHelper.post("/users/loadOrCreate", { userId: selectedUser }, "AccessApi");
+        setFetchedUser(user);
+        setName(user.displayName);
+        setEmail(user.email);
+
+        try {
+          const person = await ApiHelper.get(`/people/${user.personId}`, "MembershipApi");
+          setLinkedPerson(person)
+        } catch {
+          setLinkedPerson(null);
+        }
+      }
+    })()
+  }, [selectedUser]);
 
   const message = (!showNameField && !editMode && hasSearched) && (<span>Don't have a user account? <a href="about:blank" onClick={CreateNewUser}>Create New User</a></span>);
   const nameField = (showNameField || editMode) && (
@@ -184,7 +170,7 @@ export const UserAdd: React.FC<Props> = (props) => {
   )
 
   return (
-    <InputBox headerIcon="fas fa-lock" headerText={"Add to " + props.role.name} saveFunction={handleSave} cancelFunction={props.updatedFunction}>
+    <InputBox headerIcon="fas fa-lock" headerText={"Add to " + role.name} saveFunction={handleSave} cancelFunction={updatedFunction}>
       <ErrorMessages errors={errors} />
       {
         (!showNameField || editMode) && (
@@ -194,6 +180,9 @@ export const UserAdd: React.FC<Props> = (props) => {
               person={selectedPerson || linkedPerson }
               handleAssociatePerson={handleAssociatePerson}
               searchStatus={handleSearchStatus}
+              filterList={roleMembers.map(rm => rm.personId)}
+              onChangeClick={() => setShowEmailField(false)}
+              showChangeOption={!editMode}
             />
           </FormGroup>
         )
