@@ -47,10 +47,10 @@ export const RoleMembers: React.FC<Props> = (props) => {
       const rm = roleMembers[i];
       const removeLink = (canEdit) ? <a href="about:blank" onClick={handleRemove} data-index={i} className="text-danger"><i className="fas fa-user-times"></i></a> : <></>
       const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); props.setSelectedRoleMember(rm.userId) }}><i className="fas fa-pencil-alt"></i></a>) : null;
-
+      const { firstName, lastName } = rm.user;
       rows.push(
         <tr key={i}>
-          <td>{rm.user.displayName}</td>
+          <td>{`${firstName} ${lastName}`}</td>
           <td>{rm.user.email}</td>
           <td>{editLink}</td>
           <td>{removeLink}</td>

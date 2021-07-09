@@ -12,13 +12,14 @@ interface Props {
 
 export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Props) => {
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   const [fetchedUser, setFetchedUser] = useState<UserInterface>(null);
   const [errors, setErrors] = useState([]);
   const [linkedPerson, setLinkedPerson] = useState<PersonInterface>(null)
   const [selectedPerson, setSelectedPerson] = useState<PersonInterface>(null);
   const [showEmailField, setShowEmailField] = useState<boolean>(false);
-  const [showNameField, setShowNameField] = useState<boolean>(false);
+  const [showNameFields, setShowNameFields] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
 
@@ -29,14 +30,13 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
         return
       }
 
-      await ApiHelper.post(`/users/setDisplayName`, { displayName: name, userId: fetchedUser.id }, "AccessApi");
+      await ApiHelper.post(`/users/setDisplayName`, { firstName, lastName, userId: fetchedUser.id }, "AccessApi");
       await ApiHelper.post(`/users/updateEmail`, { email, userId: fetchedUser.id }, "AccessApi");
 
       const person = {...linkedPerson};
       person.contactInfo.email = email;
-      const [first, last] = name.split(" ");
-      person.name.first = first;
-      person.name.last = last;
+      person.name.first = firstName;
+      person.name.last = lastName;
 
       await ApiHelper.post("/people", [person], "MembershipApi");
 
@@ -44,11 +44,11 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
       return;
     }
     // creating a complete new user
-    if (showNameField) {
+    if (showNameFields) {
       if (validateInputs()) {
         return;
       }
-      const user = await createUserAndToGroup(name, email);
+      const user = await createUserAndToGroup(firstName, lastName, email);
       const person = await createPerson(user.id);
       await linkUserAndPerson(user.id, person.id)
 
@@ -61,8 +61,9 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
       return;
     }
     if (!selectedPerson) return;
+    const { first, last } = selectedPerson.name;
     const userEmail = showEmailField ? email : selectedPerson.contactInfo.email;
-    const user = await createUserAndToGroup(selectedPerson.name.display, userEmail);
+    const user = await createUserAndToGroup(first, last, userEmail);
     await linkUserAndPerson(user.id, selectedPerson.id);
 
     if (showEmailField) {
@@ -76,7 +77,8 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
 
   const validateInputs = () => {
     const warnings: string[] = [];
-    if (!ValidateHelper.shouldBeTwoWords(name)) warnings.push("Name should be 2 words");
+    if (!firstName) warnings.push("Please enter firstname");
+    if (!lastName) warnings.push("Please enter lastname");
     if (!ValidateHelper.email(email)) warnings.push("Enter a valid Email");
     setErrors(warnings);
     return warnings.length > 0;
@@ -86,8 +88,8 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
     await ApiHelper.post(`/userchurch?userId=${userId}`, { personId }, "AccessApi");
   }
 
-  const createUserAndToGroup = async (userName: string, userEmail: string) => {
-    const userPayload: LoadCreateUserRequestInterface = { userName, userEmail };
+  const createUserAndToGroup = async (firstName: string, lastName: string, userEmail: string) => {
+    const userPayload: LoadCreateUserRequestInterface = { firstName, lastName, userEmail };
     const user: UserInterface = await ApiHelper.post("/users/loadOrCreate", userPayload, "AccessApi");
     const roleMember: RoleMemberInterface = { userId: user.id, roleId: role.id, churchId: UserHelper.currentChurch.id };
     await ApiHelper.post("/rolemembers/", [roleMember], "AccessApi");
@@ -96,11 +98,10 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
   }
 
   const createPerson = async (userId: string) => {
-    const house = { name } as HouseholdInterface
+    const house: HouseholdInterface = { name: lastName };
     const households = await ApiHelper.post("/households", [house], "MembershipApi")
 
-    const names = name.split(" ");
-    const personRecord: PersonInterface = { householdId: households[0].id, name: { first: names[0], last: names[1] }, userId, contactInfo: { email } }
+    const personRecord: PersonInterface = { householdId: households[0].id, name: { first: firstName, last: lastName }, userId, contactInfo: { email } }
     const person: PersonInterface[] = await ApiHelper.post("/people", [personRecord], "MembershipApi")
 
     return person[0];
@@ -108,13 +109,16 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setErrors([]);
+    const val = e.currentTarget.value;
     switch (e.currentTarget.name) {
       case "email":
-        setEmail(e.currentTarget.value);
+        setEmail(val);
         break;
-      case "name":
-        setName(e.currentTarget.value);
+      case "firstName":
+        setFirstName(val);
         break;
+      case "lastName":
+        setLastName(val);
     }
   }
 
@@ -128,7 +132,7 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
 
   const CreateNewUser = (e: React.MouseEvent) => {
     e.preventDefault();
-    setShowNameField(true);
+    setShowNameFields(true);
     setShowEmailField(true);
   }
 
@@ -142,9 +146,9 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
         setEditMode(true);
         const user: UserInterface = await ApiHelper.post("/users/loadOrCreate", { userId: selectedUser }, "AccessApi");
         setFetchedUser(user);
-        setName(user.displayName);
+        setFirstName(user.firstName);
+        setLastName(user.lastName);
         setEmail(user.email);
-
         try {
           const userChurch: UserChurchInterface = await ApiHelper.get(`/userchurch/userid/${user.id}`, "AccessApi");
           const person = await ApiHelper.get(`/people/${userChurch.personId}`, "MembershipApi");
@@ -156,12 +160,18 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
     })()
   }, [selectedUser]);
 
-  const message = (!showNameField && !editMode && hasSearched) && (<span>Don't have a user account? <a href="about:blank" onClick={CreateNewUser}>Create New User</a></span>);
-  const nameField = (showNameField || editMode) && (
-    <FormGroup>
-      <label>Name</label>
-      <input type="text" name="name" value={name} onChange={handleChange} placeholder="John Smith" className="form-control" />
-    </FormGroup>
+  const message = (!showNameFields && !editMode && hasSearched) && (<span>Don't have a user account? <a href="about:blank" onClick={CreateNewUser}>Create New User</a></span>);
+  const nameField = (showNameFields || editMode) && (
+    <>
+      <FormGroup>
+        <label>firstname</label>
+        <input type="text" name="firstName" value={firstName} onChange={handleChange} placeholder="John" className="form-control" />
+      </FormGroup>
+      <FormGroup>
+        <label>lastname</label>
+        <input type="text" name="lastName" value={lastName} onChange={handleChange} placeholder="Smith" className="form-control" />
+      </FormGroup>
+    </>
   )
   const emailField = (showEmailField || editMode) && (
     <FormGroup>
@@ -174,7 +184,7 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
     <InputBox headerIcon="fas fa-lock" headerText={"Add to " + role.name} saveFunction={handleSave} cancelFunction={updatedFunction}>
       <ErrorMessages errors={errors} />
       {
-        (!showNameField || editMode) && (
+        (!showNameFields || editMode) && (
           <FormGroup>
             <label>Associate Person</label>
             <AssociatePerson
