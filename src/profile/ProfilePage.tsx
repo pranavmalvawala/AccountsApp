@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Row, Col, FormGroup } from "react-bootstrap"
-import { InputBox, ApiHelper, ErrorMessages, UserHelper } from "./components"
+import { InputBox, ApiHelper, ErrorMessages, UserHelper, PasswordField } from "./components"
 
 export const ProfilePage = () => {
   const [password, setPassword] = useState<string>("");
@@ -103,11 +103,11 @@ export const ProfilePage = () => {
               <Col>
                 <FormGroup>
                   <label>Set Password</label>
-                  <input type="password" name="password" value={password} onChange={handleChange} className="form-control" />
+                  <PasswordField value={password} onChange={handleChange} placeholder="New password" />
                 </FormGroup>
                 <FormGroup>
                   <label>Verify Password</label>
-                  <input type="password" name="passwordVerify" value={passwordVerify} onChange={handleChange} className="form-control" />
+                  <PasswordField name="passwordVerify" value={passwordVerify} onChange={handleChange} placeholder="New password" />
                 </FormGroup>
               </Col>
             </Row>
