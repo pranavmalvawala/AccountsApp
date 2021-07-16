@@ -92,11 +92,11 @@ export const ProfilePage = () => {
                   <input type="email" name="email" value={email} onChange={handleChange} className="form-control" />
                 </FormGroup>
                 <FormGroup>
-                  <label>Firstname</label>
+                  <label>First Name</label>
                   <input type="text" name="firstName" value={firstName} onChange={handleChange} className="form-control" />
                 </FormGroup>
                 <FormGroup>
-                  <label>Lastname</label>
+                  <label>Last Name</label>
                   <input type="text" name="lastName" value={lastName} onChange={handleChange} className="form-control" />
                 </FormGroup>
               </Col>

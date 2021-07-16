@@ -29,16 +29,15 @@ export const Header: React.FC = () => {
   }
 
   const toggleMenuItems = () => {
-    //let menuNav = document.getElementById("nav-menu");
-    //let listItems = Array.from(menuNav.children);
-    let listItems = document.querySelectorAll("#nav-menu .nav-link");
+    let menuNav = document.getElementById("nav-menu");
+    let listItems = Array.from(menuNav.children);
     listItems.forEach((_, i) => {
       if (i < (userName.length <= 5 ? 3 : userName.length < 24 ? 2 : 1)) {
         listItems[i].classList.add("d-md-none");
       } else if (
         i < (userName.length <= 5 ? 5 : userName.length < 24 ? 4 : 3)
       ) {
-        listItems[i].classList.add("d-lg-none");
+        return;
       } else if (i < (userName.length < 24 ? 6 : 5)) {
         listItems[i].classList.add("d-xl-none");
       }
@@ -72,17 +71,16 @@ export const Header: React.FC = () => {
             </div>
           </div>
         </Container>
-      </div>
-      <div className="container collapse" id="userMenu">
-        <div>
-          <ul id="nav-menu" className="nav d-flex flex-column">
-            <NavItems />
-            {getChurchLinks()}
-            <Link to="/logout"><i className="fas fa-lock"></i> Logout</Link>
-          </ul>
+        <div className="container collapse" id="userMenu">
+          <div>
+            <ul id="nav-menu" className="nav d-flex flex-column">
+              <NavItems />
+              {getChurchLinks()}
+              <Link to="/logout"><i className="fas fa-lock"></i> Logout</Link>
+            </ul>
+          </div>
         </div>
       </div>
-
       <div id="navSpacer"></div>
     </>
   );

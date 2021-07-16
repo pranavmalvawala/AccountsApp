@@ -8,24 +8,33 @@ interface Props {
   prefix?: String;
 }
 
-export const NavItems: React.FC<Props> = (props) => {
+interface Tab {
+  key: string;
+  url: string;
+  icon: string;
+  label: string;
+}
+
+export function NavItems({ prefix }: Props) {
   const location = useLocation();
 
   const getSelected = (): string => {
     let url = location.pathname;
-    let result = "People";
+    let result = "Church";
     if (url.indexOf("/admin") > -1) result = "Admin";
+    if (url.indexOf("/churches") > -1) result = "Church";
+    if (url.indexOf("/profile") > -1) result = "Profile";
 
     return result;
   };
 
   const getClass = (sectionName: string): string => {
-    if (sectionName === getSelected()) return "nav-link active";
-    else return "nav-link";
+    if (sectionName === getSelected()) return prefix === "main" ? "nav-link active" : "active";
+    else return prefix === "main" ? "nav-link" : "";
   };
 
-  const getTab = (key: string, url: string, icon: string, label: string) => (
-    <li key={key} className="nav-item" data-toggle={props.prefix === "main" ? null : "collapse"} data-target={props.prefix === "main" ? null : "#userMenu"} id={(props.prefix || "") + key + "Tab"}>
+  const getTab = ({ key, url, icon, label }: Tab) => (
+    <li key={key} className="nav-item" data-toggle={prefix === "main" ? null : "collapse"} data-target={prefix === "main" ? null : "#userMenu"} id={(prefix || "") + key + "Tab"}>
       <Link className={getClass(key)} to={url}>
         <i className={icon}></i> {label}
       </Link>
@@ -34,9 +43,9 @@ export const NavItems: React.FC<Props> = (props) => {
 
   const getTabs = () => {
     let tabs = [];
-    tabs.push(getTab("Church", "/churches", "fas fa-church", "Church"));
-    if (UserHelper.checkAccess(Permissions.accessApi.server.admin)) tabs.push(getTab("Admin", "/admin", "fas fa-user-shield", "Admin"));
-    tabs.push(getTab("Profile", "/profile", "fas fa-user", "Profile"));
+    tabs.push(getTab({ key: "Church", url: "/churches", icon: "fas fa-church", label: "Church" }));
+    if (UserHelper.checkAccess(Permissions.accessApi.server.admin)) tabs.push(getTab({ key: "Admin", url: "/admin", icon: "fas fa-user-shield", label: "Admin" }));
+    tabs.push(getTab({ key: "Profile", url: "/profile", icon: "fas fa-user", label: "Profile" }));
     return tabs;
   };
 
