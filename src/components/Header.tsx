@@ -1,32 +1,11 @@
 import React from "react";
 import { UserHelper, NavItems } from "./";
-import UserContext from "../UserContext";
 import { Link } from "react-router-dom";
 import { Col, Container } from "react-bootstrap";
 
 export const Header: React.FC = () => {
   const { firstName, lastName }  = UserHelper.user;
   const userName = `${firstName} ${lastName}`;
-
-  const context = React.useContext(UserContext);
-
-  const switchChurch = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const id = e.currentTarget.getAttribute("data-id");
-    UserHelper.selectChurch(context, id);
-  }
-
-  const getChurchLinks = () => {
-    if (UserHelper.churches.length < 2) return null;
-    else {
-      let result: JSX.Element[] = [];
-      UserHelper.churches.forEach((c, index) => {
-        const churchName = (c.id === UserHelper.currentChurch.id) ? (<b>{c.name}</b>) : (c.name);
-        result.push(<li className="nav-tem" key={index}><a href="about:blank" data-id={c.id} onClick={switchChurch} className="nav-link"><i className="fas fa-external-link-alt"></i> {churchName}</a></li>);
-      });
-      return result;
-    }
-  }
 
   const toggleMenuItems = () => {
     let menuNav = document.getElementById("nav-menu");
@@ -37,6 +16,8 @@ export const Header: React.FC = () => {
       } else if (
         i < (userName.length <= 5 ? 5 : userName.length < 24 ? 4 : 3)
       ) {
+        if (listItems[i].id === "logout") return;
+        listItems[i].classList.add("d-lg-none");
         return;
       } else if (i < (userName.length < 24 ? 6 : 5)) {
         listItems[i].classList.add("d-xl-none");
@@ -75,8 +56,7 @@ export const Header: React.FC = () => {
           <div>
             <ul id="nav-menu" className="nav d-flex flex-column">
               <NavItems />
-              {getChurchLinks()}
-              <Link to="/logout"><i className="fas fa-lock"></i> Logout</Link>
+              <Link id="logout" to="/logout"><i className="fas fa-lock"></i> Logout</Link>
             </ul>
           </div>
         </div>
