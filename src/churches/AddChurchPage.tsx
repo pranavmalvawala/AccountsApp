@@ -30,9 +30,10 @@ export const AddChurchPage = () => {
     setRedirectUrl("/logout");
   }
 
-  const handleSave = (church: ChurchInterface, { setSubmitting }: FormikHelpers<ChurchInterface>) => {
+  const handleSave = async (church: ChurchInterface, { setSubmitting }: FormikHelpers<ChurchInterface>) => {
     setSubmitting(true);
-    ApiHelper.post("/churches/add", church, "AccessApi").then(resp => {
+    const personData: { person: any, encodedPerson: string } = await ApiHelper.get("/people/claim/" + church.id, "MembershipApi");
+    ApiHelper.post("/churches/add", { encodedPerson: personData.encodedPerson, church }, "AccessApi").then(resp => {
       setSubmitting(false);
       if (resp.errors !== undefined) {
         let handleError = formikRef.current.setErrors;
