@@ -19,7 +19,7 @@ export const Login: React.FC = (props: any) => {
     if (!jwt) jwt = "";
     if (!auth) auth = "";
 
-    return (<LoginPage auth={auth} context={context} jwt={jwt} appName="AccessManagement" />);
+    return (<LoginPage auth={auth} context={context} jwt={jwt} appName="ChurchApps" />);
   } else {
     let path = from.pathname === "/" ? "/churches" : from.pathname;
     return <Authenticated location={path}></Authenticated>;
