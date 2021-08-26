@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { UserProvider } from "./UserContext"
 import { Routing } from "./Routing";

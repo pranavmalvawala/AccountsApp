@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import { Switch, Route, useLocation } from "react-router-dom";
 import ReactGA from "react-ga";
 import { EnvironmentHelper } from "./helpers";
