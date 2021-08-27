@@ -5,12 +5,23 @@ import UserContext from "./UserContext";
 import { useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { LoginPage } from "./appBase/pageComponents/LoginPage";
+import ReactGA from "react-ga";
+import { EnvironmentHelper } from "./helpers";
+import { UserInterface, ChurchInterface } from "./helpers";
 
 export const Login: React.FC = (props: any) => {
   const [cookies] = useCookies(["jwt"]);
   let { from } = (useLocation().state as any) || { from: { pathname: "/" } };
 
   const context = React.useContext(UserContext);
+
+  const trackChurchRegister = async (church: ChurchInterface) => {
+    if (EnvironmentHelper.GoogleAnalyticsTag !== "") ReactGA.event({ category: "Church", action: "Register" });
+  }
+
+  const trackUserRegister = async (user: UserInterface) => {
+    if (EnvironmentHelper.GoogleAnalyticsTag !== "") ReactGA.event({ category: "User", action: "Register" });
+  }
 
   if (context.userName === "" || !ApiHelper.isAuthenticated) {
     let search = new URLSearchParams(props.location.search);
@@ -19,7 +30,7 @@ export const Login: React.FC = (props: any) => {
     if (!jwt) jwt = "";
     if (!auth) auth = "";
 
-    return (<LoginPage auth={auth} context={context} jwt={jwt} appName="ChurchApps" appUrl={window.location.href} />);
+    return (<LoginPage auth={auth} context={context} jwt={jwt} appName="ChurchApps" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} />);
   } else {
     let path = from.pathname === "/" ? "/churches" : from.pathname;
     return <Authenticated location={path}></Authenticated>;
