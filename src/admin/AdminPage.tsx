@@ -41,7 +41,7 @@ export const AdminPage = () => {
       const result = await ApiHelper.get("/churches/" + churchId + "/impersonate", "AccessApi");
       UserHelper.churches.push(...result.churches);
     }
-    setRedirectUrl(`/churches/${churchId}/manage`);
+    setRedirectUrl(`/${churchId}/manage`);
 
   }
 

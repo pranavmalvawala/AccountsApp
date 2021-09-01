@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { LoginPage } from "./appBase/pageComponents/LoginPage";
 import ReactGA from "react-ga";
-import { EnvironmentHelper } from "./helpers";
+import { EnvironmentHelper, UserHelper } from "./helpers";
 import { UserInterface, ChurchInterface } from "./helpers";
 
 export const Login: React.FC = (props: any) => {
@@ -32,7 +32,10 @@ export const Login: React.FC = (props: any) => {
 
     return (<LoginPage auth={auth} context={context} jwt={jwt} appName="ChurchApps" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} />);
   } else {
-    let path = from.pathname === "/" ? "/churches" : from.pathname;
+    const churchId = UserHelper.currentChurch.id;
+    // in case when church is changed what you can do is just check current churchId and the churchId
+    // from the path it wants to redirect to (from.pathName). If they don't match just redirect to /:churchId
+    let path = from.pathname === "/" ? `/${churchId}` : from.pathname;
     return <Authenticated location={path}></Authenticated>;
   }
 };

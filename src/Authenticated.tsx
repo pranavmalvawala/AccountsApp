@@ -4,7 +4,6 @@ import { Header } from "./components";
 import { ProfilePage } from "./profile/ProfilePage";
 import { RolePage } from "./churches/RolePage";
 import { AddChurchPage } from "./churches/AddChurchPage";
-import { ChurchesPage } from "./churches/ChurchesPage";
 import { ManageChurch } from "./churches/ManageChurch";
 import { ChurchPage } from "./churches/ChurchPage";
 import { AdminPage } from "./admin/AdminPage";
@@ -26,14 +25,13 @@ export const Authenticated: React.FC<Props> = (props) => {
       <Header></Header>
       <div className="container">
         <Switch>
-          <Route path="/login"><Redirect to={props.location} /></Route>
-          <Route path="/admin"><AdminPage /></Route>
-          <Route path="/churches/add" component={AddChurchPage} />
-          <Route path="/churches/:id/manage" component={ManageChurch} />
-          <Route path="/churches/:id/role/:roleId" component={RolePage} />
-          <Route path="/churches/:id" component={ChurchPage} />
-          <Route path="/churches"><ChurchesPage /></Route>
-          <Route path="/profile"><ProfilePage /></Route>
+          <Route path="/login" exact><Redirect to={props.location} /></Route>
+          <Route path="/admin" exact><AdminPage /></Route>
+          <Route path="/profile" exact><ProfilePage /></Route>
+          <Route path="/add" component={AddChurchPage} />
+          <Route path="/:id/manage" component={ManageChurch} />
+          <Route path="/:id/role/:roleId" component={RolePage} />
+          <Route path="/:id" component={ChurchPage} />
         </Switch>
       </div>
     </>

@@ -16,7 +16,7 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
   const loadData = () => {
     const churchId = match.params.id;
     if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId);
-    if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit)) setRedirectUrl("/churches/" + church.id);
+    if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit)) setRedirectUrl("/" + church.id);
     ApiHelper.get("/churches/" + match.params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
   }
 
@@ -36,9 +36,8 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
   React.useEffect(loadData, [match.params.id]);
 
   const items: BreadCrumbProps[] = [
-    { name: "churches", to: "/churches" },
-    { name: church?.name, to: `/churches/${church?.id}` },
-    { name: "Manage", to: `/churches/${church?.id}/manage`, active: true }
+    { name: church?.name, to: `/${church?.id}` },
+    { name: "Manage", to: `/${church?.id}/manage`, active: true }
   ]
 
   if (redirectUrl !== "") return <Redirect to={redirectUrl}></Redirect>;

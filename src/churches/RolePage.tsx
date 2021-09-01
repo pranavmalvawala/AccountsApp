@@ -44,10 +44,9 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
   React.useEffect(loadRoleMembers, [])
 
   const items: BreadCrumbProps[] = [
-    { name: "churches", to: "/churches" },
-    { name: church?.name, to: `/churches/${church?.id}` },
-    { name: "Manage", to: `/churches/${church?.id}/manage` },
-    { name: role.name, to: `/churches/${church?.id}/role/${role?.id}`, active: true }
+    { name: church?.name, to: `/${church?.id}` },
+    { name: "Manage", to: `/${church?.id}/manage` },
+    { name: role.name, to: `/${church?.id}/role/${role?.id}`, active: true }
   ]
 
   if (!UserHelper.checkAccess(Permissions.accessApi.roles.view)) return (<></>);

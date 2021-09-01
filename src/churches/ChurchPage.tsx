@@ -50,14 +50,13 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
 
   const getSidebar = () => {
     if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit) || church === null) return null;
-    else return (<Button variant="primary" size="lg" block onClick={() => history.push(`/churches/${church?.id}/manage`)}>Edit Church Settings</Button>);
+    else return (<Button variant="primary" size="lg" block onClick={() => history.push(`/${church?.id}/manage`)}>Edit Church Settings</Button>);
   }
 
   React.useEffect(loadData, [match.params.id]);
 
   const items: BreadCrumbProps[] = [
-    { name: "churches", to: "/churches" },
-    { name: church?.name, to: `/churches/${church?.id}`, active: true }
+    { name: church?.name, to: `/${church?.id}`, active: true }
   ]
 
   return (

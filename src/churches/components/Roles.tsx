@@ -37,7 +37,7 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
     if (UserHelper.checkAccess(Permissions.accessApi.rolePermissions.edit)) {
       result.push(
         <tr key="everyone">
-          <td><i className="fas fa-user-friends" /> <Link to={`/churches/${churchId}/role/everyone`}>(Everyone)</Link></td>
+          <td><i className="fas fa-user-friends" /> <Link to={`/${churchId}/role/everyone`}>(Everyone)</Link></td>
           <td></td>
         </tr>
       );
@@ -47,7 +47,7 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
       const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); selectRoleId(role.id) }}><i className="fas fa-pencil-alt"></i></a>) : null;
 
       result.push(<tr key={role.id}>
-        <td><i className="fas fa-lock" /> <Link to={`/churches/${churchId}/role/${role.id}`}>{role.name}</Link></td>
+        <td><i className="fas fa-lock" /> <Link to={`/${churchId}/role/${role.id}`}>{role.name}</Link></td>
         <td>{editLink}</td>
       </tr>);
     });

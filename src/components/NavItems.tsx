@@ -22,7 +22,6 @@ export function NavItems({ prefix }: Props) {
     let url = location.pathname;
     let result = "Church";
     if (url.indexOf("/admin") > -1) result = "Admin";
-    if (url.indexOf("/churches") > -1) result = "Church";
     if (url.indexOf("/profile") > -1) result = "Profile";
 
     return result;
@@ -43,7 +42,8 @@ export function NavItems({ prefix }: Props) {
 
   const getTabs = () => {
     let tabs = [];
-    tabs.push(getTab({ key: "Church", url: "/churches", icon: "fas fa-church", label: "Church" }));
+    const churchId = UserHelper.currentChurch.id
+    tabs.push(getTab({ key: "Church", url: `/${churchId}`, icon: "fas fa-church", label: "Church" }));
     if (UserHelper.checkAccess(Permissions.accessApi.server.admin)) tabs.push(getTab({ key: "Admin", url: "/admin", icon: "fas fa-user-shield", label: "Admin" }));
     tabs.push(getTab({ key: "Profile", url: "/profile", icon: "fas fa-user", label: "Profile" }));
     return tabs;
