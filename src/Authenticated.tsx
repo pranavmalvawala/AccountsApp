@@ -3,7 +3,6 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { Header } from "./components";
 import { ProfilePage } from "./profile/ProfilePage";
 import { RolePage } from "./churches/RolePage";
-import { AddChurchPage } from "./churches/AddChurchPage";
 import { ManageChurch } from "./churches/ManageChurch";
 import { ChurchPage } from "./churches/ChurchPage";
 import { AdminPage } from "./admin/AdminPage";
@@ -28,7 +27,6 @@ export const Authenticated: React.FC<Props> = (props) => {
           <Route path="/login" exact><Redirect to={props.location} /></Route>
           <Route path="/admin" exact><AdminPage /></Route>
           <Route path="/profile" exact><ProfilePage /></Route>
-          <Route path="/add" component={AddChurchPage} />
           <Route path="/:id/manage" component={ManageChurch} />
           <Route path="/:id/role/:roleId" component={RolePage} />
           <Route path="/:id" component={ChurchPage} />
