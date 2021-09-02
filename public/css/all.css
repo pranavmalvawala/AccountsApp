@@ -539,3 +539,7 @@ label .description {
 
 .disabled {color:#999;}
 .breadcrumb { background: none; padding-left: 0; }
+.no-default-style {
+  border: none;
+  background: none;
+}
