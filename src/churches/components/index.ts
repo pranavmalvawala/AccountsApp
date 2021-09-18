@@ -1,5 +1,4 @@
 export * from "../../components"
-export { ChurchApps } from "./ChurchApps"
 export { ChurchSettings } from "./ChurchSettings"
 export { ChurchSettingsEdit } from "./ChurchSettingsEdit"
 

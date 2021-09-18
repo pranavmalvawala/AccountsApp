@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Row, Col } from "react-bootstrap"
 import UserContext from "../UserContext";
-import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, ChurchApps, Permissions, Appearance, Roles, RoleEdit, BreadCrumb, BreadCrumbProps } from "./components"
+import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, Permissions, Appearance, Roles, RoleEdit, BreadCrumb, BreadCrumbProps } from "./components"
 import { Redirect } from "react-router-dom";
 import { RouteComponentProps } from "react-router-dom";
 
@@ -22,7 +22,6 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
 
   const getSidebar = () => {
     let modules: JSX.Element[] = [
-      <ChurchApps key="churchApps" church={church} redirectFunction={setRedirectUrl} updatedFunction={loadData} />,
       <Appearance key="appearence" />
     ];
 
