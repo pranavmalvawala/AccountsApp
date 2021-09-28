@@ -27,10 +27,12 @@ export const Login: React.FC = (props: any) => {
     let search = new URLSearchParams(props.location.search);
     let jwt = search.get("jwt") || cookies.jwt;
     let auth = search.get("auth");
+    let keyName = search.get("keyName");
     if (!jwt) jwt = "";
     if (!auth) auth = "";
+    if (!keyName) keyName = ""
 
-    return (<LoginPage auth={auth} context={context} jwt={jwt} appName="ChurchApps" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} />);
+    return (<LoginPage auth={auth} context={context} jwt={jwt} appName="ChurchApps" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} keyName={keyName} />);
   } else {
     const churchId = UserHelper.currentChurch.id;
     // in case when church is changed what you can do is just check current churchId and the churchId
