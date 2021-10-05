@@ -5,6 +5,7 @@ export class EnvironmentHelper {
     static ChumsUrl = "";
     static B1Url = "";
     static churchAppsUrl = "";
+    static LessonsUrl = "";
     static ContentRoot = "";
 
     private static AccessApi = "";
@@ -43,6 +44,7 @@ export class EnvironmentHelper {
       EnvironmentHelper.B1Url = process.env.REACT_APP_B1_URL || "";
       EnvironmentHelper.MembershipApi = process.env.REACT_APP_MEMBERSHIP_API || "";
       EnvironmentHelper.churchAppsUrl = process.env.REACT_APP_CHURCH_APPS_URL || "";
+      EnvironmentHelper.LessonsUrl = process.env.REACT_APP_LESSONS_URL || ""
       EnvironmentHelper.GoogleAnalyticsTag = process.env.REACT_APP_GOOGLE_ANALYTICS || "";
     }
 
@@ -58,6 +60,7 @@ export class EnvironmentHelper {
       EnvironmentHelper.B1Url = "https://app.staging.b1.church";
       EnvironmentHelper.MembershipApi = "https://membershipapi.staging.churchapps.org";
       EnvironmentHelper.churchAppsUrl = "https://staging.churchapps.org";
+      EnvironmentHelper.LessonsUrl = "https://staging.lessons.church"
       EnvironmentHelper.GoogleAnalyticsTag = "";
     }
 
@@ -73,6 +76,7 @@ export class EnvironmentHelper {
       EnvironmentHelper.B1Url = "https://app.b1.church";
       EnvironmentHelper.MembershipApi = "https://membershipapi.churchapps.org";
       EnvironmentHelper.churchAppsUrl = "https://churchapps.org";
+      EnvironmentHelper.LessonsUrl = "https://lessons.church"
       EnvironmentHelper.GoogleAnalyticsTag = "UA-164774603-7";
     }
 

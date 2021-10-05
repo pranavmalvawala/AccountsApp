@@ -6,21 +6,17 @@ import { RouteComponentProps, useHistory } from "react-router-dom";
 
 type TParams = { id?: string };
 
-const APP_TO_API_MAPPING: { [key: string]: string } = {
-  AccessApi: "AccountsManagement",
-  StreamingLiveApi: "StreamingLive",
-  MessagingApi: "StreamingLive",
-  GivingApi: "CHUMS",
-  MembershipApi: "CHUMS",
-  AttendanceApi: "CHUMS",
-  B1Api: "B1",
-  LessonsApi: "Lessons.church"
-}
-
 export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
   const [church, setChurch] = React.useState<ChurchInterface>(null);
   const context = React.useContext(UserContext);
   const history = useHistory();
+  const APPS: { app: string, url: string }[] = [
+    { app: "AccountsManagement", url: "" },
+    { app: "StreamingLive", url: createLoginLink(EnvironmentHelper.StreamingLiveUrl.replace("{key}", UserHelper.currentChurch.subDomain)) },
+    { app: "CHUMS", url: createLoginLink(EnvironmentHelper.ChumsUrl) },
+    { app: "B1", url: createLoginLink(EnvironmentHelper.B1Url.replace("{key}", UserHelper.currentChurch.subDomain)) },
+    { app: "Lessons.church", url: createLoginLink(EnvironmentHelper.LessonsUrl) }
+  ]
 
   const loadData = () => {
     const churchId = match.params.id;
@@ -29,50 +25,10 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
     ApiHelper.get("/churches/" + match.params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
   }
 
-  const getAppRows = () => {
-    const result: JSX.Element[] = [];
-    const apps: string[] = [];
-
-    if (church !== null) {
-      ApiHelper.apiConfigs.forEach(api => {
-        if (api.permisssions.length > 0) {
-          const appName = APP_TO_API_MAPPING[api.keyName]
-          if (!apps.includes(appName) ) {
-            apps.push(appName)
-            result.push(
-              <tr key={appName}>
-                <td>{appName}</td>
-                <td>{getLoginLink(appName, api.jwt)}</td>
-              </tr>
-            )
-          }
-        }
-      })
-    }
-
-    if (result.length === 0) {
-      result.push(
-        <tr key="0">
-          <td>AccountsManagement</td>
-          <td />
-        </tr>)
-    }
-
-    return result;
-  }
-
-  const getLoginLink = (appName: string, jwt: string) => {
+  function createLoginLink(url: string) {
+    const jwt = ApiHelper.getConfig("AccessApi").jwt
     const church = UserHelper.currentChurch
-    let result: JSX.Element = null;
-    switch (appName) {
-      case "CHUMS":
-        result = (<a href={EnvironmentHelper.ChumsUrl + "/login/?jwt=" + jwt + "&churchId=" + church.id.toString()} rel="external noopener noreferrer " target="_blank"><i className="fas fa-external-link-alt"></i></a>);
-        break;
-      case "StreamingLive":
-        result = (<a href={EnvironmentHelper.StreamingLiveUrl.replace("{key}", UserHelper.currentChurch.subDomain) + "/login/?jwt=" + jwt + "&churchId=" + church.id.toString()} rel="external noopener noreferrer" target="_blank"><i className="fas fa-external-link-alt"></i></a>);
-        break;
-    }
-    return result;
+    return url + `/login?jwt=${jwt}&churchId=${church.id.toString()}`
   }
 
   const getSidebar = () => {
@@ -101,7 +57,14 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
                   <th>App</th>
                   <th>Actions</th>
                 </tr>
-                {getAppRows()}
+                {
+                  APPS.map(a => (
+                    <tr key={a.app}>
+                      <td>{a.app}</td>
+                      <td>{a.url && <a href={a.url} rel="external noopener noreferrer " target="_blank"><i className="fas fa-external-link-alt"></i></a>}</td>
+                    </tr>
+                  ))
+                }
               </thead>
             </table>
           </DisplayBox>
