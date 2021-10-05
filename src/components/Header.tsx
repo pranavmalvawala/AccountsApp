@@ -1,11 +1,31 @@
 import React from "react";
 import { UserHelper, NavItems } from "./";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Col, Container } from "react-bootstrap";
 
 export const Header: React.FC = () => {
+  const history = useHistory()
   const { firstName, lastName }  = UserHelper.user;
   const userName = `${firstName} ${lastName}`;
+
+  const switchChurch = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const id = e.currentTarget.getAttribute("data-id");
+    history.replace(`/${id}`)
+  }
+
+  const getChurchLinks = () => {
+    if (UserHelper.churches.length < 2) return null;
+    else {
+      let result: JSX.Element[] = [];
+      const churches = UserHelper.churches.filter(c => c.apis.length > 0)
+      churches.forEach(c => {
+        const churchName = (c.id === UserHelper.currentChurch.id) ? (<b>{c.name}</b>) : (c.name);
+        result.push(<li className="nav-tem" id="church" key={c.id}><a href="about:blank" data-id={c.id} onClick={switchChurch}><i className="fas fa-external-link-alt"></i> {churchName}</a></li>);
+      });
+      return result;
+    }
+  }
 
   const toggleMenuItems = () => {
     let menuNav = document.getElementById("nav-menu");
@@ -16,10 +36,11 @@ export const Header: React.FC = () => {
       } else if (
         i < (userName.length <= 5 ? 5 : userName.length < 24 ? 4 : 3)
       ) {
-        if (listItems[i].id === "logout") return;
+        if (listItems[i].id === "church") return;
         listItems[i].classList.add("d-lg-none");
         return;
       } else if (i < (userName.length < 24 ? 6 : 5)) {
+        if (listItems[i].id === "logout") return
         listItems[i].classList.add("d-xl-none");
       }
     });
@@ -56,6 +77,7 @@ export const Header: React.FC = () => {
           <div>
             <ul id="nav-menu" className="nav d-flex flex-column">
               <NavItems />
+              {getChurchLinks()}
               <Link id="logout" to="/logout"><i className="fas fa-lock"></i> Logout</Link>
             </ul>
           </div>
