@@ -57,7 +57,7 @@ export class EnvironmentHelper {
       EnvironmentHelper.GivingApi = "https://givingapi.staging.churchapps.org";
       EnvironmentHelper.ChumsUrl = "https://app.staging.chums.org";
       EnvironmentHelper.B1Api = "https://api.staging.b1.church";
-      EnvironmentHelper.B1Url = "https://app.staging.b1.church";
+      EnvironmentHelper.B1Url = "https://{key}.staging.b1.church";
       EnvironmentHelper.MembershipApi = "https://membershipapi.staging.churchapps.org";
       EnvironmentHelper.churchAppsUrl = "https://staging.churchapps.org";
       EnvironmentHelper.LessonsUrl = "https://staging.lessons.church"
@@ -73,7 +73,7 @@ export class EnvironmentHelper {
       EnvironmentHelper.GivingApi = "https://givingapi.churchapps.org";
       EnvironmentHelper.ChumsUrl = "https://app.chums.org";
       EnvironmentHelper.B1Api = "https://api.b1.church";
-      EnvironmentHelper.B1Url = "https://app.b1.church";
+      EnvironmentHelper.B1Url = "https://{key}.b1.church";
       EnvironmentHelper.MembershipApi = "https://membershipapi.churchapps.org";
       EnvironmentHelper.churchAppsUrl = "https://churchapps.org";
       EnvironmentHelper.LessonsUrl = "https://lessons.church"
