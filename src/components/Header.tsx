@@ -36,7 +36,7 @@ export const Header: React.FC = () => {
       } else if (
         i < (userName.length <= 5 ? 5 : userName.length < 24 ? 4 : 3)
       ) {
-        if (listItems[i].id === "church") return;
+        if (listItems[i].id === "logout" || listItems[i].id === "church") return;
         listItems[i].classList.add("d-lg-none");
         return;
       } else if (i < (userName.length < 24 ? 6 : 5)) {
