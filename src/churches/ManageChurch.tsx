@@ -2,22 +2,21 @@ import React, { useState, useContext } from "react";
 import { Row, Col } from "react-bootstrap"
 import UserContext from "../UserContext";
 import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, Permissions, Appearance, Roles, RoleEdit, BreadCrumb, BreadCrumbProps } from "./components"
-import { Redirect } from "react-router-dom";
-import { RouteComponentProps } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-type TParams = { id?: string };
-
-export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
+export const ManageChurch = () => {
+  const params = useParams();
   const [church, setChurch] = useState<ChurchInterface>(null);
   const [redirectUrl, setRedirectUrl] = useState<string>("");
   const [selectedRoleId, setSelectedRoleId] = useState<string>("notset");
   const context = useContext(UserContext);
 
   const loadData = () => {
-    const churchId = match.params.id;
+    const churchId = params.id;
     if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId);
     if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit)) setRedirectUrl("/" + church.id);
-    ApiHelper.get("/churches/" + match.params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
+    ApiHelper.get("/churches/" + params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
   }
 
   const getSidebar = () => {
@@ -32,14 +31,14 @@ export const ManageChurch = ({ match }: RouteComponentProps<TParams>) => {
     return modules;
   }
 
-  React.useEffect(loadData, [match.params.id]);
+  React.useEffect(loadData, [params.id]); //eslint-disable-line
 
   const items: BreadCrumbProps[] = [
     { name: church?.name, to: `/${church?.id}` },
     { name: "Manage", to: `/${church?.id}/manage`, active: true }
   ]
 
-  if (redirectUrl !== "") return <Redirect to={redirectUrl}></Redirect>;
+  if (redirectUrl !== "") return <Navigate to={redirectUrl}></Navigate>;
   else return (
     <>
       <BreadCrumb items={items} />

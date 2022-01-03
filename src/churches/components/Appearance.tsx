@@ -33,7 +33,7 @@ export const Appearance: React.FC<Props> = (props) => {
     setStyles(style);
   }
 
-  React.useEffect(loadData, []);
+  React.useEffect(loadData, []); //eslint-disable-line
 
   if (mode === "edit") return (<AppearanceEdit settings={currentSettings} updatedFunction={handleUpdate} />)
   else return (

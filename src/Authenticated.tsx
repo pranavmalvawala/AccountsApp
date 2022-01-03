@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Header } from "./components";
 import { ProfilePage } from "./profile/ProfilePage";
 import { RolePage } from "./churches/RolePage";
@@ -8,11 +8,8 @@ import { ChurchPage } from "./churches/ChurchPage";
 import { AdminPage } from "./admin/AdminPage";
 import UserContext from "./UserContext";
 
-interface Props {
-  location: any;
-}
-
-export const Authenticated: React.FC<Props> = (props) => {
+export const Authenticated: React.FC = () => {
+  console.log("AUTHENTICATED")
   //to force rerender on login
   let user = React.useContext(UserContext)?.userName;
   let church = React.useContext(UserContext)?.churchName;
@@ -23,14 +20,14 @@ export const Authenticated: React.FC<Props> = (props) => {
     <>
       <Header></Header>
       <div className="container">
-        <Switch>
-          <Route path="/login" exact><Redirect to={props.location} /></Route>
-          <Route path="/admin" exact><AdminPage /></Route>
-          <Route path="/profile" exact><ProfilePage /></Route>
-          <Route path="/:id/manage" component={ManageChurch} />
-          <Route path="/:id/role/:roleId" component={RolePage} />
-          <Route path="/:id" component={ChurchPage} />
-        </Switch>
+        <Routes>
+          <Route path="/login" element={<Navigate to={window.location} />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/:id" element={<ChurchPage />} />
+          <Route path="/:id/manage" element={<ManageChurch />} />
+          <Route path="/:id/role/:roleId" element={<RolePage />} />
+        </Routes>
       </div>
     </>
   );

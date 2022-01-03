@@ -6,14 +6,14 @@ import { RoleInterface } from "../../helpers"
 import UserContext from "../../UserContext"
 
 interface Props {
-    selectRoleId: (id: string) => void;
-    selectedRoleId: string;
-    church: ChurchInterface;
+  selectRoleId: (id: string) => void;
+  selectedRoleId: string;
+  church: ChurchInterface;
 }
 
 export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church }) => {
   const [roles, setRoles] = useState<RoleInterface[]>([]);
-  const params: { id: string } = useParams();
+  const params = useParams();
   const context = useContext(UserContext);
 
   const loadData = () => {
@@ -55,7 +55,7 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
     return result;
   }
 
-  useEffect(loadData, [selectedRoleId, church]);
+  useEffect(loadData, [selectedRoleId, church]); //eslint-disable-line
 
   return (
     <DisplayBox id="rolesBox" headerText="Roles" headerIcon="fas fa-lock" editContent={getEditContent()}>

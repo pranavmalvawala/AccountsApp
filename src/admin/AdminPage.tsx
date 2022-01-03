@@ -1,7 +1,7 @@
 import React from "react";
 import { ChurchInterface, ApiHelper, DisplayBox, UserHelper } from "./components";
 import { Row, Col, InputGroup, FormControl, Button } from "react-bootstrap"
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export const AdminPage = () => {
   const [searchText, setSearchText] = React.useState<string>("")
@@ -49,9 +49,9 @@ export const AdminPage = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<any>) => { if (e.key === "Enter") { e.preventDefault(); loadData(); } }
 
-  React.useEffect(loadData, []);
+  React.useEffect(loadData, []); //eslint-disable-line
 
-  if (redirectUrl !== "") return <Redirect to={redirectUrl}></Redirect>;
+  if (redirectUrl !== "") return <Navigate to={redirectUrl}></Navigate>;
   else return (
     <>
       <Row style={{ marginBottom: 25 }}>
@@ -62,7 +62,7 @@ export const AdminPage = () => {
           <DisplayBox headerIcon="fas fa-key" headerText="Your access">
             <InputGroup>
               <FormControl id="searchText" data-cy="search-input" name="searchText" type="text" placeholder="Church Name" value={searchText} onChange={handleChange} onKeyDown={handleKeyDown} />
-              <InputGroup.Append><Button id="searchButton" data-cy="search-button" variant="primary" onClick={loadData}>Search</Button></InputGroup.Append>
+              <Button id="searchButton" data-cy="search-button" variant="primary" onClick={loadData}>Search</Button>
             </InputGroup>
             <br />
             {

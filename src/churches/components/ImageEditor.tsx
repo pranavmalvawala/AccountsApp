@@ -66,7 +66,7 @@ export const ImageEditor: React.FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(init, []);
+  React.useEffect(init, []); //eslint-disable-line
 
   return (
     <InputBox id="cropperBox" headerIcon="" headerText="Crop" saveFunction={handleSave} saveText={"Update"} cancelFunction={handleCancel} headerActionContent={getHeaderButton()}>

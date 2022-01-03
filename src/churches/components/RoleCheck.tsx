@@ -2,12 +2,12 @@ import React from "react";
 import { ApiHelper, RolePermissionInterface } from "./";
 
 interface Props {
-    apiName: string,
-    contentType: string,
-    action: string,
-    label: string,
-    roleId: string,
-    rolePermissions: RolePermissionInterface[]
+  apiName: string,
+  contentType: string,
+  action: string,
+  label: string,
+  roleId: string,
+  rolePermissions: RolePermissionInterface[]
 }
 
 export const RoleCheck: React.FC<Props> = (props) => {
@@ -34,7 +34,7 @@ export const RoleCheck: React.FC<Props> = (props) => {
     }
   }
 
-  React.useEffect(init, [props.rolePermissions]);
+  React.useEffect(init, [props.rolePermissions]); //eslint-disable-line
 
   return (
     <div className="form-check">

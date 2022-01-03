@@ -1,17 +1,17 @@
 import React from "react";
 import { UserHelper, NavItems } from "./";
-import { Link, useHistory } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Col, Container } from "react-bootstrap";
 
 export const Header: React.FC = () => {
-  const history = useHistory()
-  const { firstName, lastName }  = UserHelper.user;
+  const { firstName, lastName } = UserHelper.user;
   const userName = `${firstName} ${lastName}`;
+  const [redirect, setRedirect] = React.useState("");
 
   const switchChurch = (e: React.MouseEvent) => {
     e.preventDefault();
     const id = e.currentTarget.getAttribute("data-id");
-    history.replace(`/${id}`)
+    setRedirect(`/${id}`)
   }
 
   const getChurchLinks = () => {
@@ -48,7 +48,8 @@ export const Header: React.FC = () => {
 
   React.useEffect(() => { toggleMenuItems(); });
 
-  return (
+  if (redirect) return <Navigate to={redirect} />
+  else return (
     <>
       <div id="navbar" className=" fixed-top">
         <Container>

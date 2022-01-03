@@ -71,8 +71,8 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
     setPrivateKey("");
   }
 
-  React.useEffect(() => { if (!UniqueIdHelper.isMissing(props.churchId)) loadData() }, [props.churchId]);
-  React.useEffect(checkSave, [props.saveTrigger]);
+  React.useEffect(() => { if (!UniqueIdHelper.isMissing(props.churchId)) loadData() }, [props.churchId]); //eslint-disable-line
+  React.useEffect(checkSave, [props.saveTrigger]); //eslint-disable-line
 
   return (
     <>

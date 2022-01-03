@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import ReactGA from "react-ga";
 import { EnvironmentHelper } from "./helpers";
 import { ControlPanel } from "./ControlPanel";
@@ -12,9 +12,10 @@ export const Routing: React.FC = () => {
   }
   React.useEffect(() => { if (EnvironmentHelper.GoogleAnalyticsTag !== "") ReactGA.pageview(location.pathname + location.search); }, [location]);
 
+  console.log("routing");
   return (
-    <Switch>
-      <Route path="/"><ControlPanel /></Route>
-    </Switch>
+    <Routes>
+      <Route path="/*" element={<ControlPanel />} />
+    </Routes>
   );
 }

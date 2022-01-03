@@ -2,14 +2,14 @@ import React from "react";
 import { Row, Col, Button } from "react-bootstrap"
 import UserContext from "../UserContext";
 import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, Permissions, BreadCrumb, BreadCrumbProps, EnvironmentHelper } from "./components"
-import { RouteComponentProps, useHistory } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
-type TParams = { id?: string };
-
-export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
+export const ChurchPage = () => {
+  console.log("CHURCH PAGE")
+  const params = useParams();
+  const [redirect, setRedirect] = React.useState("");
   const [church, setChurch] = React.useState<ChurchInterface>(null);
   const context = React.useContext(UserContext);
-  const history = useHistory();
   const APPS: { app: string, url: string }[] = [
     { app: "AccountsManagement", url: "" },
     { app: "StreamingLive", url: createLoginLink(EnvironmentHelper.StreamingLiveUrl.replace("{key}", UserHelper.currentChurch.subDomain)) },
@@ -19,10 +19,10 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
   ]
 
   const loadData = () => {
-    const churchId = match.params.id;
+    const churchId = params.id;
     if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId);
 
-    ApiHelper.get("/churches/" + match.params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
+    ApiHelper.get("/churches/" + params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
   }
 
   function createLoginLink(url: string) {
@@ -33,16 +33,17 @@ export const ChurchPage = ({ match }: RouteComponentProps<TParams>) => {
 
   const getSidebar = () => {
     if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit) || church === null) return null;
-    else return (<Button variant="primary" size="lg" block onClick={() => history.push(`/${church?.id}/manage`)}>Edit Church Settings</Button>);
+    else return (<Button variant="primary" block size="lg" onClick={() => setRedirect(`/${church?.id}/manage`)}>Edit Church Settings</Button>);
   }
 
-  React.useEffect(loadData, [match.params.id]);
+  React.useEffect(loadData, [params.id]); //eslint-disable-line
 
   const items: BreadCrumbProps[] = [
     { name: church?.name, to: `/${church?.id}`, active: true }
   ]
 
-  return (
+  if (redirect) return <Navigate to={redirect} />
+  else return (
     <>
       <BreadCrumb items={items} />
       <Row style={{ marginBottom: 25 }}>

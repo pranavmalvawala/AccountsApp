@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { ApiHelper, RoleInterface, UserAdd, UserHelper, Permissions, RoleMemberInterface, BreadCrumb, BreadCrumbProps } from "./components";
-import { RouteComponentProps } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { RoleMembers } from "./components/RoleMembers";
 import { RolePermissions } from "./components/RolePermissions";
 import { Row, Col } from "react-bootstrap";
 
-type TParams = { roleId?: string };
-
-export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
+export const RolePage = () => {
+  const params = useParams();
   const [role, setRole] = React.useState<RoleInterface>({} as RoleInterface);
   const [showAdd, setShowAdd] = React.useState<boolean>(false);
   const [selectedRoleMemberId, setSelectedRoleMemberId] = React.useState<string>("");
@@ -18,14 +17,14 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
   const handleAdd = () => { setShowAdd(false); setSelectedRoleMemberId(""); loadData(); loadRoleMembers(); }
 
   const loadData = () => {
-    if (match.params.roleId === "everyone") {
+    if (params.roleId === "everyone") {
       setRole({ id: null, name: "Everyone" });
       return;
     }
-    ApiHelper.get("/roles/" + match.params.roleId, "AccessApi")
+    ApiHelper.get("/roles/" + params.roleId, "AccessApi")
       .then(data => setRole(data));
   }
-  const loadRoleMembers = () => { ApiHelper.get("/rolemembers/roles/" + match.params.roleId + "?include=users", "AccessApi").then((data: any) => { setRoleMembers(data); }); }
+  const loadRoleMembers = () => { ApiHelper.get("/rolemembers/roles/" + params.roleId + "?include=users", "AccessApi").then((data: any) => { setRoleMembers(data); }); }
 
   const getAddUser = () => {
     if (showAdd || selectedRoleMemberId) return <UserAdd role={role} roleMembers={roleMembers} selectedUser={selectedRoleMemberId} updatedFunction={handleAdd} />;
@@ -40,8 +39,8 @@ export const RolePage = ({ match }: RouteComponentProps<TParams>) => {
     </>);
   }
 
-  React.useEffect(loadData, []);
-  React.useEffect(loadRoleMembers, [])
+  React.useEffect(loadData, []); //eslint-disable-line
+  React.useEffect(loadRoleMembers, []); //eslint-disable-line
 
   const items: BreadCrumbProps[] = [
     { name: church?.name, to: `/${church?.id}` },
