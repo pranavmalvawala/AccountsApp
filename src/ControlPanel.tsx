@@ -2,7 +2,7 @@ import React from "react";
 import UserContext from "./UserContext";
 
 import { ApiHelper } from "./components";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Login } from "./Login";
 
 import { Authenticated } from "./Authenticated";
@@ -18,15 +18,23 @@ export const ControlPanel = () => {
     <Routes>
       <Route path="/logout" element={<Logout />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/" element={<Navigate replace to="/login" />}></Route>
-      {getAuth()}
+      <Route
+        path="/*"
+        element={
+          <RequireAuth>
+            <Authenticated />
+          </RequireAuth>
+        }
+      />
     </Routes>
   );
 };
 
-const getAuth = () => {
-  if (ApiHelper.isAuthenticated) return <Route path="/*" element={<Authenticated />}></Route>
-  else {
-    return <Route path="/" element={<Navigate replace to="/login" />}></Route>
+const RequireAuth = ({ children }: { children: JSX.Element }) => {
+  const location = useLocation()
+  if (!ApiHelper.isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
+
+  return children
 }

@@ -1,6 +1,6 @@
 import React from "react";
+import { Navigate, useLocation } from "react-router-dom"
 import { ApiHelper } from "./components";
-import { Authenticated } from "./Authenticated";
 import UserContext from "./UserContext";
 import { useCookies } from "react-cookie";
 import { LoginPage } from "./appBase/pageComponents/LoginPage";
@@ -10,6 +10,7 @@ import { UserInterface, ChurchInterface } from "./helpers";
 
 export const Login: React.FC = () => {
   const [cookies] = useCookies(["jwt"]);
+  const location = useLocation();
 
   const context = React.useContext(UserContext);
 
@@ -32,6 +33,8 @@ export const Login: React.FC = () => {
 
     return (<LoginPage auth={auth} context={context} jwt={jwt} appName="ChurchApps" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} keyName={keyName} />);
   } else {
-    return <Authenticated />;
+    // @ts-ignore
+    let from = location.state?.from?.pathname || "/people";
+    return <Navigate to={from !== "/" ? from : "/people"} replace />;
   }
 };

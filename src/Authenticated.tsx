@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Header } from "./components";
 import { ProfilePage } from "./profile/ProfilePage";
 import { RolePage } from "./churches/RolePage";
@@ -21,7 +21,6 @@ export const Authenticated: React.FC = () => {
       <Header></Header>
       <div className="container">
         <Routes>
-          <Route path="/login" element={<Navigate to={window.location} />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/:id" element={<ChurchPage />} />
