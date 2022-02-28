@@ -27,6 +27,7 @@ export const Authenticated: React.FC = () => {
         <Routes>
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/login" element={<Navigate to={defaultPath} />} />
           <Route path="/:id" element={<ChurchPage />} />
           <Route path="/:id/manage" element={<ManageChurch />} />
           <Route path="/:id/role/:roleId" element={<RolePage />} />
