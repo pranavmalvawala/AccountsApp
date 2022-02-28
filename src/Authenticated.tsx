@@ -1,6 +1,6 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import { Header } from "./components";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Header, UserHelper } from "./components";
 import { ProfilePage } from "./profile/ProfilePage";
 import { RolePage } from "./churches/RolePage";
 import { ManageChurch } from "./churches/ManageChurch";
@@ -15,6 +15,10 @@ export const Authenticated: React.FC = () => {
   let church = React.useContext(UserContext)?.churchName;
   console.log(user);
   console.log(church);
+  let defaultPath = "/profile";
+  if (UserHelper.currentChurch) defaultPath = "/" + UserHelper.currentChurch.id;
+
+  //<Route path="/" element={<Navigate to={defaultPath} />} />
 
   return (
     <>
@@ -26,6 +30,7 @@ export const Authenticated: React.FC = () => {
           <Route path="/:id" element={<ChurchPage />} />
           <Route path="/:id/manage" element={<ManageChurch />} />
           <Route path="/:id/role/:roleId" element={<RolePage />} />
+          <Route path="/" element={<Navigate to={defaultPath} />} />
         </Routes>
       </div>
     </>

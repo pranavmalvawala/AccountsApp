@@ -6,7 +6,7 @@ export const Unauthenticated = () => (
   <>
     <Routes>
       <Route path="/login" element={Login}></Route>
-      <Route path="/"><Navigate to="/login" /></Route>
+      <Route path="/" element={<Navigate to="/login" />} />
     </Routes>
   </>
 )

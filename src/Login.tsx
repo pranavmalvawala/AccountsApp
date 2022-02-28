@@ -34,7 +34,8 @@ export const Login: React.FC = () => {
     return (<LoginPage auth={auth} context={context} jwt={jwt} appName="ChurchApps" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} keyName={keyName} />);
   } else {
     // @ts-ignore
-    let from = location.state?.from?.pathname || "/people";
-    return <Navigate to={from !== "/" ? from : "/people"} replace />;
+    let from = location.state?.from?.pathname || "/";
+
+    return <Navigate to={from} replace />;
   }
 };

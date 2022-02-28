@@ -1,17 +1,18 @@
 import React from "react";
 import { UserHelper, NavItems } from "./";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Col, Container } from "react-bootstrap";
 
 export const Header: React.FC = () => {
   const { firstName, lastName } = UserHelper.user;
   const userName = `${firstName} ${lastName}`;
-  const [redirect, setRedirect] = React.useState("");
+
+  const navigate = useNavigate();
 
   const switchChurch = (e: React.MouseEvent) => {
     e.preventDefault();
     const id = e.currentTarget.getAttribute("data-id");
-    setRedirect(`/${id}`)
+    navigate(`/${id}`)
   }
 
   const getChurchLinks = () => {
@@ -29,7 +30,7 @@ export const Header: React.FC = () => {
 
   const toggleMenuItems = () => {
     let menuNav = document.getElementById("nav-menu");
-    let listItems = Array.from(menuNav.children);
+    let listItems = Array.from(menuNav?.children || []);
     listItems.forEach((_, i) => {
       if (i < (userName.length <= 5 ? 3 : userName.length < 24 ? 2 : 1)) {
         listItems[i].classList.add("d-md-none");
@@ -48,8 +49,7 @@ export const Header: React.FC = () => {
 
   React.useEffect(() => { toggleMenuItems(); });
 
-  if (redirect) return <Navigate to={redirect} />
-  else return (
+  return (
     <>
       <div id="navbar" className=" fixed-top">
         <Container>
@@ -68,8 +68,7 @@ export const Header: React.FC = () => {
 
             <div className="d-flex align-items-center" id="navRight">
               <a href="about:blank" id="userMenuLink" data-toggle="collapse" data-target="#userMenu" aria-controls="navbarToggleMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <img src="/images/sample-profile.png" alt="user" />
-                {userName} <i className="fas fa-caret-down"></i>
+                <i className="fas fa-user"></i> &nbsp;{userName} <i className="fas fa-caret-down"></i>
               </a>
             </div>
           </div>

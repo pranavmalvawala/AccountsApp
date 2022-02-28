@@ -1,18 +1,10 @@
 import React from "react";
 import { UserHelper } from "./";
 import { NavLink } from "react-router-dom";
-import { Permissions }  from "../helpers/Permissions"
+import { Permissions } from "../helpers/Permissions"
 
-interface Props {
-  prefix?: String;
-}
-
-interface Tab {
-  key: string;
-  url: string;
-  icon: string;
-  label: string;
-}
+interface Props { prefix?: String; }
+interface Tab { key: string; url: string; icon: string; label: string; }
 
 export function NavItems({ prefix }: Props) {
   const getTab = ({ key, url, icon, label }: Tab) => (

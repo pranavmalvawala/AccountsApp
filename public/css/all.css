@@ -543,3 +543,8 @@ label .description {
   border: none;
   background: none;
 }
+
+.appLink { display:block; padding-top:20px; padding-bottom: 20px; border-bottom: 1px solid #EEE; color:#333; }
+.appLink:hover {text-decoration: none;}
+
+#userMenuLink:hover {text-decoration: none;}
