@@ -31,7 +31,7 @@ export const Login: React.FC = () => {
     if (!auth) auth = "";
     if (!keyName) keyName = ""
 
-    return (<LoginPage auth={auth} context={context} jwt={jwt} appName="ChurchApps" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} keyName={keyName} />);
+    return (<LoginPage auth={auth} context={context} jwt={jwt} appName="AccountsApp" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} keyName={keyName} />);
   } else {
     // @ts-ignore
     let from = location.state?.from?.pathname || "/";
