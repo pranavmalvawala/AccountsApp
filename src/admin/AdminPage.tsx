@@ -1,7 +1,7 @@
 import React from "react";
 import { ChurchInterface, ApiHelper, DisplayBox, UserHelper } from "./components";
 import { Row, Col, InputGroup, FormControl, Button } from "react-bootstrap"
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 export const AdminPage = () => {
   const [searchText, setSearchText] = React.useState<string>("")
@@ -55,7 +55,7 @@ export const AdminPage = () => {
   else return (
     <>
       <Row style={{ marginBottom: 25 }}>
-        <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-key"></i> Your Access</h1></div>
+        <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-key"></i> List of All Churches</h1></div>
       </Row>
       <Row>
         <Col md={8}>
@@ -70,19 +70,18 @@ export const AdminPage = () => {
                 ? <>No church found.  Please search for a different name.</>
                 : (
                   <table className="table table-sm" id="adminChurchesTable">
-                    <thead>
-                      <tr>
-                        <th>List of all Churches</th>
-                      </tr>
-                      {getChurchRows()}
-                    </thead>
+                    {getChurchRows()}
                   </table>
                 )
             }
           </DisplayBox>
         </Col>
         <Col md={4}>
-
+          <DisplayBox headerIcon="fas fa-table" headerText="Reports">
+            <ul>
+              <li><Link to="/admin/report/activeChurches">Active Churches</Link></li>
+            </ul>
+          </DisplayBox>
         </Col>
       </Row>
     </>

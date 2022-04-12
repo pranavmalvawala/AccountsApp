@@ -7,6 +7,7 @@ import { ManageChurch } from "./churches/ManageChurch";
 import { ChurchPage } from "./churches/ChurchPage";
 import { AdminPage } from "./admin/AdminPage";
 import UserContext from "./UserContext";
+import { ReportPage } from "./admin/ReportPage";
 
 export const Authenticated: React.FC = () => {
   console.log("AUTHENTICATED")
@@ -25,6 +26,7 @@ export const Authenticated: React.FC = () => {
       <Header></Header>
       <div className="container">
         <Routes>
+          <Route path="/admin/report/:keyName" element={<ReportPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/login" element={<Navigate to={defaultPath} />} />

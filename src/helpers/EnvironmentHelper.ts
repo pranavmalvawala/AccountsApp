@@ -13,6 +13,7 @@ export class EnvironmentHelper {
   private static GivingApi = "";
   private static B1Api = "";
   private static MembershipApi = "";
+  private static ReportingApi = "";
   static GoogleAnalyticsTag = "";
 
   static init = () => {
@@ -27,6 +28,7 @@ export class EnvironmentHelper {
       { keyName: "GivingApi", url: EnvironmentHelper.GivingApi, jwt: "", permisssions: [] },
       { keyName: "B1Api", url: EnvironmentHelper.B1Api, jwt: "", permisssions: [] },
       { keyName: "MembershipApi", url: EnvironmentHelper.MembershipApi, jwt: "", permisssions: [] },
+      { keyName: "ReportingApi", url: EnvironmentHelper.ReportingApi, jwt: "", permisssions: [] },
       { keyName: "LessonsApi", url: "", jwt: "", permisssions: [] },
       { keyName: "AttendanceApi", url: "", jwt: "", permisssions: [] },
       { keyName: "MessagingApi", url: "", jwt: "", permisssions: [] }
@@ -43,6 +45,7 @@ export class EnvironmentHelper {
     EnvironmentHelper.B1Api = process.env.REACT_APP_B1_API || "";
     EnvironmentHelper.B1Url = process.env.REACT_APP_B1_URL || "";
     EnvironmentHelper.MembershipApi = process.env.REACT_APP_MEMBERSHIP_API || "";
+    EnvironmentHelper.ReportingApi = process.env.REACT_APP_REPORTING_API || "";
     EnvironmentHelper.churchAppsUrl = process.env.REACT_APP_CHURCH_APPS_URL || "";
     EnvironmentHelper.LessonsUrl = process.env.REACT_APP_LESSONS_URL || ""
     EnvironmentHelper.GoogleAnalyticsTag = process.env.REACT_APP_GOOGLE_ANALYTICS || "";
@@ -59,6 +62,7 @@ export class EnvironmentHelper {
     EnvironmentHelper.B1Api = "https://api.staging.b1.church";
     EnvironmentHelper.B1Url = "https://{key}.staging.b1.church";
     EnvironmentHelper.MembershipApi = "https://membershipapi.staging.churchapps.org";
+    EnvironmentHelper.ReportingApi = "https://reportingapi.staging.churchapps.org";
     EnvironmentHelper.churchAppsUrl = "https://staging.churchapps.org";
     EnvironmentHelper.LessonsUrl = "https://staging.lessons.church"
     EnvironmentHelper.GoogleAnalyticsTag = "";
@@ -75,6 +79,7 @@ export class EnvironmentHelper {
     EnvironmentHelper.B1Api = "https://api.b1.church";
     EnvironmentHelper.B1Url = "https://{key}.b1.church";
     EnvironmentHelper.MembershipApi = "https://membershipapi.churchapps.org";
+    EnvironmentHelper.ReportingApi = "https://reportingapi.churchapps.org";
     EnvironmentHelper.churchAppsUrl = "https://churchapps.org";
     EnvironmentHelper.LessonsUrl = "https://lessons.church"
     EnvironmentHelper.GoogleAnalyticsTag = "UA-164774603-7";
