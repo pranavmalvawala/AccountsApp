@@ -525,6 +525,7 @@ label .description {
   padding-left: 10px;
 }
 
+/*
 #adminChurchesTable td:first-child {
   width: 50%;
   overflow-x: hidden;
@@ -532,19 +533,43 @@ label .description {
 #adminChurchesTable td:last-child {
   width: 50%;
   overflow-x: hidden;
+}*/
+
+
+.inputBox .subHead {
+  margin: 10px -10px 10px -10px;
+  padding: 10px;
+  border-top: 4px solid #03a9f4;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
 }
 
+.disabled {
+  color: #999;
+}
 
-.inputBox .subHead { margin: 10px -10px 10px -10px; padding: 10px; border-top:4px solid #03a9f4; border-bottom: 1px solid #ddd; font-weight: bold; }
+.breadcrumb {
+  background: none;
+  padding-left: 0;
+}
 
-.disabled {color:#999;}
-.breadcrumb { background: none; padding-left: 0; }
 .no-default-style {
   border: none;
   background: none;
 }
 
-.appLink { display:block; padding-top:20px; padding-bottom: 20px; border-bottom: 1px solid #EEE; color:#333; }
-.appLink:hover {text-decoration: none;}
+.appLink {
+  display: block;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #EEE;
+  color: #333;
+}
 
-#userMenuLink:hover {text-decoration: none;}
+.appLink:hover {
+  text-decoration: none;
+}
+
+#userMenuLink:hover {
+  text-decoration: none;
+}
