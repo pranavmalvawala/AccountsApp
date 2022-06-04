@@ -2,7 +2,7 @@ import React from "react";
 import { UserHelper, NavItems } from "./";
 import { Link, useNavigate } from "react-router-dom";
 import { Col, Container } from "react-bootstrap";
-import { Person as PersonIcon, Church as ChurchIcon, Apps as AppsIcon, AdminPanelSettings, ChevronLeft, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
+import { Person as PersonIcon, Church as ChurchIcon, Apps as AppsIcon, AdminPanelSettings, ChevronLeft, Menu as MenuIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { AppBar, AppBarProps, Badge, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, styled, Toolbar, Typography } from "@mui/material";
 import { Permissions } from "../helpers/Permissions"
 
@@ -24,6 +24,7 @@ export const SideNav: React.FC = () => {
       case "person": result = <PersonIcon />; break;
       case "apps": result = <AppsIcon />; break;
       case "admin": result = <AdminPanelSettings />; break;
+      case "logout": result = <LogoutIcon />; break;
     }
     return result;
   }
@@ -86,6 +87,7 @@ export const SideNav: React.FC = () => {
   tabs.push(getTab({ key: "Profile", url: "/profile", icon: "person", label: "Manage Profile" }));
   tabs.push(getTab({ key: "Church", url: `/${churchId}`, icon: "church", label: "Church Settings" }))
   if (UserHelper.checkAccess(Permissions.accessApi.server.admin)) tabs.push(getTab({ key: "Admin", url: "/admin", icon: "admin", label: "Admin" }));
+  tabs.push(getTab({ key: "Logout", url: "/logout", icon: "logout", label: "Logout" }))
 
   return <>
     <CustomAppBar position="absolute" open={open}>
@@ -93,19 +95,19 @@ export const SideNav: React.FC = () => {
         <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={toggleDrawer} sx={{ marginRight: '36px', ...(open && { display: 'none' }) }} >
           <MenuIcon />
         </IconButton>
-        <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }} >
+        <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1, borderBottom: "none" }} >
           Manage: Ironwood Christian Church
         </Typography>
         <IconButton color="inherit">
-          <Badge badgeContent={"4"} color="secondary">
-            <NotificationsIcon />
-          </Badge>
+          <PersonIcon />
+          <Typography color="inherit" noWrap>Jeremy Zongker</Typography>
         </IconButton>
       </Toolbar>
     </CustomAppBar>
 
     <CustomDrawer variant="permanent" open={open}>
       <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', px: [1] }}>
+        <img src="/images/logo.png" alt="logo" style={{ maxWidth: 170 }} />
         <IconButton onClick={toggleDrawer}><ChevronLeft /></IconButton>
       </Toolbar>
       <Divider />

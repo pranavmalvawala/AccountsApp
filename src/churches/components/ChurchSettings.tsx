@@ -36,11 +36,7 @@ export const ChurchSettings: React.FC<Props> = (props) => {
   if (mode === "display") {
     return (
       <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', marginBottom: 2 }} >
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>
-          Recent Orders
-        </Typography>
-
-
+        <Typography component="h2" variant="h6" color="primary" gutterBottom>Church Settings</Typography>
         <Row>
           <Col>
             <label>Name</label><br />

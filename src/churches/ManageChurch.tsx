@@ -36,12 +36,7 @@ export const ManageChurch = () => {
 
   React.useEffect(loadData, [params.id]); //eslint-disable-line
 
-  const items: BreadCrumbProps[] = [
-    { name: church?.name, to: `/${church?.id}` },
-    { name: "Manage", to: `/${church?.id}/manage`, active: true }
-  ]
-
-
+  //<h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-church"></i> Manage: {church?.name || ""}</h1>
 
   if (redirectUrl !== "") return <Navigate to={redirectUrl}></Navigate>;
   else return (
@@ -49,12 +44,11 @@ export const ManageChurch = () => {
 
       <SideNav />
 
-      <Box component="main" sx={{ flexGrow: 1, overflow: 'auto', }}>
+      <Box component="main" sx={{ flexGrow: 1, overflow: 'auto', marginTop: 8 }}>
         <Container maxWidth={false} sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8} lg={9}>
-              <BreadCrumb items={items} />
-              <h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-church"></i> Manage: {church?.name || ""}</h1>
+
               <ChurchSettings church={church} updatedFunction={loadData} />
               <Roles selectRoleId={setSelectedRoleId} selectedRoleId={selectedRoleId} church={church} />
             </Grid>
