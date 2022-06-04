@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom"
 import { RoleMembers } from "./components/RoleMembers";
 import { RolePermissions } from "./components/RolePermissions";
 import { Row, Col } from "react-bootstrap";
+import { Wrapper } from "../components/Wrapper";
+import { Grid } from "@mui/material";
 
 export const RolePage = () => {
   const params = useParams();
@@ -51,11 +53,9 @@ export const RolePage = () => {
   if (!UserHelper.checkAccess(Permissions.accessApi.roles.view)) return (<></>);
   else {
     return (
-      <>
-        <BreadCrumb items={items} />
-        <h1><i className="fas fa-lock"></i> {role.name}</h1>
-        <Row>
-          <Col lg={8}>
+      <Wrapper pageTitle={"Edit Role: " + role?.name}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={8} lg={9}>
             <RoleMembers
               role={role}
               roleMembers={roleMembers}
@@ -63,10 +63,12 @@ export const RolePage = () => {
               setSelectedRoleMember={setSelectedRoleMemberId}
               updatedFunction={handleAdd}
             />
-          </Col>
-          <Col lg={4}>{getSidebar()}</Col>
-        </Row>
-      </>
+          </Grid>
+          <Grid item xs={12} md={4} lg={3}>
+            {getSidebar()}
+          </Grid>
+        </Grid>
+      </Wrapper>
     );
   }
 }

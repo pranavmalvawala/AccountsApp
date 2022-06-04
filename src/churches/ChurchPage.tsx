@@ -3,6 +3,8 @@ import { Row, Col, Button } from "react-bootstrap"
 import UserContext from "../UserContext";
 import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, Permissions, EnvironmentHelper } from "./components"
 import { Navigate, useParams } from "react-router-dom";
+import { Wrapper } from "../components/Wrapper";
+import { Container } from "@mui/material";
 
 export const ChurchPage = () => {
   console.log("CHURCH PAGE")
@@ -39,29 +41,19 @@ export const ChurchPage = () => {
 
   if (redirect) return <Navigate to={redirect} />
   else return (
-    <>
-      <Row style={{ marginBottom: 25 }}>
-        <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-church"></i> {church?.name || ""}</h1></div>
-      </Row>
-      <Row>
-        <Col md={8}>
-          <DisplayBox headerIcon="fas fa-link" headerText="Go to App">
-            {
-              APPS.map(a => (
-                <a href={a.url} className="appLink" key={a.app}>
-                  <Row>
-                    <Col sm={4}><img src={a.logo} className="img-fluid" alt={a.app} /></Col>
-                    <Col sm={8}>{a.desc}</Col>
-                  </Row>
-                </a>
-              ))
-            }
-          </DisplayBox>
-        </Col>
-        <Col md={4}>
-          {getSidebar()}
-        </Col>
-      </Row>
-    </>
+    <Wrapper pageTitle={church?.name || "Select App"} >
+      <DisplayBox headerIcon="fas fa-link" headerText="Go to App">
+        {
+          APPS.map(a => (
+            <a href={a.url} className="appLink" key={a.app}>
+              <Row>
+                <Col sm={4}><img src={a.logo} className="img-fluid" alt={a.app} /></Col>
+                <Col sm={8}>{a.desc}</Col>
+              </Row>
+            </a>
+          ))
+        }
+      </DisplayBox>
+    </Wrapper>
   );
 }

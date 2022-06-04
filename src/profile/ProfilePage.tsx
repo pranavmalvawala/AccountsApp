@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Row, Col, FormGroup } from "react-bootstrap"
+import { Wrapper } from "../components/Wrapper";
 import { InputBox, ApiHelper, ErrorMessages, UserHelper, PasswordField } from "./components"
 
 export const ProfilePage = () => {
@@ -77,43 +78,37 @@ export const ProfilePage = () => {
   React.useEffect(initData, []);
 
   return (
-    <>
-      <Row style={{ marginBottom: 25 }}>
-        <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-user"></i> Edit Profile</h1></div>
-      </Row>
-      <Row>
-        <Col md={8}>
-          <ErrorMessages errors={errors} />
-          <InputBox headerIcon="fas fa-user" headerText="Edit Profile" saveFunction={handleSave}>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <label>Email</label>
-                  <input type="email" name="email" value={email} onChange={handleChange} className="form-control" />
-                </FormGroup>
-                <FormGroup>
-                  <label>First Name</label>
-                  <input type="text" name="firstName" value={firstName} onChange={handleChange} className="form-control" />
-                </FormGroup>
-                <FormGroup>
-                  <label>Last Name</label>
-                  <input type="text" name="lastName" value={lastName} onChange={handleChange} className="form-control" />
-                </FormGroup>
-              </Col>
-              <Col>
-                <FormGroup>
-                  <label>Set Password</label>
-                  <PasswordField value={password} onChange={handleChange} placeholder="New password" />
-                </FormGroup>
-                <FormGroup>
-                  <label>Verify Password</label>
-                  <PasswordField name="passwordVerify" value={passwordVerify} onChange={handleChange} placeholder="New password" />
-                </FormGroup>
-              </Col>
-            </Row>
-          </InputBox>
-        </Col>
-      </Row>
-    </>
+    <Wrapper pageTitle="Edit Profile">
+      <ErrorMessages errors={errors} />
+      <InputBox headerIcon="fas fa-user" headerText="Edit Profile" saveFunction={handleSave}>
+        <Row>
+          <Col>
+            <FormGroup>
+              <label>Email</label>
+              <input type="email" name="email" value={email} onChange={handleChange} className="form-control" />
+            </FormGroup>
+            <FormGroup>
+              <label>First Name</label>
+              <input type="text" name="firstName" value={firstName} onChange={handleChange} className="form-control" />
+            </FormGroup>
+            <FormGroup>
+              <label>Last Name</label>
+              <input type="text" name="lastName" value={lastName} onChange={handleChange} className="form-control" />
+            </FormGroup>
+          </Col>
+          <Col>
+            <FormGroup>
+              <label>Set Password</label>
+              <PasswordField value={password} onChange={handleChange} placeholder="New password" />
+            </FormGroup>
+            <FormGroup>
+              <label>Verify Password</label>
+              <PasswordField name="passwordVerify" value={passwordVerify} onChange={handleChange} placeholder="New password" />
+            </FormGroup>
+          </Col>
+        </Row>
+      </InputBox>
+
+    </Wrapper>
   );
 }

@@ -3,7 +3,7 @@ import UserContext from "../UserContext";
 import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, Permissions, Appearance, Roles, RoleEdit } from "./components"
 import { Navigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { Box, Container, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Wrapper } from "../components/Wrapper";
 
 export const ManageChurch = () => {
@@ -32,23 +32,17 @@ export const ManageChurch = () => {
 
   if (redirectUrl !== "") return <Navigate to={redirectUrl}></Navigate>;
   else return (
-    <>
-      <Wrapper pageTitle={"Manage: " + church?.name} />
-      <Box component="main" sx={{ flexGrow: 1, overflow: 'auto', marginTop: 8 }}>
-        <Container maxWidth={false} sx={{ mt: 4, mb: 4 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={9}>
-
-              <ChurchSettings church={church} updatedFunction={loadData} />
-              <Roles selectRoleId={setSelectedRoleId} selectedRoleId={selectedRoleId} church={church} />
-            </Grid>
-            <Grid item xs={12} md={4} lg={3}>
-              {getSidebar()}
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-    </>
+    <Wrapper pageTitle={"Manage: " + church?.name}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={8} lg={9}>
+          <ChurchSettings church={church} updatedFunction={loadData} />
+          <Roles selectRoleId={setSelectedRoleId} selectedRoleId={selectedRoleId} church={church} />
+        </Grid>
+        <Grid item xs={12} md={4} lg={3}>
+          {getSidebar()}
+        </Grid>
+      </Grid>
+    </Wrapper>
   );
 }
 

@@ -2,6 +2,8 @@ import React from "react";
 import { ChurchInterface, ApiHelper, DisplayBox, UserHelper, DateHelper, ArrayHelper } from "./components";
 import { Row, Col, InputGroup, FormControl, Button } from "react-bootstrap"
 import { Link, Navigate } from "react-router-dom";
+import { Wrapper } from "../components/Wrapper";
+import { Grid } from "@mui/material";
 
 export const AdminPage = () => {
   const [searchText, setSearchText] = React.useState<string>("")
@@ -75,12 +77,9 @@ export const AdminPage = () => {
 
   if (redirectUrl !== "") return <Navigate to={redirectUrl}></Navigate>;
   else return (
-    <>
-      <Row style={{ marginBottom: 25 }}>
-        <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-key"></i> Admin</h1></div>
-      </Row>
-      <Row>
-        <Col md={8}>
+    <Wrapper pageTitle="Server Admin">
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={8} lg={9}>
           <DisplayBox headerIcon="fas fa-church" headerText="Churches">
             <InputGroup>
               <FormControl id="searchText" data-cy="search-input" name="searchText" type="text" placeholder="Church Name" value={searchText} onChange={handleChange} onKeyDown={handleKeyDown} />
@@ -97,16 +96,16 @@ export const AdminPage = () => {
                 )
             }
           </DisplayBox>
-        </Col>
-        <Col md={4}>
+        </Grid>
+        <Grid item xs={12} md={4} lg={3}>
           <DisplayBox headerIcon="fas fa-table" headerText="Reports">
             <ul>
               <li><Link to="/admin/report/activeChurches">Active Churches</Link></li>
             </ul>
           </DisplayBox>
-        </Col>
-      </Row>
-    </>
+        </Grid>
+      </Grid>
+    </Wrapper>
   );
 
 }
