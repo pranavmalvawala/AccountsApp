@@ -80,7 +80,7 @@ export const ProfilePage = () => {
   return (
     <Wrapper pageTitle="Edit Profile">
       <ErrorMessages errors={errors} />
-      <InputBox headerIcon="fas fa-user" headerText="Edit Profile" saveFunction={handleSave}>
+      <InputBox headerText="Edit Profile" saveFunction={handleSave}>
         <Row>
           <Col>
             <FormGroup>
