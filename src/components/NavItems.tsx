@@ -1,7 +1,7 @@
 import React from "react";
 import { UserHelper } from "./";
 import { NavLink } from "react-router-dom";
-import { Permissions } from "../helpers/Permissions"
+import { Permissions } from "./"
 
 interface Props { prefix?: String; }
 interface Tab { key: string; url: string; icon: string; label: string; }

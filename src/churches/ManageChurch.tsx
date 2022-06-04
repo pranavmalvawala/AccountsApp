@@ -1,12 +1,10 @@
 import React, { useState, useContext } from "react";
-import { Row, Col } from "react-bootstrap"
 import UserContext from "../UserContext";
-import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, Permissions, Appearance, Roles, RoleEdit, BreadCrumb, BreadCrumbProps } from "./components"
+import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, Permissions, Appearance, Roles, RoleEdit } from "./components"
 import { Navigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { AppBar, Box, Container, CssBaseline, Divider, Drawer, Grid, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Paper, Toolbar } from "@mui/material";
-import { SideNav } from "../components/SideNav";
+import { Box, Container, Grid } from "@mui/material";
+import { Wrapper } from "../components/Wrapper";
 
 export const ManageChurch = () => {
   const params = useParams();
@@ -23,27 +21,19 @@ export const ManageChurch = () => {
   }
 
   const getSidebar = () => {
-    let modules: JSX.Element[] = [
-      <Appearance key="appearence" />
-    ];
-
+    let modules: JSX.Element[] = [<Appearance key="appearence" />];
     if (selectedRoleId !== "notset") {
       modules.splice(1, 0, <RoleEdit key="roleEdit" roleId={selectedRoleId} updatedFunction={() => { setSelectedRoleId("notset") }} />);
     }
-
     return modules;
   }
 
   React.useEffect(loadData, [params.id]); //eslint-disable-line
 
-  //<h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-church"></i> Manage: {church?.name || ""}</h1>
-
   if (redirectUrl !== "") return <Navigate to={redirectUrl}></Navigate>;
   else return (
     <>
-
-      <SideNav />
-
+      <Wrapper pageTitle={"Manage: " + church?.name} />
       <Box component="main" sx={{ flexGrow: 1, overflow: 'auto', marginTop: 8 }}>
         <Container maxWidth={false} sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
@@ -60,8 +50,5 @@ export const ManageChurch = () => {
       </Box>
     </>
   );
-}
-function MuiDrawer(MuiDrawer: any, arg1: { shouldForwardProp: (prop: PropertyKey) => boolean; }) {
-  throw new Error("Function not implemented.");
 }
 
