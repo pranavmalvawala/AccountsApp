@@ -25,7 +25,6 @@ export const Authenticated: React.FC = () => {
 
   return (
     <>
-      <Header></Header>
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: 'flex', backgroundColor: "#EEE" }}>
           <CssBaseline />
