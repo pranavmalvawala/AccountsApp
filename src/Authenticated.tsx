@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Header, UserHelper } from "./components";
+import { UserHelper } from "./components";
 import { ProfilePage } from "./profile/ProfilePage";
 import { RolePage } from "./churches/RolePage";
 import { ManageChurch } from "./churches/ManageChurch";
@@ -20,13 +20,12 @@ export const Authenticated: React.FC = () => {
   let defaultPath = "/profile";
   if (UserHelper.currentChurch) defaultPath = "/" + UserHelper.currentChurch.id;
 
-  //<Route path="/" element={<Navigate to={defaultPath} />} />
   const mdTheme = createTheme();
 
   return (
     <>
       <ThemeProvider theme={mdTheme}>
-        <Box sx={{ display: 'flex', backgroundColor: "#EEE" }}>
+        <Box sx={{ display: "flex", backgroundColor: "#EEE" }}>
           <CssBaseline />
           <Routes>
             <Route path="/admin/report/:keyName" element={<ReportPage />} />

@@ -1,16 +1,14 @@
 import React from "react";
 import { UserHelper } from ".";
-import { Person as PersonIcon, Church as ChurchIcon, Apps as AppsIcon, AdminPanelSettings, Logout as LogoutIcon } from '@mui/icons-material';
+import { Person as PersonIcon, Church as ChurchIcon, Apps as AppsIcon, AdminPanelSettings, Logout as LogoutIcon } from "@mui/icons-material";
 import { Box, Container, Divider, IconButton, List, ListSubheader, Typography } from "@mui/material";
 import { Permissions } from "./"
-import { SiteWrapper, NavItem } from "../appBase/components/material";
-
+import { SiteWrapper, NavItem } from "../appBase/components";
 
 interface Props {
   pageTitle: string,
   children: React.ReactNode,
 }
-
 
 export const Wrapper: React.FC<Props> = props => {
 
@@ -23,10 +21,9 @@ export const Wrapper: React.FC<Props> = props => {
     tabs.push(<NavItem url={`/${churchId}/manage`} label="Church Settings" icon={<ChurchIcon />} />);
   }
 
-
-  if (UserHelper.checkAccess(Permissions.accessApi.server.admin)) tabs.push(<NavItem url="/admin" label="Server Admin" icon={<AdminPanelSettings />} />);
   tabs.push(<Divider />);
   tabs.push(<ListSubheader component="div">User</ListSubheader>);
+  if (UserHelper.checkAccess(Permissions.accessApi.server.admin)) tabs.push(<NavItem url="/admin" label="Server Admin" icon={<AdminPanelSettings />} />);
   tabs.push(<NavItem url="/profile" label="Profile" icon={<PersonIcon />} />);
   tabs.push(<NavItem url="/logout" label="Logout" icon={<LogoutIcon />} />);
 
@@ -37,7 +34,7 @@ export const Wrapper: React.FC<Props> = props => {
     <SiteWrapper logoUrl="/images/logo.png" navContent={navContent} pageTitle={props.pageTitle} userMenu={userMenu}>
 
     </SiteWrapper>
-    <Box component="main" sx={{ flexGrow: 1, overflow: 'auto', marginTop: 8, minHeight: "90vh" }}>
+    <Box component="main" sx={{ flexGrow: 1, overflow: "auto", marginTop: 8, minHeight: "90vh" }}>
       <Container maxWidth={false} sx={{ mt: 4, mb: 4 }}>
         {props.children}
       </Container>

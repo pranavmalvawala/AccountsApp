@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { ApiHelper, RoleInterface, UserAdd, UserHelper, Permissions, RoleMemberInterface, BreadCrumb, BreadCrumbProps } from "./components";
+import { ApiHelper, RoleInterface, UserAdd, UserHelper, Permissions, RoleMemberInterface } from "./components";
 import { useParams } from "react-router-dom"
 import { RoleMembers } from "./components/RoleMembers";
 import { RolePermissions } from "./components/RolePermissions";
-import { Row, Col } from "react-bootstrap";
 import { Wrapper } from "../components/Wrapper";
 import { Grid } from "@mui/material";
 
@@ -13,8 +12,6 @@ export const RolePage = () => {
   const [showAdd, setShowAdd] = React.useState<boolean>(false);
   const [selectedRoleMemberId, setSelectedRoleMemberId] = React.useState<string>("");
   const [roleMembers, setRoleMembers] = useState<RoleMemberInterface[]>([]);
-  const church = UserHelper.currentChurch;
-
   const handleShowAdd = (role: RoleInterface) => { setShowAdd(true); }
   const handleAdd = () => { setShowAdd(false); setSelectedRoleMemberId(""); loadData(); loadRoleMembers(); }
 
@@ -43,12 +40,6 @@ export const RolePage = () => {
 
   React.useEffect(loadData, []); //eslint-disable-line
   React.useEffect(loadRoleMembers, []); //eslint-disable-line
-
-  const items: BreadCrumbProps[] = [
-    { name: church?.name, to: `/${church?.id}` },
-    { name: "Manage", to: `/${church?.id}/manage` },
-    { name: role.name, to: `/${church?.id}/role/${role?.id}`, active: true }
-  ]
 
   if (!UserHelper.checkAccess(Permissions.accessApi.roles.view)) return (<></>);
   else {

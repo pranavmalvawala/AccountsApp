@@ -1,7 +1,6 @@
 import React from "react";
 import { ChurchInterface, DisplayBox, UserHelper, ChurchSettingsEdit, Permissions } from "./";
 import { Row, Col } from "react-bootstrap";
-import { Title } from "@mui/icons-material";
 import { Paper, Typography } from "@mui/material";
 
 interface Props { church: ChurchInterface, updatedFunction: () => void }
@@ -37,6 +36,8 @@ export const ChurchSettings: React.FC<Props> = (props) => {
     return (
       <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', marginBottom: 2 }} >
         <Typography component="h2" variant="h6" color="primary" gutterBottom>Church Settings</Typography>
+
+
         <Row>
           <Col>
             <label>Name</label><br />

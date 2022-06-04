@@ -1,6 +1,6 @@
 import React from "react";
 import { ChurchInterface, ApiHelper, DisplayBox, UserHelper, DateHelper, ArrayHelper } from "./components";
-import { Row, Col, InputGroup, FormControl, Button } from "react-bootstrap"
+import { InputGroup, FormControl, Button } from "react-bootstrap"
 import { Link, Navigate } from "react-router-dom";
 import { Wrapper } from "../components/Wrapper";
 import { Grid } from "@mui/material";

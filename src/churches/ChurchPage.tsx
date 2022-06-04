@@ -1,15 +1,13 @@
 import React from "react";
-import { Row, Col, Button } from "react-bootstrap"
+import { Row, Col } from "react-bootstrap"
 import UserContext from "../UserContext";
-import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, Permissions, EnvironmentHelper } from "./components"
-import { Navigate, useParams } from "react-router-dom";
+import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, EnvironmentHelper } from "./components"
+import { useParams } from "react-router-dom";
 import { Wrapper } from "../components/Wrapper";
-import { Container } from "@mui/material";
 
 export const ChurchPage = () => {
   console.log("CHURCH PAGE")
   const params = useParams();
-  const [redirect, setRedirect] = React.useState("");
   const [church, setChurch] = React.useState<ChurchInterface>(null);
   const context = React.useContext(UserContext);
   const APPS: { app: string, url: string, logo?: string, desc?: string }[] = [
@@ -32,16 +30,10 @@ export const ChurchPage = () => {
     return url + `/login?jwt=${jwt}&churchId=${church.id.toString()}`
   }
 
-  const getSidebar = () => {
-    if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit) || church === null) return null;
-    else return (<Button variant="primary" block size="lg" onClick={() => setRedirect(`/${church?.id}/manage`)}>Edit Church Settings</Button>);
-  }
-
   React.useEffect(loadData, [params.id]); //eslint-disable-line
 
-  if (redirect) return <Navigate to={redirect} />
-  else return (
-    <Wrapper pageTitle={church?.name || "Select App"} >
+  return (
+    <Wrapper pageTitle={church?.name || "Select App"}>
       <DisplayBox headerIcon="fas fa-link" headerText="Go to App">
         {
           APPS.map(a => (
