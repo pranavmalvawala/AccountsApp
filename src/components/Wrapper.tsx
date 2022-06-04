@@ -4,6 +4,7 @@ import { Person as PersonIcon, Church as ChurchIcon, Apps as AppsIcon, AdminPane
 import { Box, Container, Divider, IconButton, List, ListSubheader, Typography } from "@mui/material";
 import { Permissions } from "./"
 import { SiteWrapper, NavItem } from "../appBase/components";
+import { UserMenu } from "./UserMenu";
 
 interface Props {
   pageTitle: string,
@@ -28,7 +29,8 @@ export const Wrapper: React.FC<Props> = props => {
   tabs.push(<NavItem url="/logout" label="Logout" icon={<LogoutIcon />} />);
 
   const navContent = <List component="nav">{tabs}</List>
-  const userMenu = <IconButton color="inherit"><PersonIcon /><Typography color="inherit" noWrap>Jeremy Zongker</Typography></IconButton>
+  //const userMenu = <IconButton color="inherit"><PersonIcon /><Typography color="inherit" noWrap>Jeremy Zongker</Typography></IconButton>
+  const userMenu = <UserMenu />
 
   return <>
     <SiteWrapper logoUrl="/images/logo.png" navContent={navContent} pageTitle={props.pageTitle} userMenu={userMenu}>
