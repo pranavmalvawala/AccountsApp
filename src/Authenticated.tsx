@@ -8,6 +8,7 @@ import { ChurchPage } from "./churches/ChurchPage";
 import { AdminPage } from "./admin/AdminPage";
 import UserContext from "./UserContext";
 import { ReportPage } from "./admin/ReportPage";
+import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 
 export const Authenticated: React.FC = () => {
   console.log("AUTHENTICATED")
@@ -20,22 +21,26 @@ export const Authenticated: React.FC = () => {
   if (UserHelper.currentChurch) defaultPath = "/" + UserHelper.currentChurch.id;
 
   //<Route path="/" element={<Navigate to={defaultPath} />} />
+  const mdTheme = createTheme();
 
   return (
     <>
       <Header></Header>
-      <div className="container">
-        <Routes>
-          <Route path="/admin/report/:keyName" element={<ReportPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/login" element={<Navigate to={defaultPath} />} />
-          <Route path="/:id" element={<ChurchPage />} />
-          <Route path="/:id/manage" element={<ManageChurch />} />
-          <Route path="/:id/role/:roleId" element={<RolePage />} />
-          <Route path="/" element={<Navigate to={defaultPath} />} />
-        </Routes>
-      </div>
+      <ThemeProvider theme={mdTheme}>
+        <Box sx={{ display: 'flex', backgroundColor: "#EEE" }}>
+          <CssBaseline />
+          <Routes>
+            <Route path="/admin/report/:keyName" element={<ReportPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/login" element={<Navigate to={defaultPath} />} />
+            <Route path="/:id" element={<ChurchPage />} />
+            <Route path="/:id/manage" element={<ManageChurch />} />
+            <Route path="/:id/role/:roleId" element={<RolePage />} />
+            <Route path="/" element={<Navigate to={defaultPath} />} />
+          </Routes>
+        </Box>
+      </ThemeProvider>
     </>
   );
 };
