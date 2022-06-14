@@ -37,7 +37,7 @@ export const Appearance: React.FC<Props> = (props) => {
 
   if (mode === "edit") return (<AppearanceEdit settings={currentSettings} updatedFunction={handleUpdate} />)
   else return (
-    <DisplayBox headerIcon="fas fa-palette" headerText="Church Appearance" editFunction={handleEdit}>
+    <DisplayBox headerIcon="palette" headerText="Church Appearance" editFunction={handleEdit}>
 
       <div style={{ padding: 10, fontWeight: "bold", textAlign: "center", backgroundColor: "#EEE" }}>
         {getLogo("logoLight")}

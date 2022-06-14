@@ -1,5 +1,5 @@
+import { Grid, TextField } from "@mui/material";
 import React from "react";
-import { Row, Col, FormGroup } from "react-bootstrap"
 import { InputBox, ApiHelper, ImageEditor, GenericSettingInterface, ArrayHelper } from "."
 
 interface Props {
@@ -61,54 +61,49 @@ export const AppearanceEdit: React.FC<Props> = (props) => {
   return (
     <>
       {getLogoEditor(currentEditLogo)}
-      <InputBox headerIcon="fas fa-palette" headerText="Church Appearance" saveFunction={handleSave} cancelFunction={handleCancel}>
+      <InputBox headerIcon="palette" headerText="Church Appearance" saveFunction={handleSave} cancelFunction={handleCancel}>
         <div style={{ backgroundColor: "#EEE", margin: -10, padding: 10 }}>
-          <FormGroup>
-            <label>Logo - Light background</label><br />
-            <p style={{ color: "#999", fontSize: 12 }}>Upload horizontal logo with a transparent background suitable for use of light backrounds.</p>
-            {getLogoLink("logoLight", "#EEE")}
 
-          </FormGroup>
+          <label>Logo - Light background</label><br />
+          <p style={{ color: "#999", fontSize: 12 }}>Upload horizontal logo with a transparent background suitable for use of light backrounds.</p>
+          {getLogoLink("logoLight", "#EEE")}
+
         </div>
         <hr />
         <div style={{ backgroundColor: "#333", margin: -10, padding: 10, color: "#FFF" }}>
-          <FormGroup>
-            <label>Logo - Dark background</label><br />
-            <p style={{ color: "#999", fontSize: 12 }}>Upload horizontal logo with a transparent background suitable for use of dark backrounds.</p>
-            {getLogoLink("logoDark", "#333")}
-          </FormGroup>
+
+          <label>Logo - Dark background</label><br />
+          <p style={{ color: "#999", fontSize: 12 }}>Upload horizontal logo with a transparent background suitable for use of dark backrounds.</p>
+          {getLogoLink("logoDark", "#333")}
+
         </div>
         <hr />
         <div className="section">Primary Colors</div>
-        <Row>
-          <Col>
-            <FormGroup>
-              <label>Color</label>
-              <input type="color" className="form-control" name="primaryColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryColor"))?.value || "#08A0CC"} onChange={handleChange} />
-            </FormGroup>
-          </Col>
-          <Col>
-            <FormGroup>
-              <label>Contrast</label>
-              <input type="color" className="form-control" name="primaryContrast" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryContrast"))?.value || "#FFFFFF"} onChange={handleChange} />
-            </FormGroup>
-          </Col>
-        </Row>
+        <Grid container spacing={3}>
+          <Grid item xs={6}>
+            <label>Color</label>
+            <input type="color" className="form-control" name="primaryColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryColor"))?.value || "#08A0CC"} onChange={handleChange} />
+            <TextField type="color" name="primaryColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryColor"))?.value || "#08A0CC"} onChange={handleChange} />
+          </Grid>
+          <Grid item xs={6}>
+            <label>Contrast</label>
+            <input type="color" className="form-control" name="primaryContrast" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryContrast"))?.value || "#FFFFFF"} onChange={handleChange} />
+            <TextField type="color" name="primaryContrast" value={(ArrayHelper.getOne(currentSettings, "keyName", "primaryContrast"))?.value || "#FFFFFF"} onChange={handleChange} />
+          </Grid>
+        </Grid>
         <div className="section">Secondary Colors</div>
-        <Row>
-          <Col>
-            <FormGroup>
-              <label>Color</label>
-              <input type="color" className="form-control" name="secondaryColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "secondaryColor"))?.value || "#FFBA1A"} onChange={handleChange} />
-            </FormGroup>
-          </Col>
-          <Col>
-            <FormGroup>
-              <label>Contrast</label>
-              <input type="color" className="form-control" name="secondaryContrast" value={(ArrayHelper.getOne(currentSettings, "keyName", "secondaryContrast"))?.value || "#000000"} onChange={handleChange} />
-            </FormGroup>
-          </Col>
-        </Row>
+        <Grid container spacing={3}>
+          <Grid item xs={6}>
+            <label>Color</label>
+            <input type="color" className="form-control" name="secondaryColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "secondaryColor"))?.value || "#FFBA1A"} onChange={handleChange} />
+            <TextField type="color" name="secondaryColor" value={(ArrayHelper.getOne(currentSettings, "keyName", "secondaryColor"))?.value || "#FFBA1A"} onChange={handleChange} />
+          </Grid>
+          <Grid item xs={6}>
+            <label>Contrast</label>
+            <input type="color" className="form-control" name="secondaryContrast" value={(ArrayHelper.getOne(currentSettings, "keyName", "secondaryContrast"))?.value || "#000000"} onChange={handleChange} />
+            <TextField type="color" name="secondaryContrast" value={(ArrayHelper.getOne(currentSettings, "keyName", "secondaryContrast"))?.value || "#000000"} onChange={handleChange} />
+          </Grid>
+        </Grid>
       </InputBox>
     </>
   );

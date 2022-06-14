@@ -1,6 +1,6 @@
+import { Grid } from "@mui/material";
 import React from "react";
 import { ChurchInterface, DisplayBox, UserHelper, ChurchSettingsEdit, Permissions } from "./";
-import { Row, Col } from "react-bootstrap";
 
 interface Props { church: ChurchInterface, updatedFunction: () => void }
 
@@ -33,17 +33,17 @@ export const ChurchSettings: React.FC<Props> = (props) => {
 
   if (mode === "display") {
     return (
-      <DisplayBox id="churchSettingsBox" headerIcon="fas fa-church" headerText="Church Settings" editFunction={getEditFunction()}>
-        <Row>
-          <Col>
+      <DisplayBox headerIcon="church" headerText="Church Settings" editFunction={getEditFunction()}>
+        <Grid container>
+          <Grid item xs={6}>
             <label>Name</label><br />
             {props.church?.name}<br /><br />
-          </Col>
-          <Col>
+          </Grid>
+          <Grid item xs={6}>
             <label>Subdomain</label><br />
             {props.church?.subDomain}
-          </Col>
-        </Row>
+          </Grid>
+        </Grid>
         <label>Address</label><br />
         {getDisplayAddress()}<br /><br />
       </DisplayBox>

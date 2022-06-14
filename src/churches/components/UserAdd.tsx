@@ -1,14 +1,16 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { InputBox, RoleInterface } from "."
-import { FormGroup } from "react-bootstrap";
-import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, AssociatePerson, ErrorMessages, UserInterface, ValidateHelper, UserChurchInterface } from "./";
+import { ApiHelper, RoleMemberInterface, UserHelper, LoadCreateUserRequestInterface, PersonInterface, HouseholdInterface, AssociatePerson, ErrorMessages, UserInterface, UserChurchInterface } from "./";
+import { TextField } from "@mui/material";
 
 interface Props {
-    role: RoleInterface,
-    updatedFunction: () => void,
-    selectedUser: string,
-    roleMembers: RoleMemberInterface[];
+  role: RoleInterface,
+  updatedFunction: () => void,
+  selectedUser: string,
+  roleMembers: RoleMemberInterface[];
 }
+
+const validateEmail = (email: string) => (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/.test(email))
 
 export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Props) => {
   const [email, setEmail] = useState("");
@@ -33,7 +35,7 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
       await ApiHelper.post(`/users/setDisplayName`, { firstName, lastName, userId: fetchedUser.id }, "AccessApi");
       await ApiHelper.post(`/users/updateEmail`, { email, userId: fetchedUser.id }, "AccessApi");
 
-      const person = {...linkedPerson};
+      const person = { ...linkedPerson };
       person.contactInfo.email = email;
       person.name.first = firstName;
       person.name.last = lastName;
@@ -55,8 +57,9 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
       updatedFunction();
       return;
     }
+
     // creating users from already existing people
-    if (showEmailField && !ValidateHelper.email(email)) {
+    if (showEmailField && !validateEmail(email)) {
       setErrors(["Please enter a valid Email"]);
       return;
     }
@@ -67,7 +70,7 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
     await linkUserAndPerson(user.id, selectedPerson.id);
 
     if (showEmailField) {
-      const person = {...selectedPerson};
+      const person = { ...selectedPerson };
       person.contactInfo.email = email;
       await ApiHelper.post("/people", [person], "MembershipApi");
     }
@@ -79,7 +82,7 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
     const warnings: string[] = [];
     if (!firstName) warnings.push("Please enter firstname");
     if (!lastName) warnings.push("Please enter lastname");
-    if (!ValidateHelper.email(email)) warnings.push("Enter a valid Email");
+    if (!validateEmail(email)) warnings.push("Enter a valid Email");
     setErrors(warnings);
     return warnings.length > 0;
   }
@@ -163,39 +166,27 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
   const message = (!showNameFields && !editMode && hasSearched) && (<span>Don't have a user account? <a href="about:blank" onClick={CreateNewUser}>Create New User</a></span>);
   const nameField = (showNameFields || editMode) && (
     <>
-      <FormGroup>
-        <label>firstname</label>
-        <input type="text" name="firstName" value={firstName} onChange={handleChange} placeholder="John" className="form-control" />
-      </FormGroup>
-      <FormGroup>
-        <label>lastname</label>
-        <input type="text" name="lastName" value={lastName} onChange={handleChange} placeholder="Smith" className="form-control" />
-      </FormGroup>
+      <TextField fullWidth name="firstName" label="First Name" value={firstName} onChange={handleChange} />
+      <TextField fullWidth name="lastName" label="Last Name" value={lastName} onChange={handleChange} />
     </>
   )
   const emailField = (showEmailField || editMode) && (
-    <FormGroup>
-      <label>Email</label>
-      <input type="email" name="email" value={email} onChange={handleChange} className="form-control" />
-    </FormGroup>
+    <TextField type="email" fullWidth name="email" label="Email" value={email} onChange={handleChange} />
   )
 
   return (
-    <InputBox headerIcon="fas fa-lock" headerText={"Add to " + role.name} saveFunction={handleSave} cancelFunction={updatedFunction}>
+    <InputBox headerIcon="lock" headerText={"Add to " + role.name} saveFunction={handleSave} cancelFunction={updatedFunction}>
       <ErrorMessages errors={errors} />
       {
         (!showNameFields || editMode) && (
-          <FormGroup>
-            <label>Associate Person</label>
-            <AssociatePerson
-              person={selectedPerson || linkedPerson }
-              handleAssociatePerson={handleAssociatePerson}
-              searchStatus={handleSearchStatus}
-              filterList={roleMembers.map(rm => rm.personId)}
-              onChangeClick={() => setShowEmailField(false)}
-              showChangeOption={!editMode}
-            />
-          </FormGroup>
+          <AssociatePerson
+            person={selectedPerson || linkedPerson}
+            handleAssociatePerson={handleAssociatePerson}
+            searchStatus={handleSearchStatus}
+            filterList={roleMembers.map(rm => rm.personId)}
+            onChangeClick={() => setShowEmailField(false)}
+            showChangeOption={!editMode}
+          />
         )
       }
       {nameField}

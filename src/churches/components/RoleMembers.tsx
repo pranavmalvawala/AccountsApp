@@ -1,13 +1,14 @@
 import React from "react";
 import { ApiHelper, DisplayBox, UserHelper, RoleMemberInterface, RoleInterface, Permissions } from "./";
-import { Table } from "react-bootstrap";
+import { Stack, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { SmallButton } from "../../appBase/components";
 
 interface Props {
-    role: RoleInterface,
-    addFunction: (role: RoleInterface) => void,
-    setSelectedRoleMember: (id: string) => void,
-    roleMembers: RoleMemberInterface[],
-    updatedFunction: () => void,
+  role: RoleInterface,
+  addFunction: (role: RoleInterface) => void,
+  setSelectedRoleMember: (id: string) => void,
+  roleMembers: RoleMemberInterface[],
+  updatedFunction: () => void,
 }
 
 export const RoleMembers: React.FC<Props> = (props) => {
@@ -15,7 +16,7 @@ export const RoleMembers: React.FC<Props> = (props) => {
   const isRoleEveryone = props.role.id === null;
   const getEditContent = () => {
     if (isRoleEveryone) return null;
-    return <a href="about:blank" onClick={handleAdd}><i className="fas fa-plus"></i></a>
+    return <SmallButton onClick={handleAdd} icon="add" text="Add" />
   }
 
   const handleAdd = (e: React.MouseEvent) => {
@@ -24,7 +25,6 @@ export const RoleMembers: React.FC<Props> = (props) => {
   }
 
   const handleRemove = (e: React.MouseEvent) => {
-    e.preventDefault();
     if (window.confirm(`Are you sure you wish to delete this user from ${props.role.name}?`)) {
       const anchor = e.currentTarget as HTMLAnchorElement;
       const idx = parseInt(anchor.getAttribute("data-index"));
@@ -39,22 +39,26 @@ export const RoleMembers: React.FC<Props> = (props) => {
     let canEdit = UserHelper.checkAccess(Permissions.accessApi.roleMembers.edit);
     let rows: JSX.Element[] = [];
     if (isRoleEveryone) {
-      rows.push(<tr><td key="0">This role applies to all the members of the church.</td></tr>)
+      rows.push(<TableRow><TableCell key="0">This role applies to all the members of the church.</TableCell></TableRow>)
       return rows;
     }
 
     for (let i = 0; i < roleMembers.length; i++) {
       const rm = roleMembers[i];
-      const removeLink = (canEdit) ? <a href="about:blank" onClick={handleRemove} data-index={i} className="text-danger"><i className="fas fa-user-times"></i></a> : <></>
-      const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); props.setSelectedRoleMember(rm.userId) }}><i className="fas fa-pencil-alt"></i></a>) : null;
+      const removeLink = (canEdit) ? (<SmallButton icon="delete" color="error" toolTip="Delete" onClick={handleRemove} />) : null;
+      const editLink = (canEdit) ? (<SmallButton icon="edit" toolTip="Edit" onClick={() => { props.setSelectedRoleMember(rm.userId) }} />) : null;
+
       const { firstName, lastName } = rm.user;
       rows.push(
-        <tr key={i}>
-          <td>{`${firstName} ${lastName}`}</td>
-          <td>{rm.user.email}</td>
-          <td>{editLink}</td>
-          <td>{removeLink}</td>
-        </tr>
+        <TableRow key={i}>
+          <TableCell>{`${firstName} ${lastName}`}</TableCell>
+          <TableCell>{rm.user.email}</TableCell>
+          <TableCell>
+            <Stack direction="row" spacing={1} justifyContent="end">
+              {editLink}{removeLink}
+            </Stack>
+          </TableCell>
+        </TableRow>
       );
     }
     return rows;
@@ -63,14 +67,14 @@ export const RoleMembers: React.FC<Props> = (props) => {
   const getTableHeader = () => {
     if (isRoleEveryone) return null;
 
-    return (<tr><th>Name</th><th>Email</th><th>Edit</th><th>Remove</th></tr>);
+    return (<TableRow><TableCell>Name</TableCell><TableCell>Email</TableCell><TableCell></TableCell></TableRow>);
   }
 
   return (
-    <DisplayBox id="roleMembersBox" headerText="Members" headerIcon="fas fa-users" editContent={getEditContent()}>
+    <DisplayBox id="roleMembersBox" headerText="Members" headerIcon="person" editContent={getEditContent()}>
       <Table id="roleMemberTable">
-        <thead>{getTableHeader()}</thead>
-        <tbody>{getRows()}</tbody>
+        <TableHead>{getTableHeader()}</TableHead>
+        <TableBody>{getRows()}</TableBody>
       </Table>
     </DisplayBox>
   );

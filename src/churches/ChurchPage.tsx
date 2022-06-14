@@ -1,13 +1,12 @@
 import React from "react";
-import { Row, Col, Button } from "react-bootstrap"
 import UserContext from "../UserContext";
-import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, Permissions, EnvironmentHelper } from "./components"
-import { Navigate, useParams } from "react-router-dom";
+import { DisplayBox, ChurchInterface, ApiHelper, UserHelper, EnvironmentHelper } from "./components"
+import { useParams } from "react-router-dom";
+import { Grid, Icon } from "@mui/material";
 
 export const ChurchPage = () => {
   console.log("CHURCH PAGE")
   const params = useParams();
-  const [redirect, setRedirect] = React.useState("");
   const [church, setChurch] = React.useState<ChurchInterface>(null);
   const context = React.useContext(UserContext);
   const APPS: { app: string, url: string, logo?: string, desc?: string }[] = [
@@ -30,38 +29,23 @@ export const ChurchPage = () => {
     return url + `/login?jwt=${jwt}&churchId=${church.id.toString()}`
   }
 
-  const getSidebar = () => {
-    if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit) || church === null) return null;
-    else return (<Button variant="primary" block size="lg" onClick={() => setRedirect(`/${church?.id}/manage`)}>Edit Church Settings</Button>);
-  }
-
   React.useEffect(loadData, [params.id]); //eslint-disable-line
 
-  if (redirect) return <Navigate to={redirect} />
-  else return (
+  return (
     <>
-      <Row style={{ marginBottom: 25 }}>
-        <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-church"></i> {church?.name || ""}</h1></div>
-      </Row>
-      <Row>
-        <Col md={8}>
-          <DisplayBox headerIcon="fas fa-link" headerText="Go to App">
-            {
-              APPS.map(a => (
-                <a href={a.url} className="appLink" key={a.app}>
-                  <Row>
-                    <Col sm={4}><img src={a.logo} className="img-fluid" alt={a.app} /></Col>
-                    <Col sm={8}>{a.desc}</Col>
-                  </Row>
-                </a>
-              ))
-            }
-          </DisplayBox>
-        </Col>
-        <Col md={4}>
-          {getSidebar()}
-        </Col>
-      </Row>
+      <h1><Icon>church</Icon> {church?.name || "Select App"}</h1>
+      <DisplayBox headerIcon="link" headerText="Go to App">
+        {
+          APPS.map(a => (
+            <a href={a.url} className="appLink" key={a.app}>
+              <Grid container spacing={3}>
+                <Grid item sm={2}><img src={a.logo} className="img-fluid" alt={a.app} /></Grid>
+                <Grid item sm={10}>{a.desc}</Grid>
+              </Grid>
+            </a>
+          ))
+        }
+      </DisplayBox>
     </>
   );
 }

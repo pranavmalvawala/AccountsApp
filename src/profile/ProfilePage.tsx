@@ -1,6 +1,6 @@
+import { Grid, Icon, TextField } from "@mui/material";
 import React, { useState } from "react";
-import { Row, Col, FormGroup } from "react-bootstrap"
-import { InputBox, ApiHelper, ErrorMessages, UserHelper, PasswordField } from "./components"
+import { InputBox, ApiHelper, ErrorMessages, UserHelper } from "./components"
 
 export const ProfilePage = () => {
   const [password, setPassword] = useState<string>("");
@@ -78,42 +78,21 @@ export const ProfilePage = () => {
 
   return (
     <>
-      <Row style={{ marginBottom: 25 }}>
-        <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-user"></i> Edit Profile</h1></div>
-      </Row>
-      <Row>
-        <Col md={8}>
-          <ErrorMessages errors={errors} />
-          <InputBox headerIcon="fas fa-user" headerText="Edit Profile" saveFunction={handleSave}>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <label>Email</label>
-                  <input type="email" name="email" value={email} onChange={handleChange} className="form-control" />
-                </FormGroup>
-                <FormGroup>
-                  <label>First Name</label>
-                  <input type="text" name="firstName" value={firstName} onChange={handleChange} className="form-control" />
-                </FormGroup>
-                <FormGroup>
-                  <label>Last Name</label>
-                  <input type="text" name="lastName" value={lastName} onChange={handleChange} className="form-control" />
-                </FormGroup>
-              </Col>
-              <Col>
-                <FormGroup>
-                  <label>Set Password</label>
-                  <PasswordField value={password} onChange={handleChange} placeholder="New password" />
-                </FormGroup>
-                <FormGroup>
-                  <label>Verify Password</label>
-                  <PasswordField name="passwordVerify" value={passwordVerify} onChange={handleChange} placeholder="New password" />
-                </FormGroup>
-              </Col>
-            </Row>
-          </InputBox>
-        </Col>
-      </Row>
+      <h1><Icon>person</Icon> Edit Profile</h1>
+      <ErrorMessages errors={errors} />
+      <InputBox headerText="Edit Profile" saveFunction={handleSave}>
+        <Grid container spacing={3}>
+          <Grid item>
+            <TextField fullWidth type="email" name="email" label="Email" value={email} onChange={handleChange} />
+            <TextField fullWidth name="firstName" label="First Name" value={firstName} onChange={handleChange} />
+            <TextField fullWidth name="lastName" label="Last Name" value={lastName} onChange={handleChange} />
+          </Grid>
+          <Grid item>
+            <TextField type="password" fullWidth name="password" label="New password" value={password} onChange={handleChange} />
+            <TextField type="passwordVerify" fullWidth name="password" label="Verify password" value={passwordVerify} onChange={handleChange} />
+          </Grid>
+        </Grid>
+      </InputBox>
     </>
   );
 }

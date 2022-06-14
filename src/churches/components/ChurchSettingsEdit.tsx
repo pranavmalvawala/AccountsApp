@@ -1,8 +1,8 @@
 import React from "react";
 import { ApiHelper, ChurchInterface, InputBox, ErrorMessages } from "./";
-import { Row, Col, FormGroup } from "react-bootstrap";
 import { GivingSettingsEdit } from "./GivingSettingsEdit";
 import { UserHelper, Permissions } from "../../helpers";
+import { TextField, Grid } from "@mui/material";
 
 interface Props { church: ChurchInterface, updatedFunction: () => void }
 
@@ -24,7 +24,7 @@ export const ChurchSettingsEdit: React.FC<Props> = (props) => {
   const validate = () => {
     let errors = [];
     if (church.name === "") errors.push("Church name cannot be blank.");
-    if (church.subDomain === "") errors.push("Sub domain cannot be blank.");
+    if (church.subDomain === "") errors.push("Subdomain cannot be blank.");
     setErrors(errors);
     return errors.length === 0;
   }
@@ -32,21 +32,22 @@ export const ChurchSettingsEdit: React.FC<Props> = (props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     let c = { ...church };
-    switch (e.currentTarget.id) {
-      case "churchName": c.name = e.currentTarget.value; break;
-      case "address1": c.address1 = e.currentTarget.value; break;
-      case "address2": c.address2 = e.currentTarget.value; break;
-      case "city": c.city = e.currentTarget.value; break;
-      case "state": c.state = e.currentTarget.value; break;
-      case "zip": c.zip = e.currentTarget.value; break;
-      case "country": c.country = e.currentTarget.value; break;
-      case "subDomain": c.subDomain = e.currentTarget.value; break;
+    switch (e.target.name) {
+      case "churchName": c.name = e.target.value; break;
+      case "address1": c.address1 = e.target.value; break;
+      case "address2": c.address2 = e.target.value; break;
+      case "city": c.city = e.target.value; break;
+      case "state": c.state = e.target.value; break;
+      case "zip": c.zip = e.target.value; break;
+      case "country": c.country = e.target.value; break;
+      case "subDomain": c.subDomain = e.target.value; break;
     }
 
     setChurch(c);
   }
 
   const giveSection = () => {
+
     if (!UserHelper.checkAccess(Permissions.givingApi.settings.edit)) return null;
     else return (<GivingSettingsEdit churchId={church?.id || ""} saveTrigger={saveTrigger} />)
   }
@@ -55,62 +56,38 @@ export const ChurchSettingsEdit: React.FC<Props> = (props) => {
 
   if (church === null || church.id === undefined) return null;
   else return (
-    <InputBox id="campusBox" cancelFunction={props.updatedFunction} saveFunction={handleSave} headerText={church.name} headerIcon="fas fa-church">
+    <InputBox id="campusBox" cancelFunction={props.updatedFunction} saveFunction={handleSave} headerText={church.name} headerIcon="church">
       <ErrorMessages errors={errors} />
-      <Row>
-        <Col>
-          <FormGroup>
-            <label>Church Name</label>
-            <input id="churchName" type="text" className="form-control" value={church?.name || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
-          </FormGroup>
-        </Col>
-        <Col>
-          <FormGroup>
-            <label>Subdomain</label>
-            <input id="subDomain" type="text" className="form-control" value={church?.subDomain || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
-          </FormGroup>
-        </Col>
-      </Row>
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <TextField fullWidth name="churchName" label="Church Name" value={church?.name || ""} onChange={(handleChange)} />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField fullWidth name="subDomain" label="Subdomain" value={church?.subDomain || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
+        </Grid>
+      </Grid>
 
-      <Row>
-        <Col>
-          <FormGroup>
-            <label>Address Line 1</label>
-            <input id="address1" type="text" className="form-control" value={church?.address1 || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
-          </FormGroup>
-        </Col>
-        <Col>
-          <FormGroup>
-            <label>Address Line 2</label>
-            <input id="address2" type="text" className="form-control" value={church?.address2 || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
-          </FormGroup>
-        </Col>
-      </Row>
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <TextField fullWidth name="address1" label="Adress Line 1" value={church?.address1 || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField fullWidth name="address2" label="Adress Line 2" value={church?.address2 || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
+        </Grid>
+      </Grid>
 
-      <Row>
-        <Col sm={6}>
-          <FormGroup>
-            <label>City</label>
-            <input id="city" type="text" className="form-control" value={church?.city || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
-          </FormGroup>
-        </Col>
-        <Col sm={3}>
-          <FormGroup>
-            <label>State</label>
-            <input id="state" type="text" className="form-control" value={church?.state || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
-          </FormGroup>
-        </Col>
-        <Col sm={3}>
-          <FormGroup>
-            <label>Zip</label>
-            <input id="zip" type="text" className="form-control" value={church?.zip || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
-          </FormGroup>
-        </Col>
-      </Row>
-      <FormGroup>
-        <label>Country</label>
-        <input id="country" type="text" className="form-control" value={church?.country || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
-      </FormGroup>
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <TextField fullWidth name="city" label="City" value={church?.city || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField fullWidth name="state" label="State/Province" value={church?.state || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField fullWidth name="zip" label="Zip/Postal" value={church?.zip || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
+        </Grid>
+      </Grid>
+      <TextField fullWidth name="country" label="Country" value={church?.country || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
       {giveSection()}
 
     </InputBox>

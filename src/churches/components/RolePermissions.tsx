@@ -50,7 +50,7 @@ export const RolePermissions: React.FC<Props> = (props) => {
   React.useEffect(() => { if (props.role?.id !== undefined) loadPermissions() }, [props.role, loadPermissions]);
 
   return (
-    <DisplayBox id="rolePermissionsBox" headerText="Edit Permissions" headerIcon="fas fa-lock">
+    <DisplayBox id="rolePermissionsBox" headerText="Edit Permissions" headerIcon="lock">
       <Accordion>
         {getSections()}
       </Accordion>

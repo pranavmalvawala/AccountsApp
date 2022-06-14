@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react"
-import { Table } from "react-bootstrap"
 import { useParams, Link } from "react-router-dom"
 import { DisplayBox, UserHelper, ApiHelper, Permissions, ChurchInterface } from "."
 import { RoleInterface } from "../../helpers"
 import UserContext from "../../UserContext"
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { SmallButton } from "../../appBase/components"
 
 interface Props {
   selectRoleId: (id: string) => void;
@@ -25,7 +26,7 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
 
   const getEditContent = () => {
     if (!UserHelper.checkAccess(Permissions.accessApi.roles.edit)) return null;
-    else return (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); selectRoleId("") }}><i className="fas fa-plus"></i></a>);
+    else return (<SmallButton icon="add" text="Add" onClick={() => { selectRoleId(""); }} />);
   }
 
   const getRows = () => {
@@ -36,20 +37,19 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
 
     if (UserHelper.checkAccess(Permissions.accessApi.rolePermissions.edit)) {
       result.push(
-        <tr key="everyone">
-          <td><i className="fas fa-user-friends" /> <Link to={`/${churchId}/role/everyone`}>(Everyone)</Link></td>
-          <td></td>
-        </tr>
+        <TableRow key="everyone">
+          <TableCell><i className="groups" /> <Link to={`/${churchId}/role/everyone`}>(Everyone)</Link></TableCell>
+          <TableCell></TableCell>
+        </TableRow>
       );
     }
 
     sortedRoles.forEach(role => {
-      const editLink = (canEdit) ? (<a href="about:blank" onClick={(e: React.MouseEvent) => { e.preventDefault(); selectRoleId(role.id) }}><i className="fas fa-pencil-alt"></i></a>) : null;
-
-      result.push(<tr key={role.id}>
-        <td><i className="fas fa-lock" /> <Link to={`/${churchId}/role/${role.id}`}>{role.name}</Link></td>
-        <td>{editLink}</td>
-      </tr>);
+      const editLink = (canEdit) ? <SmallButton icon="edit" toolTip="Edit" onClick={() => { selectRoleId(role.id) }} /> : null;
+      result.push(<TableRow key={role.id}>
+        <TableCell><i className="lock" /> <Link to={`/${churchId}/role/${role.id}`}>{role.name}</Link></TableCell>
+        <TableCell align="right">{editLink}</TableCell>
+      </TableRow>);
     });
 
     return result;
@@ -58,10 +58,10 @@ export const Roles: React.FC<Props> = ({ selectRoleId, selectedRoleId, church })
   useEffect(loadData, [selectedRoleId, church]); //eslint-disable-line
 
   return (
-    <DisplayBox id="rolesBox" headerText="Roles" headerIcon="fas fa-lock" editContent={getEditContent()}>
+    <DisplayBox id="rolesBox" headerText="Roles" headerIcon="lock" editContent={getEditContent()}>
       <Table id="roleMemberTable">
-        <thead><tr><th>Name</th><th></th></tr></thead>
-        <tbody>{getRows()}</tbody>
+        <TableHead><TableRow><TableCell>Name</TableCell><TableCell></TableCell></TableRow></TableHead>
+        <TableBody>{getRows()}</TableBody>
       </Table>
     </DisplayBox>
   )

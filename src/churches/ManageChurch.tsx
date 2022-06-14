@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { Row, Col } from "react-bootstrap"
 import UserContext from "../UserContext";
-import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, Permissions, Appearance, Roles, RoleEdit, BreadCrumb, BreadCrumbProps } from "./components"
+import { ChurchInterface, ApiHelper, UserHelper, ChurchSettings, Permissions, Appearance, Roles, RoleEdit } from "./components"
 import { Navigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { Grid, Box, Icon } from "@mui/material";
 
 export const ManageChurch = () => {
   const params = useParams();
@@ -20,40 +20,29 @@ export const ManageChurch = () => {
   }
 
   const getSidebar = () => {
-    let modules: JSX.Element[] = [
-      <Appearance key="appearence" />
-    ];
-
+    let modules: JSX.Element[] = [<Box sx={{ marginBottom: 2 }}><Appearance key="appearence" /></Box>];
     if (selectedRoleId !== "notset") {
       modules.splice(1, 0, <RoleEdit key="roleEdit" roleId={selectedRoleId} updatedFunction={() => { setSelectedRoleId("notset") }} />);
     }
-
     return modules;
   }
 
   React.useEffect(loadData, [params.id]); //eslint-disable-line
 
-  const items: BreadCrumbProps[] = [
-    { name: church?.name, to: `/${church?.id}` },
-    { name: "Manage", to: `/${church?.id}/manage`, active: true }
-  ]
-
   if (redirectUrl !== "") return <Navigate to={redirectUrl}></Navigate>;
   else return (
     <>
-      <BreadCrumb items={items} />
-      <Row style={{ marginBottom: 25 }}>
-        <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-church"></i> Manage: {church?.name || ""}</h1></div>
-      </Row>
-      <Row>
-        <Col lg={8}>
+      <h1><Icon>church</Icon> Manage {church?.name}</h1>
+      <Grid container spacing={3}>
+        <Grid item md={8} xs={12}>
           <ChurchSettings church={church} updatedFunction={loadData} />
           <Roles selectRoleId={setSelectedRoleId} selectedRoleId={selectedRoleId} church={church} />
-        </Col>
-        <Col lg={4}>
+        </Grid>
+        <Grid item md={4} xs={12}>
           {getSidebar()}
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
     </>
   );
 }
+

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { ApiHelper, RoleInterface, UserAdd, UserHelper, Permissions, RoleMemberInterface, BreadCrumb, BreadCrumbProps } from "./components";
+import { ApiHelper, RoleInterface, UserAdd, UserHelper, Permissions, RoleMemberInterface } from "./components";
 import { useParams } from "react-router-dom"
 import { RoleMembers } from "./components/RoleMembers";
 import { RolePermissions } from "./components/RolePermissions";
-import { Row, Col } from "react-bootstrap";
+import { Grid, Icon } from "@mui/material";
 
 export const RolePage = () => {
   const params = useParams();
@@ -11,8 +11,6 @@ export const RolePage = () => {
   const [showAdd, setShowAdd] = React.useState<boolean>(false);
   const [selectedRoleMemberId, setSelectedRoleMemberId] = React.useState<string>("");
   const [roleMembers, setRoleMembers] = useState<RoleMemberInterface[]>([]);
-  const church = UserHelper.currentChurch;
-
   const handleShowAdd = (role: RoleInterface) => { setShowAdd(true); }
   const handleAdd = () => { setShowAdd(false); setSelectedRoleMemberId(""); loadData(); loadRoleMembers(); }
 
@@ -42,20 +40,13 @@ export const RolePage = () => {
   React.useEffect(loadData, []); //eslint-disable-line
   React.useEffect(loadRoleMembers, []); //eslint-disable-line
 
-  const items: BreadCrumbProps[] = [
-    { name: church?.name, to: `/${church?.id}` },
-    { name: "Manage", to: `/${church?.id}/manage` },
-    { name: role.name, to: `/${church?.id}/role/${role?.id}`, active: true }
-  ]
-
   if (!UserHelper.checkAccess(Permissions.accessApi.roles.view)) return (<></>);
   else {
     return (
       <>
-        <BreadCrumb items={items} />
-        <h1><i className="fas fa-lock"></i> {role.name}</h1>
-        <Row>
-          <Col lg={8}>
+        <h1><Icon>lock</Icon> Edit Role: {role?.name}</h1>
+        <Grid container spacing={3}>
+          <Grid item md={8} xs={12}>
             <RoleMembers
               role={role}
               roleMembers={roleMembers}
@@ -63,9 +54,11 @@ export const RolePage = () => {
               setSelectedRoleMember={setSelectedRoleMemberId}
               updatedFunction={handleAdd}
             />
-          </Col>
-          <Col lg={4}>{getSidebar()}</Col>
-        </Row>
+          </Grid>
+          <Grid item md={4} xs={12}>
+            {getSidebar()}
+          </Grid>
+        </Grid>
       </>
     );
   }

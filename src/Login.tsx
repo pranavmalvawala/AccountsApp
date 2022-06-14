@@ -22,7 +22,7 @@ export const Login: React.FC = () => {
     if (EnvironmentHelper.GoogleAnalyticsTag !== "") ReactGA.event({ category: "User", action: "Register" });
   }
 
-  if (context.userName === "" || !ApiHelper.isAuthenticated) {
+  if (context.user === null || !ApiHelper.isAuthenticated) {
     let search = new URLSearchParams(window.location.search);
     let jwt = search.get("jwt") || cookies.jwt;
     let auth = search.get("auth");

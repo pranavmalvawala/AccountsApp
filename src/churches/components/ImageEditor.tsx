@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { Button } from "react-bootstrap";
 import { InputBox, GenericSettingInterface, ArrayHelper } from ".";
+import { SmallButton } from "../../appBase/components";
 
 interface Props {
   settings: GenericSettingInterface[],
@@ -31,7 +31,7 @@ export const ImageEditor: React.FC<Props> = (props) => {
 
   const getHeaderButton = () => (<div>
     <input type="file" onChange={handleUpload} id="fileUpload" accept="image/*" style={{ display: "none" }} />
-    <Button size="sm" variant="info" onClick={(e: React.MouseEvent) => { e.preventDefault(); document.getElementById("fileUpload").click(); }}>Upload</Button>
+    <SmallButton onClick={() => { document.getElementById("fileUpload").click(); }} text="Upload" icon="upload" />
   </div>)
 
   const cropper = React.useRef(null);

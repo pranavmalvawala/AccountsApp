@@ -1,7 +1,7 @@
 import React from "react";
 import { ApiHelper } from ".";
-import { Row, Col, FormGroup } from "react-bootstrap";
 import { PaymentGatewaysInterface, UniqueIdHelper } from "../../helpers";
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Grid } from "@mui/material";
 
 interface Props { churchId: string, saveTrigger: Date | null }
 
@@ -11,30 +11,24 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
   const [publicKey, setPublicKey] = React.useState("");
   const [privateKey, setPrivateKey] = React.useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | SelectChangeEvent<string>) => {
     e.preventDefault();
-    switch (e.currentTarget.id) {
-      case "provider": setProvider(e.currentTarget.value); break;
-      case "publicKey": setPublicKey(e.currentTarget.value); break;
-      case "privateKey": setPrivateKey(e.currentTarget.value); break;
+    switch (e.target.name) {
+      case "provider": setProvider(e.target.value); break;
+      case "publicKey": setPublicKey(e.target.value); break;
+      case "privateKey": setPrivateKey(e.target.value); break;
     }
   }
 
   const getKeys = () => {
     if (provider === "") return null;
     else return (<>
-      <Col xl={4}>
-        <FormGroup>
-          <label>Public Key</label>
-          <input id="publicKey" type="text" className="form-control" value={publicKey} onChange={handleChange} />
-        </FormGroup>
-      </Col>
-      <Col xl={4}>
-        <FormGroup>
-          <label>Secret Key</label>
-          <input id="privateKey" type="text" className="form-control" value={privateKey} placeholder="********" onChange={handleChange} />
-        </FormGroup>
-      </Col>
+      <Grid item md={4} xs={12}>
+        <TextField fullWidth name="publicKey" label="Public Key" value={publicKey} onChange={handleChange} />
+      </Grid>
+      <Grid item md={4} xs={12}>
+        <TextField fullWidth name="privateKey" label="Secret Key" value={privateKey} placeholder="********" type="password" onChange={handleChange} />
+      </Grid>
     </>);
   }
 
@@ -77,18 +71,18 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
   return (
     <>
       <div className="subHead">Giving</div>
-      <Row>
-        <Col xl={4}>
-          <FormGroup>
-            <label>Provider</label>
-            <select id="provider" className="form-control" value={provider} onChange={handleChange}>
-              <option value="">None</option>
-              <option value="Stripe">Stripe</option>
-            </select>
-          </FormGroup>
-        </Col>
+      <Grid container spacing={3}>
+        <Grid item md={4} xs={12}>
+          <FormControl fullWidth>
+            <InputLabel>Provider</InputLabel>
+            <Select name="provider" value={provider} onChange={handleChange}>
+              <MenuItem value="">None</MenuItem>
+              <MenuItem value="Stripe">Stripe</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
         {getKeys()}
-      </Row>
+      </Grid>
 
     </>
   );

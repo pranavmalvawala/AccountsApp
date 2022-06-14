@@ -1,9 +1,10 @@
+import { TextField } from "@mui/material";
 import React, { useState } from "react";
 import { ApiHelper, InputBox, RoleInterface, UniqueIdHelper, ErrorMessages } from "./";
 
 interface Props {
-    roleId: string,
-    updatedFunction: () => void
+  roleId: string,
+  updatedFunction: () => void
 }
 
 export const RoleEdit: React.FC<Props> = (props) => {
@@ -46,12 +47,9 @@ export const RoleEdit: React.FC<Props> = (props) => {
   React.useEffect(loadData, [props.roleId]);
 
   return (
-    <InputBox id="roleBox" headerIcon="fas fa-lock" headerText="Edit Role" saveFunction={handleSave} cancelFunction={handleCancel} deleteFunction={(!UniqueIdHelper.isMissing(props.roleId)) ? handleDelete : undefined}>
+    <InputBox id="roleBox" headerIcon="lock" headerText="Edit Role" saveFunction={handleSave} cancelFunction={handleCancel} deleteFunction={(!UniqueIdHelper.isMissing(props.roleId)) ? handleDelete : undefined}>
       <ErrorMessages errors={errors} />
-      <div className="form-group">
-        <label>Role Name</label>
-        <input type="text" className="form-control" value={role.name || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
-      </div>
+      <TextField fullWidth name="roleName" label="Role Name" value={role?.name || ""} onChange={handleChange} onKeyDown={handleKeyDown} />
     </InputBox>
   );
 }

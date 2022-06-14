@@ -1,7 +1,7 @@
 import React from "react";
 import { ChurchInterface, ApiHelper, DisplayBox, UserHelper, DateHelper, ArrayHelper } from "./components";
-import { Row, Col, InputGroup, FormControl, Button } from "react-bootstrap"
 import { Link, Navigate } from "react-router-dom";
+import { Grid, TextField, Button, Icon } from "@mui/material";
 
 export const AdminPage = () => {
   const [searchText, setSearchText] = React.useState<string>("")
@@ -76,16 +76,13 @@ export const AdminPage = () => {
   if (redirectUrl !== "") return <Navigate to={redirectUrl}></Navigate>;
   else return (
     <>
-      <Row style={{ marginBottom: 25 }}>
-        <div className="col"><h1 style={{ borderBottom: 0, marginBottom: 0 }}><i className="fas fa-key"></i> Admin</h1></div>
-      </Row>
-      <Row>
-        <Col md={8}>
-          <DisplayBox headerIcon="fas fa-church" headerText="Churches">
-            <InputGroup>
-              <FormControl id="searchText" data-cy="search-input" name="searchText" type="text" placeholder="Church Name" value={searchText} onChange={handleChange} onKeyDown={handleKeyDown} />
-              <Button id="searchButton" data-cy="search-button" variant="primary" onClick={loadData}>Search</Button>
-            </InputGroup>
+      <h1><Icon>admin_panel_settings</Icon> Server Admin</h1>
+      <Grid container spacing={3}>
+        <Grid item md={8} xs={12}>
+          <DisplayBox headerIcon="church" headerText="Churches">
+            <TextField fullWidth variant="outlined" name="searchText" label="Church Name" value={searchText} onChange={handleChange} onKeyDown={handleKeyDown}
+              InputProps={{ endAdornment: <Button variant="contained" id="searchButton" data-cy="search-button" disableElevation onClick={loadData}>Search</Button> }}
+            />
             <br />
             {
               churches.length === 0
@@ -97,15 +94,15 @@ export const AdminPage = () => {
                 )
             }
           </DisplayBox>
-        </Col>
-        <Col md={4}>
-          <DisplayBox headerIcon="fas fa-table" headerText="Reports">
+        </Grid>
+        <Grid item md={4} xs={12}>
+          <DisplayBox headerIcon="summarize" headerText="Reports">
             <ul>
               <li><Link to="/admin/report/activeChurches">Active Churches</Link></li>
             </ul>
           </DisplayBox>
-        </Col>
-      </Row>
+        </Grid>
+      </Grid>
     </>
   );
 
