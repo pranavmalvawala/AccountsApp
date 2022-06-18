@@ -569,3 +569,8 @@ label .description {
 #userMenuLink:hover {
   text-decoration: none;
 }
+
+/*Temp because of bootstrap*/
+button:focus {
+  outline: none;
+}
