@@ -89,7 +89,7 @@ export const ProfilePage = () => {
           </Grid>
           <Grid item>
             <TextField type="password" fullWidth name="password" label="New password" value={password} onChange={handleChange} />
-            <TextField type="passwordVerify" fullWidth name="password" label="Verify password" value={passwordVerify} onChange={handleChange} />
+            <TextField type="password" fullWidth name="passwordVerify" label="Verify password" value={passwordVerify} onChange={handleChange} />
           </Grid>
         </Grid>
       </InputBox>
