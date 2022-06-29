@@ -24,15 +24,10 @@ export const RoleMembers: React.FC<Props> = (props) => {
     props.addFunction(props.role);
   }
 
-  const handleRemove = (e: React.MouseEvent) => {
+  const handleRemove = (roleMember: RoleMemberInterface) => {
     if (window.confirm(`Are you sure you wish to delete this user from ${props.role.name}?`)) {
-      const anchor = e.currentTarget as HTMLAnchorElement;
-      const idx = parseInt(anchor.getAttribute("data-index"));
-      const members = [...roleMembers];
-      const member = members.splice(idx, 1)[0];
-      ApiHelper.delete("/rolemembers/" + member.id, "AccessApi").then(() => props.updatedFunction());
+      ApiHelper.delete("/rolemembers/" + roleMember.id, "AccessApi").then(() => props.updatedFunction());
     }
-
   }
 
   const getRows = () => {
@@ -45,7 +40,7 @@ export const RoleMembers: React.FC<Props> = (props) => {
 
     for (let i = 0; i < roleMembers.length; i++) {
       const rm = roleMembers[i];
-      const removeLink = (canEdit) ? (<SmallButton icon="delete" color="error" toolTip="Delete" onClick={handleRemove} />) : null;
+      const removeLink = (canEdit) ? (<SmallButton icon="delete" color="error" toolTip="Delete" onClick={() => { handleRemove(rm) }} />) : null;
       const editLink = (canEdit) ? (<SmallButton icon="edit" toolTip="Edit" onClick={() => { props.setSelectedRoleMember(rm.userId) }} />) : null;
 
       const { firstName, lastName } = rm.user;

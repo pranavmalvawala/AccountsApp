@@ -16,7 +16,7 @@ export const Wrapper: React.FC<Props> = props => {
     const path = window.location.pathname;
     let result = "";
     if (path.startsWith("/admin")) result = "admin";
-    else if (path.indexOf("/manage") > -1) result = "settings";
+    else if (path.indexOf("/manage") > -1 || path.indexOf("/role") > -1) result = "settings";
     else result = "apps"
     return result;
   }

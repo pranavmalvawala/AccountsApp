@@ -34,7 +34,7 @@ export const AssociatePerson = ({ person, handleAssociatePerson, searchStatus, f
     searchStatus(hasSearched);
   }, [hasSearched, searchStatus])
 
-  if (!person || showSearchPerson) return <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={handleAssociatePerson} searchClicked={searchClicked} filterList={filterList} />;
+  if (!person || showSearchPerson) return <PersonAdd getPhotoUrl={PersonHelper.getPhotoUrl} addFunction={handleAssociatePerson} searchClicked={searchClicked} filterList={filterList} includeEmail={true} />;
   return (
     <Table size="small">
       <TableBody>
