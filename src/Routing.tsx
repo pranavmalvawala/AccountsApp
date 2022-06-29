@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import ReactGA from "react-ga";
 import { EnvironmentHelper } from "./helpers";
 import { ControlPanel } from "./ControlPanel";
+import { Box } from "@mui/material";
 
 export const Routing: React.FC = () => {
   const location = useLocation();
@@ -14,8 +15,10 @@ export const Routing: React.FC = () => {
 
   console.log("routing");
   return (
-    <Routes>
-      <Route path="/*" element={<ControlPanel />} />
-    </Routes>
+    <Box sx={{ display: "flex", backgroundColor: "#EEE", minHeight: "100vh" }}>
+      <Routes>
+        <Route path="/*" element={<ControlPanel />} />
+      </Routes>
+    </Box>
   );
 }

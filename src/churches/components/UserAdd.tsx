@@ -12,7 +12,7 @@ interface Props {
 
 const validateEmail = (email: string) => (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/.test(email))
 
-export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Props) => {
+export const UserAdd = (props: Props) => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -25,40 +25,33 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
   const [editMode, setEditMode] = useState<boolean>(false);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
 
-  const handleSave = async () => {
-    // when edit mode
-    if (editMode) {
-      if (validateInputs()) {
-        return
-      }
-
+  const saveExistingUser = async () => {
+    if (validate()) {
       await ApiHelper.post(`/users/setDisplayName`, { firstName, lastName, userId: fetchedUser.id }, "AccessApi");
-      await ApiHelper.post(`/users/updateEmail`, { email, userId: fetchedUser.id }, "AccessApi");
-
-      const person = { ...linkedPerson };
-      person.contactInfo.email = email;
-      person.name.first = firstName;
-      person.name.last = lastName;
-
-      await ApiHelper.post("/people", [person], "MembershipApi");
-
-      updatedFunction();
-      return;
-    }
-    // creating a complete new user
-    if (showNameFields) {
-      if (validateInputs()) {
-        return;
+      try {
+        await ApiHelper.post(`/users/updateEmail`, { email, userId: fetchedUser.id }, "AccessApi");
+        const person = { ...linkedPerson };
+        person.contactInfo.email = email;
+        person.name.first = firstName;
+        person.name.last = lastName;
+        await ApiHelper.post("/people", [person], "MembershipApi");
+        props.updatedFunction();
+      } catch {
+        setErrors(["Cannot save. Another user already exists for this email address."])
       }
+    }
+  }
+
+  const saveNewUser = async () => {
+    if (validate()) {
       const user = await createUserAndToGroup(firstName, lastName, email);
       const person = await createPerson(user.id);
       await linkUserAndPerson(user.id, person.id)
-
-      updatedFunction();
-      return;
+      props.updatedFunction();
     }
+  }
 
-    // creating users from already existing people
+  const saveUserFromPerson = async () => {
     if (showEmailField && !validateEmail(email)) {
       setErrors(["Please enter a valid Email"]);
       return;
@@ -67,24 +60,34 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
     const { first, last } = selectedPerson.name;
     const userEmail = showEmailField ? email : selectedPerson.contactInfo.email;
     const user = await createUserAndToGroup(first, last, userEmail);
-    await linkUserAndPerson(user.id, selectedPerson.id);
+    try {
+      await linkUserAndPerson(user.id, selectedPerson.id);
 
-    if (showEmailField) {
-      const person = { ...selectedPerson };
-      person.contactInfo.email = email;
-      await ApiHelper.post("/people", [person], "MembershipApi");
+      if (showEmailField) {
+        const person = { ...selectedPerson };
+        person.contactInfo.email = email;
+        await ApiHelper.post("/people", [person], "MembershipApi");
+      }
+    } catch {
+      setErrors(["The user account for this email is associated with a different person."]);
     }
 
-    updatedFunction();
+    props.updatedFunction();
   }
 
-  const validateInputs = () => {
+  const handleSave = async () => {
+    if (editMode) saveExistingUser();
+    else if (showNameFields) saveNewUser();
+    else saveUserFromPerson();
+  }
+
+  const validate = () => {
     const warnings: string[] = [];
     if (!firstName) warnings.push("Please enter firstname");
     if (!lastName) warnings.push("Please enter lastname");
     if (!validateEmail(email)) warnings.push("Enter a valid Email");
     setErrors(warnings);
-    return warnings.length > 0;
+    return warnings.length === 0;
   }
 
   const linkUserAndPerson = async (userId: string, personId: string) => {
@@ -94,7 +97,7 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
   const createUserAndToGroup = async (firstName: string, lastName: string, userEmail: string) => {
     const userPayload: LoadCreateUserRequestInterface = { firstName, lastName, userEmail };
     const user: UserInterface = await ApiHelper.post("/users/loadOrCreate", userPayload, "AccessApi");
-    const roleMember: RoleMemberInterface = { userId: user.id, roleId: role.id, churchId: UserHelper.currentChurch.id };
+    const roleMember: RoleMemberInterface = { userId: user.id, roleId: props.role.id, churchId: UserHelper.currentChurch.id };
     await ApiHelper.post("/rolemembers/", [roleMember], "AccessApi");
 
     return user;
@@ -145,9 +148,9 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
 
   useEffect(() => {
     (async () => {
-      if (selectedUser) {
+      if (props.selectedUser) {
         setEditMode(true);
-        const user: UserInterface = await ApiHelper.post("/users/loadOrCreate", { userId: selectedUser }, "AccessApi");
+        const user: UserInterface = await ApiHelper.post("/users/loadOrCreate", { userId: props.selectedUser }, "AccessApi");
         setFetchedUser(user);
         setFirstName(user.firstName);
         setLastName(user.lastName);
@@ -161,7 +164,7 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
         }
       }
     })()
-  }, [selectedUser]);
+  }, [props.selectedUser]);
 
   const message = (!showNameFields && !editMode && hasSearched) && (<span>Don't have a user account? <a href="about:blank" onClick={CreateNewUser}>Create New User</a></span>);
   const nameField = (showNameFields || editMode) && (
@@ -175,7 +178,7 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
   )
 
   return (
-    <InputBox headerIcon="lock" headerText={"Add to " + role.name} saveFunction={handleSave} cancelFunction={updatedFunction}>
+    <InputBox headerIcon="lock" headerText={"Add to " + props.role.name} saveFunction={handleSave} cancelFunction={props.updatedFunction}>
       <ErrorMessages errors={errors} />
       {
         (!showNameFields || editMode) && (
@@ -183,7 +186,7 @@ export const UserAdd = ({ role, updatedFunction, selectedUser, roleMembers }: Pr
             person={selectedPerson || linkedPerson}
             handleAssociatePerson={handleAssociatePerson}
             searchStatus={handleSearchStatus}
-            filterList={roleMembers.map(rm => rm.personId)}
+            filterList={props.roleMembers.map(rm => rm.personId)}
             onChangeClick={() => setShowEmailField(false)}
             showChangeOption={!editMode}
           />
