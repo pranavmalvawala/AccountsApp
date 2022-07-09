@@ -1,12 +1,18 @@
 import React, { useState, useCallback } from "react";
 import { ApiHelper, DisplayBox, RoleInterface, RolePermissionInterface, RoleCheck, PermissionInterface } from "./";
-import { Accordion, Card } from "react-bootstrap";
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Icon } from "@mui/material";
 
 interface Props { role: RoleInterface }
 
 export const RolePermissions: React.FC<Props> = (props) => {
   const [rolePermissions, setRolePermissions] = useState<RolePermissionInterface[]>([]);
   const [permissions, setPermissions] = useState<PermissionInterface[]>([]);
+
+  const [expanded, setExpanded] = React.useState<string | false>(false);
+
+  const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const loadData = useCallback(() => { ApiHelper.get("/rolepermissions/roles/" + props.role.id, "AccessApi").then(data => setRolePermissions(data)); }, [props.role]);
   const loadPermissions = useCallback(() => {
@@ -18,17 +24,19 @@ export const RolePermissions: React.FC<Props> = (props) => {
     const result: JSX.Element[] = []
     const sortedPermissions = [...permissions].sort((a, b) => a.displaySection > b.displaySection ? 1 : -1);
 
-    sortedPermissions.forEach(p => {
+    sortedPermissions.forEach((p, index) => {
       if (!lastSection.includes(p.displaySection)) {
         result.push(
-          <Card key={p.displaySection}>
-            <Accordion.Toggle as={Card.Header} style={{ cursor: "pointer" }} eventKey={p.displaySection}>
-              {p.displaySection}
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey={p.displaySection}>
-              <Card.Body>{getChecks(p.displaySection)}</Card.Body>
-            </Accordion.Collapse>
-          </Card>
+          <Accordion expanded={expanded === "panel" + index} onChange={handleChange("panel" + index)}>
+            <AccordionSummary
+              expandIcon={<Icon>expand_more</Icon>}
+            >
+              <Typography>{p.displaySection}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{getChecks(p.displaySection)}</Typography>
+            </AccordionDetails>
+          </Accordion>
         );
         lastSection.push(p.displaySection);
       }
@@ -51,9 +59,9 @@ export const RolePermissions: React.FC<Props> = (props) => {
 
   return (
     <DisplayBox id="rolePermissionsBox" headerText="Edit Permissions" headerIcon="lock">
-      <Accordion>
+      <div>
         {getSections()}
-      </Accordion>
+      </div>
     </DisplayBox>
   );
 }

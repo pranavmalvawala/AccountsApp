@@ -75,7 +75,7 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
         <Grid item md={4} xs={12}>
           <FormControl fullWidth>
             <InputLabel>Provider</InputLabel>
-            <Select name="provider" value={provider} onChange={handleChange}>
+            <Select name="provider" label="Provider" value={provider} onChange={handleChange}>
               <MenuItem value="">None</MenuItem>
               <MenuItem value="Stripe">Stripe</MenuItem>
             </Select>

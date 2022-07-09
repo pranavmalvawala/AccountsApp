@@ -1,5 +1,6 @@
 import React from "react";
 import { ApiHelper, RolePermissionInterface } from "./";
+import { FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 
 interface Props {
   apiName: string,
@@ -37,10 +38,9 @@ export const RoleCheck: React.FC<Props> = (props) => {
   React.useEffect(init, [props.rolePermissions]); //eslint-disable-line
 
   return (
-    <div className="form-check">
-      <input type="checkbox" className="form-check-input" checked={rolePermission !== null} onChange={handleChange} />
-      <label className="form-check-label">{props.label}</label>
-    </div>
+    <FormGroup>
+      <FormControlLabel control={<Checkbox checked={rolePermission !== null} onChange={handleChange} />} label={props.label} />
+    </FormGroup>
   );
 }
 

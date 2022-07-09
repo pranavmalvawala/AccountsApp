@@ -16,7 +16,7 @@ export const Appearance: React.FC<Props> = (props) => {
     const logoSrc = (logoName === "logoLight")
       ? AppearanceHelper.getLogoLight(styles, "/images/sample-logo-header.png")
       : AppearanceHelper.getLogoDark(styles, "/images/sample-logo-header.png");
-    let logoImg = (styles && logoSrc !== null && logoSrc !== undefined) ? <img src={logoSrc} alt="logo" className="img-fluid" /> : null;
+    let logoImg = (styles && logoSrc !== null && logoSrc !== undefined) ? <img src={logoSrc} alt="logo" /> : null;
     return logoImg
   }
 

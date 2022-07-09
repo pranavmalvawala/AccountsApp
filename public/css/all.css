@@ -15,6 +15,7 @@
 
 a {
   color: #24b8ff;
+  text-decoration: none;
 }
 
 h1 {
@@ -33,6 +34,18 @@ h1 {
   border-bottom: 1px solid #ccc;
   padding-bottom: 10px;
   margin-bottom: 25px;
+}
+
+img {
+  max-width: 100%;
+}
+
+.text-decoration {
+  text-decoration: none;
+}
+
+.text-decoration:hover {
+  text-decoration: underline;
 }
 
 .btn-warning,

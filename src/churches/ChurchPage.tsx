@@ -39,7 +39,7 @@ export const ChurchPage = () => {
           APPS.map(a => (
             <a href={a.url} className="appLink" key={a.app}>
               <Grid container spacing={3}>
-                <Grid item sm={2}><img src={a.logo} className="img-fluid" alt={a.app} /></Grid>
+                <Grid item sm={2}><img src={a.logo} alt={a.app} /></Grid>
                 <Grid item sm={10}>{a.desc}</Grid>
               </Grid>
             </a>
