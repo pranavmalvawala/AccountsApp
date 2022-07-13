@@ -57,12 +57,21 @@ export const AdminPage = () => {
     let anchor = e.currentTarget as HTMLAnchorElement;
     let churchId = anchor.getAttribute("data-churchid");
 
-    let churchLoaded = false;
-    UserHelper.churches.forEach(c => { if (c.id === churchId) churchLoaded = true });
-    if (!churchLoaded) {
-      const result = await ApiHelper.get("/churches/" + churchId + "/impersonate", "AccessApi");
-      UserHelper.churches.push(...result.churches);
-    }
+    //let churchLoaded = false;
+    //UserHelper.churches.forEach(c => { if (c.id === churchId) churchLoaded = true });
+    //if (!churchLoaded) {
+
+    const result = await ApiHelper.get("/churches/" + churchId + "/impersonate", "AccessApi");
+    console.log(result);
+
+    const idx = ArrayHelper.getIndex(UserHelper.churches, "id", churchId);
+    if (idx > -1) UserHelper.churches.splice(idx, 1);
+
+    UserHelper.churches.push(...result.churches);
+    //UserHelper.currentChurch = result.churches[0];
+    //console.log(UserHelper.currentChurch);
+    //UserHelper.setupApiHelper(UserHelper.currentChurch);
+    //}
     setRedirectUrl(`/${churchId}/manage`);
 
   }
