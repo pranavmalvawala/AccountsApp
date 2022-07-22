@@ -9,10 +9,8 @@ import { Authenticated } from "./Authenticated";
 import { Logout } from "./Logout";
 
 export const ControlPanel = () => {
-  console.log("CP");
   let user = React.useContext(UserContext).user; //to force rerender on login
-  if (user === null) console.log("User is null");
-  console.log("CP ROUTES")
+  if (user === null) console.log();
 
   return (
     <Routes>

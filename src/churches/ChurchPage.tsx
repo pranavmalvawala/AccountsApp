@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import { Grid, Icon } from "@mui/material";
 
 export const ChurchPage = () => {
-  console.log("CHURCH PAGE")
   const params = useParams();
   const [church, setChurch] = React.useState<ChurchInterface>(null);
   const context = React.useContext(UserContext);

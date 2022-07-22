@@ -23,9 +23,9 @@ export const Wrapper: React.FC<Props> = props => {
 
   const selectedTab = getSelectedTab();
 
-  tabs.push(<NavItem url="/" label="Apps" icon="apps" selected={selectedTab === "apps"} />);
-  if (UserHelper.checkAccess(Permissions.accessApi.settings.edit) && UserHelper.currentChurch !== null) tabs.push(<NavItem url={`/${churchId}/manage`} label="Church Settings" icon="church" selected={selectedTab === "settings"} />);
-  if (UserHelper.checkAccess(Permissions.accessApi.server.admin)) tabs.push(<NavItem url="/admin" label="Server Admin" icon="admin_panel_settings" selected={selectedTab === "admin"} />);
+  tabs.push(<NavItem url="/" key="/home" label="Apps" icon="apps" selected={selectedTab === "apps"} />);
+  if (UserHelper.checkAccess(Permissions.accessApi.settings.edit) && UserHelper.currentChurch !== null) tabs.push(<NavItem key={`/${churchId}/manage`} url={`/${churchId}/manage`} label="Church Settings" icon="church" selected={selectedTab === "settings"} />);
+  if (UserHelper.checkAccess(Permissions.accessApi.server.admin)) tabs.push(<NavItem key="/admin" url="/admin" label="Server Admin" icon="admin_panel_settings" selected={selectedTab === "admin"} />);
   const navContent = <List component="nav" sx={Themes.NavBarStyle}>{tabs}</List>
 
   return <SiteWrapper navContent={navContent} context={context} appName="ChurchApps">{props.children}</SiteWrapper>

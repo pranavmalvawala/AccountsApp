@@ -13,7 +13,6 @@ export const Routing: React.FC = () => {
   }
   React.useEffect(() => { if (EnvironmentHelper.GoogleAnalyticsTag !== "") ReactGA.pageview(location.pathname + location.search); }, [location]);
 
-  console.log("routing");
   return (
     <Box sx={{ display: "flex", backgroundColor: "#EEE", minHeight: "100vh" }}>
       <Routes>

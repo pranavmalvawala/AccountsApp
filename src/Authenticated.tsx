@@ -11,7 +11,6 @@ import { ReportPage } from "./admin/ReportPage";
 import { Wrapper } from "./components/Wrapper";
 
 export const Authenticated: React.FC = () => {
-  console.log("AUTHENTICATED")
   //to force rerender on login
   let user = React.useContext(UserContext)?.user;
   let church = React.useContext(UserContext)?.church;

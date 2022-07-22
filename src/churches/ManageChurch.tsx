@@ -20,7 +20,7 @@ export const ManageChurch = () => {
   }
 
   const getSidebar = () => {
-    let modules: JSX.Element[] = [<Box sx={{ marginBottom: 2 }}><Appearance key="appearence" /></Box>];
+    let modules: JSX.Element[] = [<Box key="appearence" sx={{ marginBottom: 2 }}><Appearance /></Box>];
     if (selectedRoleId !== "notset") {
       modules.splice(1, 0, <RoleEdit key="roleEdit" roleId={selectedRoleId} updatedFunction={() => { setSelectedRoleId("notset") }} />);
     }
