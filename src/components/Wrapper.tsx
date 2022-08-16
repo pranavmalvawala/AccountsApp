@@ -28,6 +28,6 @@ export const Wrapper: React.FC<Props> = props => {
   if (UserHelper.checkAccess(Permissions.accessApi.server.admin)) tabs.push(<NavItem key="/admin" url="/admin" label="Server Admin" icon="admin_panel_settings" selected={selectedTab === "admin"} />);
   const navContent = <List component="nav" sx={Themes.NavBarStyle}>{tabs}</List>
 
-  return <SiteWrapper navContent={navContent} context={context} appName="ChurchApps">{props.children}</SiteWrapper>
+  return <SiteWrapper navContent={navContent} context={context} appName="AccountsApp">{props.children}</SiteWrapper>
 
 };
