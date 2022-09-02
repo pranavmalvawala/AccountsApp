@@ -33,8 +33,12 @@ export const Login: React.FC = () => {
 
     return (<LoginPage auth={auth} context={context} jwt={jwt} appName="AccountsApp" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} keyName={keyName} />);
   } else {
+    let search = new URLSearchParams(window.location.search);
+    const returnUrl = search.get("returnUrl");
+
     // @ts-ignore
-    let from = location.state?.from?.pathname || "/";
+    let from = returnUrl || location.state?.from?.pathname || "/";
+    console.log(from);
 
     return <Navigate to={from} replace />;
   }
