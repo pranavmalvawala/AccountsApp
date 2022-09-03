@@ -27,11 +27,12 @@ export const Login: React.FC = () => {
     let jwt = search.get("jwt") || cookies.jwt;
     let auth = search.get("auth");
     let keyName = search.get("keyName");
+    let appName = search.get("appName") || "AccountsApp";
     if (!jwt) jwt = "";
     if (!auth) auth = "";
     if (!keyName) keyName = ""
 
-    return (<LoginPage auth={auth} context={context} jwt={jwt} appName="AccountsApp" appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} keyName={keyName} />);
+    return (<LoginPage auth={auth} context={context} jwt={jwt} appName={appName} appUrl={window.location.href} churchRegisteredCallback={trackChurchRegister} userRegisteredCallback={trackUserRegister} keyName={keyName} />);
   } else {
     let search = new URLSearchParams(window.location.search);
     const returnUrl = search.get("returnUrl");
