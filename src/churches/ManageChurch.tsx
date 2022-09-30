@@ -15,7 +15,7 @@ export const ManageChurch = () => {
   const loadData = () => {
     const churchId = params.id;
     if (churchId !== UserHelper.currentChurch.id) UserHelper.selectChurch(context, churchId);
-    if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit)) setRedirectUrl("/" + church.id);
+    if (!UserHelper.checkAccess(Permissions.accessApi.settings.edit)) setRedirectUrl("/" + churchId);
     ApiHelper.get("/churches/" + params.id + "?include=permissions", "AccessApi").then(data => setChurch(data));
   }
 
